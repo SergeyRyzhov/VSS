@@ -39,7 +39,16 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="BaseParser.cs" />
+    <Compile Include="ConsolePrinter.cs" />
+    <Compile Include="Edge.cs" />
+    <Compile Include="ISotialGraph.cs" />
+    <Compile Include="IParser.cs" />
+    <Compile Include="IPrinter.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="SotialGraph.cs" />
+    <Compile Include="SotialParser.cs" />
+    <Compile Include="Vertex.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
