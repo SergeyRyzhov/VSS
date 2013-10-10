@@ -1,0 +1,14 @@
+%%MatrixMarket matrix array real general
+%-------------------------------------------------------------------------------
+% UF Sparse Matrix Collection, Tim Davis
+% http://www.cise.ufl.edu/research/sparse/matrices/Meszaros/farm
+% name: Meszaros/farm : b matrix
+%-------------------------------------------------------------------------------
+7 1
+25000
+300
+1500
+5000
+0
+50
+100
