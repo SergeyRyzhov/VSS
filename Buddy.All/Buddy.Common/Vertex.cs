@@ -4,6 +4,6 @@
     {
         public uint Id { get; set; }
 
-        public uint Radius { get; set; }
+        public double Radius { get; set; }
     }
 }
