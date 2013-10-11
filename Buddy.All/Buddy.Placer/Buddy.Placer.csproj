@@ -42,6 +42,8 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="BasePlacer.cs" />
+    <Compile Include="ForceDirectedPlacer.cs" />
+    <Compile Include="IPlacer.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>

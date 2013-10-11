@@ -1,29 +1,23 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Drawing;
+﻿using System.Drawing;
 using System.Windows.Forms;
 
 namespace SimpleVisualization
 {
-    class BitMapDrawer
+    internal class BitMapDrawer
     {
         public void SampleDraw(int width, int height, PictureBox pictureBox1, Graph gr)
         {
             /*
             int nWidth = width, nHeight = height;
-            
+
             Pen p1 = new Pen(Color.OrangeRed);
             Bitmap b1 = new Bitmap(nWidth, nHeight);
 
-            
             using (Graphics g1 = Graphics.FromImage(b1))
             {
                 //рисуем
                   //gr.DrawGraph(g1);
-                  
+
                   g1.DrawEllipse(p1, 1000, 1000, 100, 100);
             }
 
@@ -37,10 +31,10 @@ namespace SimpleVisualization
              * */
 
             int nWidth = width, nHeight = height;
-            Pen redPen = new Pen(Color.Red, 8);
+            var redPen = new Pen(Color.Red, 8);
 
-            Bitmap b1 = new Bitmap(nWidth, nHeight);
-            using (Graphics g1 = Graphics.FromImage(b1))
+            var b1 = new Bitmap(nWidth, nHeight);
+            using (var g1 = Graphics.FromImage(b1))
             {
                 //рисуем
                 //g1.DrawRectangle(redPen, 0, 0, width - 100, height - 100);
@@ -53,7 +47,6 @@ namespace SimpleVisualization
             b1.Save("D:\\test.bmp");
 
             redPen.Dispose();
-           
         }
     }
 }

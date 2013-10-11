@@ -1,11 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
+﻿using System.Collections.Generic;
 using System.Drawing;
-using System.Windows.Forms;
-using System.Drawing.Drawing2D;
-using System.Linq;
-
 
 namespace SimpleVisualization
 {
@@ -16,57 +10,55 @@ namespace SimpleVisualization
 
         public void DrawGraph(Graphics g)
         {
-            foreach (GraphEdge ge in edgeList)
+            foreach (var ge in edgeList)
             {
                 ge.DrawEdge(g);
             }
-            foreach (GraphNode gv in nodeList)
+            foreach (var gv in nodeList)
             {
                 gv.DrawNode(g);
             }
         }
 
-        public void AddNode(int x, int y, int name, int radius) 
+        public void AddNode(int x, int y, int name, int radius)
         {
-            GraphNode c1 = new GraphNode(x, y, name, radius);
+            var c1 = new GraphNode(x, y, name, radius);
             nodeList.Add(c1);
         }
 
         public void AddEdge(GraphNode firstpoint, GraphNode secondpoint, int cost)
         {
-            GraphEdge c2 = new GraphEdge(firstpoint, secondpoint, cost);
+            var c2 = new GraphEdge(firstpoint, secondpoint, cost);
             edgeList.Add(c2);
         }
 
         public int GetNodeX(int name)
         {
-            for (int i = 0; i < nodeList.Count; i++)
+            for (var i = 0; i < nodeList.Count; i++)
             {
                 if (nodeList[i].Name == name)
                     return nodeList[i].X;
             }
-            
+
             return -1;
         }
 
         public GraphNode GetNode(int name)
         {
-            for (int i = 0; i < nodeList.Count; i++)
+            for (var i = 0; i < nodeList.Count; i++)
             {
                 if (nodeList[i].Name == name)
                     return nodeList[i];
             }
-            
+
             return null;
         }
-
     }
 
     public class GraphNode
     {
         private int x, y;
         private int name;
-
 
         public int X
         {
@@ -98,7 +90,7 @@ namespace SimpleVisualization
 
         public void DrawNode(Graphics g)
         {
-            Pen p = new Pen(Color.SandyBrown, 2);
+            var p = new Pen(Color.SandyBrown, 2);
 
             g.DrawEllipse(p, x, y, Radius, Radius);
 
@@ -112,8 +104,7 @@ namespace SimpleVisualization
         public GraphNode secondpoint;
 
         public int Cost { get; set; }
-  
-          
+
         public GraphEdge(GraphNode firstpoint, GraphNode secondpoint, int cost)
         {
             this.firstpoint = firstpoint;
@@ -123,20 +114,18 @@ namespace SimpleVisualization
 
         public void DrawEdge(Graphics g)
         {
-            
-              Pen p = new Pen(Color.SlateBlue, 2);
+            var p = new Pen(Color.SlateBlue, 2);
 
-              //p.EndCap = LineCap.ArrowAnchor;
+            //p.EndCap = LineCap.ArrowAnchor;
 
-              g.DrawLine(p, firstpoint.X + firstpoint.Radius / 2, firstpoint.Y + firstpoint.Radius / 2,
-                       secondpoint.X + secondpoint.Radius / 2, secondpoint.Y + secondpoint.Radius/2);
-              /*
-              g.DrawLines(Pens.Black, );*/
+            g.DrawLine(p, firstpoint.X + firstpoint.Radius / 2, firstpoint.Y + firstpoint.Radius / 2,
+                     secondpoint.X + secondpoint.Radius / 2, secondpoint.Y + secondpoint.Radius / 2);
+            /*
+            g.DrawLines(Pens.Black, );*/
 
-              //g.SmoothingMode = SmoothingMode.AntiAlias;
+            //g.SmoothingMode = SmoothingMode.AntiAlias;
 
-              p.Dispose();
-           
+            p.Dispose();
         }
     }
 }

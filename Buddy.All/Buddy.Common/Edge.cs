@@ -1,8 +1,8 @@
 ﻿namespace Buddy.Common
 {
     public struct Edge
-    {   
-        public uint Id { get; set; }
+    {
+        public int Id { get; set; }
 
         public Vertex U { get; set; }
 

@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Collections.Generic;
 
 namespace Buddy.Common
 {
@@ -10,6 +6,6 @@ namespace Buddy.Common
     {
         IList<Vertex> Vertices { get; }
 
-         IList<Edge> Edges { get; } 
+        IList<Edge> Edges { get; }
     }
 }

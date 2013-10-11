@@ -34,6 +34,7 @@
   <ItemGroup>
     <Reference Include="System" />
     <Reference Include="System.Core" />
+    <Reference Include="System.Drawing" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="Microsoft.CSharp" />
@@ -51,6 +52,10 @@
     <ProjectReference Include="..\Buddy.Common\Buddy.Common.csproj">
       <Project>{E3FD10D2-0C11-49CB-A309-7854800ED294}</Project>
       <Name>Buddy.Common</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Buddy.Placer\Buddy.Placer.csproj">
+      <Project>{7378DB7F-7EE1-41AB-9AD0-365DAF8A3EAD}</Project>
+      <Name>Buddy.Placer</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
