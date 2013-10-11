@@ -1,0 +1,6 @@
+Ссылки на графы.
+http://www.cise.ufl.edu/research/sparse/matrices/Meszaros/farm.html
+http://www.cise.ufl.edu/research/sparse/matrices/Meszaros/p0033.html
+http://www.cise.ufl.edu/research/sparse/matrices/JGD_Relat/relat4.html
+http://www.cise.ufl.edu/research/sparse/matrices/Newman/lesmis.html
+http://www.cise.ufl.edu/research/sparse/matrices/Pajek/GD96_d.html
