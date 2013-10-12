@@ -2,8 +2,8 @@
 {
     public struct Vertex
     {
-        public uint Id { get; set; }
+        public int Id { get; set; }
 
-        public uint Radius { get; set; }
+        public float Radius { get; set; }
     }
 }

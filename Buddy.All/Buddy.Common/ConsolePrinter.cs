@@ -16,7 +16,7 @@ namespace Buddy.Common
             for (var i = 0; i < m_graph.Vertices.Count; i++)
             {
                 var vertex = m_graph.Vertices[i];
-                Console.WriteLine("Vertex:{0} Radius:{1}", vertex.Id,  vertex.Radius);
+                Console.WriteLine("Vertex:{0} Radius:{1}", vertex.Id, vertex.Radius);
             }
         }
 

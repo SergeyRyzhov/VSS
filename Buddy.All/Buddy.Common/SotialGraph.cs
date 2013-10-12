@@ -2,7 +2,7 @@
 
 namespace Buddy.Common
 {
-    public class SotialGraph :ISotialGraph
+    public class SotialGraph : ISotialGraph
     {
         public SotialGraph()
         {
@@ -11,6 +11,7 @@ namespace Buddy.Common
         }
 
         public IList<Vertex> Vertices { get; private set; }
+
         public IList<Edge> Edges { get; private set; }
 
         public void AddVertex(Vertex vertex)

@@ -1,4 +1,6 @@
-﻿namespace Buddy.Common
+﻿using System;
+
+namespace Buddy.Common
 {
     public class SotialParser : BaseParser
     {
@@ -6,31 +8,28 @@
         {
             var graph = new SotialGraph();
 
-            var u = new Vertex()
+            var rnd = new Random();
+            var n = rnd.Next(3, 10);
+            for (int i = 0; i < n; i++)
             {
-                Radius = 1,
-                Id = 1
+                graph.AddVertex(new Vertex
+                {
+                    Id = i,
+                    Radius = rnd.Next(150)
+                });
+            }
 
-            };
-
-            var v = new Vertex()
+            var nz = rnd.Next(15, 25);
+            for (var i = 0; i < nz; i++)
             {
-                Radius = 1,
-                Id=2
-            };
-
-            var e = new Edge()
-            {
-                U = u,
-                V = v,
-                Weight = 2,
-                Id= 1
-            };
-
-            graph.AddVertex(u);
-            graph.AddVertex(v);
-
-            graph.AddEdge(e);
+                graph.AddEdge(new Edge
+                {
+                    Id = i,
+                    U = graph.Vertices[rnd.Next(graph.Vertices.Count)],
+                    V = graph.Vertices[rnd.Next(graph.Vertices.Count)],
+                    Weight = rnd.Next(50)
+                });
+            }
 
             return graph;
         }
