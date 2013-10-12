@@ -2,11 +2,11 @@
 
 namespace Buddy.Common
 {
-    public class SotialParser : BaseParser
+    public class RandomParser : BaseParser
     {
-        public override ISotialGraph Parse(string filename)
+        public override ISocialGraph Parse(string filename)
         {
-            var graph = new SotialGraph();
+            var graph = new SocialGraph();
 
             var rnd = new Random();
             var n = rnd.Next(3, 10);

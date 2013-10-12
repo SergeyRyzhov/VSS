@@ -2,7 +2,7 @@
 
 namespace Buddy.Common
 {
-    public interface ISotialGraph
+    public interface ISocialGraph
     {
         IList<Vertex> Vertices { get; }
 

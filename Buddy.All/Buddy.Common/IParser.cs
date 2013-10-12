@@ -2,6 +2,6 @@
 {
     internal interface IParser
     {
-        ISotialGraph Parse(string filename);
+        ISocialGraph Parse(string filename);
     }
 }

@@ -66,7 +66,7 @@ namespace Buddy.Placer
             return v;
         }
 
-        private static List<PointF> TotalVectorsOfForces(ISotialGraph graph, IList<PointF> coordinates)
+        private static List<PointF> TotalVectorsOfForces(ISocialGraph graph, IList<PointF> coordinates)
         {
             var vectors = new List<PointF>();
             for (int i = 0; i < graph.Vertices.Count; i++)
@@ -103,20 +103,20 @@ namespace Buddy.Placer
             return vectors;
         }
 
-        private static double MaxStep(Size size, ISotialGraph graph)
+        private static double MaxStep(Size size, ISocialGraph graph)
         {
             float maxRadus = graph.Vertices.Max(v => v.Radius);
             double maxStep = Math.Sqrt(Math.Pow(size.Width, 2) + Math.Pow(size.Height, 2))/maxRadus;
             return maxStep;
         }
 
-        private static double ReductionCoef(Size size, ISotialGraph graph, IEnumerable<PointF> vectors)
+        private static double ReductionCoef(Size size, ISocialGraph graph, IEnumerable<PointF> vectors)
         {
             double maxModule = vectors.Max(v => Distance(v));
             return MaxStep(size, graph)/maxModule;
         }
 
-        public override IList<PointF> PlaceGraph(ISotialGraph graph, IList<PointF> coordinates, Size size)
+        public override IList<PointF> PlaceGraph(ISocialGraph graph, IList<PointF> coordinates, Size size)
         {
             List<PointF> newCoord = coordinates.ToList();
 

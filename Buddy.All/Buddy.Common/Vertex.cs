@@ -1,6 +1,6 @@
 ﻿namespace Buddy.Common
 {
-    public struct Vertex
+    public class Vertex
     {
         public int Id { get; set; }
 
