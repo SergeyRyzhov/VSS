@@ -48,6 +48,7 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="SotialGraph.cs" />
     <Compile Include="SotialParser.cs" />
+    <Compile Include="SoyialParser_.cs" />
     <Compile Include="Vertex.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
