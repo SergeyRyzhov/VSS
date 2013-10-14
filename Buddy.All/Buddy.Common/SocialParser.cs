@@ -22,7 +22,7 @@ namespace Buddy.Common
                 if (linecount == 0)
                 {
                     var matrixInfo = line.Split(delimiters, StringSplitOptions.RemoveEmptyEntries);
-                    int vertexCount = Int32.Parse(matrixInfo[0]);
+                    var vertexCount = Int32.Parse(matrixInfo[0]);
                     if (matrixInfo.Length != 3)
                     {
                         throw new Exception("Invalid MTX file");

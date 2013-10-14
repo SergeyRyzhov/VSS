@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Drawing;
+using System.Linq;
 using Buddy.Common;
 using Buddy.Placer;
 
@@ -15,13 +16,13 @@ namespace Buddy.Console
             const string filename = "../../../../Matrix/lesmis(77x77)/lesmis.mtx";
             var rnd = new Random();
             var parser = new SocialParser();
-            ISocialGraph graph = parser.Parse(filename);
+            var graph = parser.Parse(filename);
             var size = new Size(640, 480);
             var coords = new List<PointF>();
-            for (int i = 0; i < graph.Vertices.Count; i++)
+            for (var i = 0; i < graph.Vertices.Count; i++)
             {
-                float x = (float) rnd.NextDouble()*size.Width;
-                float y = (float) rnd.NextDouble()*size.Height;
+                var x = (float) rnd.NextDouble()*size.Width;
+                var y = (float) rnd.NextDouble()*size.Height;
                 coords.Add(new PointF(x, y));
             }
 
@@ -39,10 +40,21 @@ namespace Buddy.Console
             System.Console.WriteLine("Число итераций");
             var s = System.Console.ReadLine();
             s = string.IsNullOrEmpty(s) ? "5" : s;
-            int a = int.Parse(s);
+            var a = int.Parse(s);
             //TODO: число итерайций в параметры
-            var placer = new ForceDirectedPlacer {Iterations = a};
-            IList<PointF> result = placer.PlaceGraph(graph, coords, size);
+            IPlacer placer = new ForceDirectedPlacer { Iterations = 1 };
+            IList<PointF> result = coords.ToList();
+            for (var i = 1; i <= a; i++)
+            {
+
+                result = placer.PlaceGraph(graph, result.ToArray(), size);
+
+                if (print)
+                    PrintCoordinates(result);
+
+                DrawGraph(size, graph, result, string.Format("iteration {0}.bmp", i), fill);
+            }
+
 
             if (print)
                 PrintCoordinates(result);
@@ -55,7 +67,7 @@ namespace Buddy.Console
 
         private static void PrintCoordinates(IEnumerable<PointF> coords)
         {
-            foreach (PointF point in coords)
+            foreach (var point in coords)
             {
                 System.Console.WriteLine(point);
             }
@@ -63,22 +75,22 @@ namespace Buddy.Console
 
         private static void DrawGraph(Size size, ISocialGraph graph, IList<PointF> coords, string fileName, bool fill)
         {
-            Brush vertexBrush = Brushes.Red;
+            var vertexBrush = Brushes.Red;
             var vertexPen = new Pen(Color.Red, 1);
             var edgePen = new Pen(Color.Blue, 1);
 
             var bitmap = new Bitmap(size.Width, size.Height);
-            using (Graphics image = Graphics.FromImage(bitmap))
+            using (var image = Graphics.FromImage(bitmap))
             {
-                foreach (Edge edge in graph.Edges)
+                foreach (var edge in graph.Edges)
                 {
-                    PointF a = coords[edge.U.Id];
-                    PointF b = coords[edge.V.Id];
+                    var a = coords[edge.U.Id];
+                    var b = coords[edge.V.Id];
                     image.DrawLine(edgePen, a, b);
                 }
 
                 const int scale = 1;
-                foreach (Vertex vertex in graph.Vertices)
+                foreach (var vertex in graph.Vertices)
                 {
                     var x = coords[vertex.Id];
                     var radius = vertex.Radius*scale;
