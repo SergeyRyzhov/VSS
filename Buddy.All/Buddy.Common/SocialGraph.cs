@@ -2,9 +2,9 @@
 
 namespace Buddy.Common
 {
-    public class SotialGraph : ISotialGraph
+    public class SocialGraph : ISocialGraph
     {
-        public SotialGraph()
+        public SocialGraph()
         {
             Vertices = new List<Vertex>();
             Edges = new List<Edge>();

@@ -2,6 +2,6 @@
 {
     public abstract class BaseParser : IParser
     {
-        public abstract ISotialGraph Parse(string filename);
+        public abstract ISocialGraph Parse(string filename);
     }
 }

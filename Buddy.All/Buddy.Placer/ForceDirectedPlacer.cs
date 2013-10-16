@@ -44,57 +44,56 @@ namespace Buddy.Placer
         /// <returns></returns>
         private static PointF FindForceVector(PointF a, PointF b, double fourceModule)
         {
-            var newCoord = new PointF();
-            var vector2 = new PointF();
-            var vector1 = new PointF();
-            newCoord.X = b.X - a.X;
-            newCoord.Y = b.Y - a.Y;
-            vector1.X = (float) Math.Sqrt(Math.Pow(fourceModule, 2)/(1 + Math.Pow(newCoord.Y/newCoord.X, 2)));
-            vector1.Y = (newCoord.Y/newCoord.X)*vector1.X;
-            vector2.X = -1*vector1.X;
-            vector2.Y = -1*vector1.Y;
-            PointF v = Distance(newCoord, vector1) < Distance(newCoord, vector2) ? vector1 : vector2;
-            if (float.IsNaN(v.X))
+            var newCoord = new PointF
             {
-                v.X = newCoord.X;
-            }
-
-            if (float.IsNaN(v.Y))
+                X = b.X - a.X, 
+                Y = b.Y - a.Y
+            };
+            var x = (float)Math.Sqrt(Math.Pow(fourceModule, 2) / (1 + Math.Pow(newCoord.Y / newCoord.X, 2)));
+            var vector1 = new PointF
             {
-                v.Y = newCoord.Y;
-            }
-            return v;
+                X = x,
+                Y = (newCoord.Y/newCoord.X)*x
+            };
+            var vector2 = new PointF
+            {
+                X = -vector1.X, 
+                Y = -vector1.Y
+            };
+            return Distance(newCoord, vector1) < Distance(newCoord, vector2)
+                ? vector1
+                : vector2;
         }
 
-        private static List<PointF> TotalVectorsOfForces(ISotialGraph graph, IList<PointF> coordinates)
+        private static List<PointF> TotalVectorsOfForces(ISocialGraph graph, IList<PointF> coordinates)
         {
             var vectors = new List<PointF>();
-            for (int i = 0; i < graph.Vertices.Count; i++)
+            for (var i = 0; i < graph.Vertices.Count; i++)
             {
                 vectors.Add(new PointF(0, 0));
             }
-            foreach (Edge e in graph.Edges)
+            foreach (var e in graph.Edges)
             {
-                PointF u = FindForceVector(coordinates[e.U.Id], coordinates[e.V.Id], AttractiveForce(e));
-                PointF a = vectors[e.U.Id];
+                var u = FindForceVector(coordinates[e.U.Id], coordinates[e.V.Id], AttractiveForce(e));
+                var a = vectors[e.U.Id];
                 a.X += u.X;
                 a.Y += u.Y;
                 vectors[e.U.Id] = a;
 
-                PointF b = vectors[e.V.Id];
+                var b = vectors[e.V.Id];
                 b.X -= u.X;
                 b.Y -= u.Y;
                 vectors[e.V.Id] = b;
             }
 
-            for (int i = 0; i < graph.Vertices.Count; i++)
+            for (var i = 0; i < graph.Vertices.Count; i++)
             {
-                for (int j = i + 1; j < graph.Vertices.Count; j++)
+                for (var j = i + 1; j < graph.Vertices.Count; j++)
                 {
-                    if (RepulsiveForce(graph.Vertices[i], graph.Vertices[j], coordinates) > 0)
+                    var repulsiveForce = RepulsiveForce(graph.Vertices[i], graph.Vertices[j], coordinates);
+                    if (repulsiveForce > 0)
                     {
-                        PointF u = FindForceVector(coordinates[i], coordinates[j],
-                            RepulsiveForce(graph.Vertices[i], graph.Vertices[j], coordinates));
+                        var u = FindForceVector(coordinates[i], coordinates[j], repulsiveForce);
                         vectors[i] = new PointF(vectors[i].X - u.X, vectors[i].Y - u.Y);
                         vectors[j] = new PointF(vectors[j].X + u.X, vectors[j].Y + u.Y);
                     }
@@ -103,30 +102,30 @@ namespace Buddy.Placer
             return vectors;
         }
 
-        private static double MaxStep(Size size, ISotialGraph graph)
+        private static double MaxStep(Size size, ISocialGraph graph)
         {
-            float maxRadus = graph.Vertices.Max(v => v.Radius);
-            double maxStep = Math.Sqrt(Math.Pow(size.Width, 2) + Math.Pow(size.Height, 2))/maxRadus;
+            var maxRadus = graph.Vertices.Max(v => v.Radius);
+            var maxStep = Math.Sqrt(Math.Pow(size.Width, 2) + Math.Pow(size.Height, 2))/maxRadus;
             return maxStep;
         }
 
-        private static double ReductionCoef(Size size, ISotialGraph graph, IEnumerable<PointF> vectors)
+        private static double ReductionCoef(Size size, ISocialGraph graph, IEnumerable<PointF> vectors)
         {
-            double maxModule = vectors.Max(v => Distance(v));
+            var maxModule = vectors.Max(v => Distance(v));
             return MaxStep(size, graph)/maxModule;
         }
 
-        public override IList<PointF> PlaceGraph(ISotialGraph graph, IList<PointF> coordinates, Size size)
+        public override IList<PointF> PlaceGraph(ISocialGraph graph, IList<PointF> coordinates, Size size)
         {
-            List<PointF> newCoord = coordinates.ToList();
+            var newCoord = coordinates.ToList();
 
             do
             {
-                List<PointF> totoalVectors = TotalVectorsOfForces(graph, coordinates);
-                double reductCoef = ReductionCoef(size, graph, totoalVectors);
-                for (int i = 0; i < graph.Vertices.Count; i++)
+                var totoalVectors = TotalVectorsOfForces(graph, coordinates);
+                var reductCoef = ReductionCoef(size, graph, totoalVectors);
+                for (var i = 0; i < graph.Vertices.Count; i++)
                 {
-                    PointF newPosition = FindForceVector(new PointF(0, 0), totoalVectors[i],
+                    var newPosition = FindForceVector(new PointF(0, 0), totoalVectors[i],
                         Distance(totoalVectors[i])*reductCoef);
                     newPosition.X = newPosition.X + newCoord[i].X;
                     newPosition.Y = newPosition.Y + newCoord[i].Y;

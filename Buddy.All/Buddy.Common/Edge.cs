@@ -1,6 +1,6 @@
 ﻿namespace Buddy.Common
 {
-    public struct Edge
+    public class Edge
     {
         public int Id { get; set; }
 

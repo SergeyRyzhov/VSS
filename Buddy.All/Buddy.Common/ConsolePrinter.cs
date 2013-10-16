@@ -4,9 +4,9 @@ namespace Buddy.Common
 {
     public class ConsolePrinter : IPrinter
     {
-        private readonly ISotialGraph m_graph;
+        private readonly ISocialGraph m_graph;
 
-        public ConsolePrinter(ISotialGraph graph)
+        public ConsolePrinter(ISocialGraph graph)
         {
             m_graph = graph;
         }

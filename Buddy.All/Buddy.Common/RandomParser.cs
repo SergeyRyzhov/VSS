@@ -2,15 +2,15 @@
 
 namespace Buddy.Common
 {
-    public class SotialParser : BaseParser
+    public class RandomParser : BaseParser
     {
-        public override ISotialGraph Parse(string filename)
+        public override ISocialGraph Parse(string filename)
         {
-            var graph = new SotialGraph();
+            var graph = new SocialGraph();
 
             var rnd = new Random();
             var n = rnd.Next(3, 10);
-            for (int i = 0; i < n; i++)
+            for (var i = 0; i < n; i++)
             {
                 graph.AddVertex(new Vertex
                 {

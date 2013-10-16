@@ -4,9 +4,9 @@ using System.Drawing;
 
 namespace Buddy.Placer
 {
-    internal interface IPlacer
+    public interface IPlacer
     {
-        IList<PointF> PlaceGraph(ISotialGraph graph, IList<PointF> coordinates, Size size);
+        IList<PointF> PlaceGraph(ISocialGraph graph, IList<PointF> coordinates, Size size);
 
         int Iterations { get; set; }
     }

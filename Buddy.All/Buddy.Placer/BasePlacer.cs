@@ -6,7 +6,7 @@ namespace Buddy.Placer
 {
     public abstract class BasePlacer : IPlacer
     {
-        public abstract IList<PointF> PlaceGraph(ISotialGraph graph, IList<PointF> coordinates, Size size);
+        public abstract IList<PointF> PlaceGraph(ISocialGraph graph, IList<PointF> coordinates, Size size);
 
         public int Iterations { get; set; }
     }
