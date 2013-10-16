@@ -1,24 +1,40 @@
 %%MatrixMarket matrix array real general
 %-------------------------------------------------------------------------------
 % UF Sparse Matrix Collection, Tim Davis
-% http://www.cise.ufl.edu/research/sparse/matrices/Meszaros/farm
-% name: Meszaros/farm : hi matrix
+% http://www.cise.ufl.edu/research/sparse/matrices/Pajek/GD01_c
+% name: Pajek/GD01_c : partition matrix
 %-------------------------------------------------------------------------------
-17 1
-1e308
-1e308
-1e308
-1e308
-1e308
-1e308
-1e308
-1e308
-1e308
-1e308
-1e308
-1e308
-1e308
-1e308
-1e308
-1e308
-1e308
+33 1
+1
+2
+3
+4
+5
+5
+6
+6
+7
+7
+7
+7
+7
+7
+8
+9
+9
+9
+9
+9
+10
+10
+10
+10
+11
+11
+11
+12
+12
+12
+12
+13
+14
