@@ -4,6 +4,9 @@ using System.Diagnostics;
 using System.Drawing;
 using System.Linq;
 using Buddy.Common;
+using Buddy.Common.Parser;
+using Buddy.Common.Printers;
+using Buddy.Common.Structures;
 using Buddy.Placer;
 
 namespace Buddy.Console
@@ -15,15 +18,16 @@ namespace Buddy.Console
             //TODO: пока так, потом через аргументы командной строки
             const string filename = "../../../../Matrix/lesmis(77x77)/lesmis.mtx";
             var rnd = new Random();
-            var parser = new SocialParser();
+            var parser = new Parser();
             var graph = parser.Parse(filename);
             var size = new Size(640, 480);
-            var coords = new List<PointF>();
+            var coords = new List<Coordinate>();
+
             for (var i = 0; i < graph.Vertices.Count; i++)
             {
                 var x = (float) rnd.NextDouble()*size.Width;
                 var y = (float) rnd.NextDouble()*size.Height;
-                coords.Add(new PointF(x, y));
+                coords.Add(new Coordinate(x, y));
             }
 
             //TODO: Печеть информации в параметры
@@ -43,7 +47,7 @@ namespace Buddy.Console
             var a = int.Parse(s);
             //TODO: число итерайций в параметры
             IPlacer placer = new ForceDirectedPlacer { Iterations = 1 };
-            IList<PointF> result = coords.ToList();
+            IList<Coordinate> result = coords.ToList();
             for (var i = 1; i <= a; i++)
             {
 
@@ -61,11 +65,12 @@ namespace Buddy.Console
 
             DrawGraph(size, graph, result, "output.bmp", fill);
             Process.Start("input.bmp");
+
             var printer = new ConsolePrinter(graph);
             printer.Info();
         }
 
-        private static void PrintCoordinates(IEnumerable<PointF> coords)
+        private static void PrintCoordinates(IEnumerable<Coordinate> coords)
         {
             foreach (var point in coords)
             {
@@ -73,7 +78,7 @@ namespace Buddy.Console
             }
         }
 
-        private static void DrawGraph(Size size, ISocialGraph graph, IList<PointF> coords, string fileName, bool fill)
+        private static void DrawGraph(Size size, ISocialGraph graph, IList<Coordinate> coords, string fileName, bool fill)
         {
             var vertexBrush = Brushes.Red;
             var vertexPen = new Pen(Color.Red, 1);
@@ -86,7 +91,7 @@ namespace Buddy.Console
                 {
                     var a = coords[edge.U.Id];
                     var b = coords[edge.V.Id];
-                    image.DrawLine(edgePen, a, b);
+                    image.DrawLine(edgePen, a.FloatX, a.FloatY, b.FloatX, b.FloatY);
                 }
 
                 const int scale = 1;
@@ -98,11 +103,11 @@ namespace Buddy.Console
                     x.Y -= radius/2;
                     if (fill)
                     {
-                        image.FillEllipse(vertexBrush, x.X, x.Y, radius, radius);
+                        image.FillEllipse(vertexBrush, x.FloatX, x.FloatY, (float)radius, (float)radius);
                     }
                     else
                     {
-                        image.DrawEllipse(vertexPen, x.X, x.Y, radius, radius);
+                        image.DrawEllipse(vertexPen, x.FloatX, x.FloatY, (float)radius, (float)radius);
                     }
                 }
             }

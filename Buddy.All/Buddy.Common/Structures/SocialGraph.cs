@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 
-namespace Buddy.Common
+namespace Buddy.Common.Structures
 {
     public class SocialGraph : ISocialGraph
     {

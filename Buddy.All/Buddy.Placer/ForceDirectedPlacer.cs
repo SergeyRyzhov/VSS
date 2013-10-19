@@ -2,23 +2,23 @@
 using System.Collections.Generic;
 using System.Drawing;
 using System.Linq;
-using Buddy.Common;
+using Buddy.Common.Structures;
 
 namespace Buddy.Placer
 {
     public class ForceDirectedPlacer : BasePlacer
     {
-        private static bool CrossingVertices(Vertex u, Vertex v, IList<PointF> coordinates)
+        private static bool CrossingVertices(Vertex u, Vertex v, IList<Coordinate> coordinates)
         {
             return Distance(coordinates[u.Id], coordinates[v.Id]) <= u.Radius + v.Radius;
         }
 
-        private static double Distance(PointF a, PointF b)
+        private static double Distance(Coordinate a, Coordinate b)
         {
             return Math.Sqrt(Math.Pow(a.X - b.X, 2) + Math.Pow(a.Y - b.Y, 2));
         }
 
-        private static double Distance(PointF a)
+        private static double Distance(Coordinate a)
         {
             return Math.Sqrt(Math.Pow(a.X, 2) + Math.Pow(a.Y, 2));
         }
@@ -28,7 +28,7 @@ namespace Buddy.Placer
             return e.Weight;
         }
 
-        private static double RepulsiveForce(Vertex u, Vertex v, IList<PointF> coordinates)
+        private static double RepulsiveForce(Vertex u, Vertex v, IList<Coordinate> coordinates)
         {
             if (CrossingVertices(u, v, coordinates))
                 return u.Radius + v.Radius - Distance(coordinates[u.Id], coordinates[v.Id]);
@@ -42,20 +42,20 @@ namespace Buddy.Placer
         /// <param name="b">вторая точка</param>
         /// <param name="fourceModule">длина результирующего вектора</param>
         /// <returns></returns>
-        private static PointF FindForceVector(PointF a, PointF b, double fourceModule)
+        private static Coordinate FindForceVector(Coordinate a, Coordinate b, double fourceModule)
         {
-            var newCoord = new PointF
+            var newCoord = new Coordinate
             {
                 X = b.X - a.X, 
                 Y = b.Y - a.Y
             };
             var x = (float)Math.Sqrt(Math.Pow(fourceModule, 2) / (1 + Math.Pow(newCoord.Y / newCoord.X, 2)));
-            var vector1 = new PointF
+            var vector1 = new Coordinate
             {
                 X = x,
                 Y = (newCoord.Y/newCoord.X)*x
             };
-            var vector2 = new PointF
+            var vector2 = new Coordinate
             {
                 X = -vector1.X, 
                 Y = -vector1.Y
@@ -65,12 +65,12 @@ namespace Buddy.Placer
                 : vector2;
         }
 
-        private static List<PointF> TotalVectorsOfForces(ISocialGraph graph, IList<PointF> coordinates)
+        private static IList<Coordinate> TotalVectorsOfForces(ISocialGraph graph, IList<Coordinate> coordinates)
         {
-            var vectors = new List<PointF>();
+            var vectors = new List<Coordinate>();
             for (var i = 0; i < graph.Vertices.Count; i++)
             {
-                vectors.Add(new PointF(0, 0));
+                vectors.Add(new Coordinate(0, 0));
             }
             foreach (var e in graph.Edges)
             {
@@ -94,8 +94,8 @@ namespace Buddy.Placer
                     if (repulsiveForce > 0)
                     {
                         var u = FindForceVector(coordinates[i], coordinates[j], repulsiveForce);
-                        vectors[i] = new PointF(vectors[i].X - u.X, vectors[i].Y - u.Y);
-                        vectors[j] = new PointF(vectors[j].X + u.X, vectors[j].Y + u.Y);
+                        vectors[i] = new Coordinate(vectors[i].X - u.X, vectors[i].Y - u.Y);
+                        vectors[j] = new Coordinate(vectors[j].X + u.X, vectors[j].Y + u.Y);
                     }
                 }
             }
@@ -109,13 +109,13 @@ namespace Buddy.Placer
             return maxStep;
         }
 
-        private static double ReductionCoef(Size size, ISocialGraph graph, IEnumerable<PointF> vectors)
+        private static double ReductionCoef(Size size, ISocialGraph graph, IEnumerable<Coordinate> vectors)
         {
             var maxModule = vectors.Max(v => Distance(v));
             return MaxStep(size, graph)/maxModule;
         }
 
-        public override IList<PointF> PlaceGraph(ISocialGraph graph, IList<PointF> coordinates, Size size)
+        public override IList<Coordinate> PlaceGraph(ISocialGraph graph, IList<Coordinate> coordinates, Size size)
         {
             var newCoord = coordinates.ToList();
 
@@ -125,7 +125,7 @@ namespace Buddy.Placer
                 var reductCoef = ReductionCoef(size, graph, totoalVectors);
                 for (var i = 0; i < graph.Vertices.Count; i++)
                 {
-                    var newPosition = FindForceVector(new PointF(0, 0), totoalVectors[i],
+                    var newPosition = FindForceVector(new Coordinate(0, 0), totoalVectors[i],
                         Distance(totoalVectors[i])*reductCoef);
                     newPosition.X = newPosition.X + newCoord[i].X;
                     newPosition.Y = newPosition.Y + newCoord[i].Y;

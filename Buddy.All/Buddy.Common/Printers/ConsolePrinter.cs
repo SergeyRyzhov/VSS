@@ -1,6 +1,7 @@
 ﻿using System;
+using Buddy.Common.Structures;
 
-namespace Buddy.Common
+namespace Buddy.Common.Printers
 {
     public class ConsolePrinter : IPrinter
     {
@@ -13,9 +14,8 @@ namespace Buddy.Common
 
         public void Vertices()
         {
-            for (var i = 0; i < m_graph.Vertices.Count; i++)
+            foreach (var vertex in m_graph.Vertices)
             {
-                var vertex = m_graph.Vertices[i];
                 Console.WriteLine("Vertex:{0} Radius:{1}", vertex.Id, vertex.Radius);
             }
         }

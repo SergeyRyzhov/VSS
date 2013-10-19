@@ -1,4 +1,4 @@
-﻿namespace Buddy.Common
+﻿namespace Buddy.Common.Structures
 {
     public class Edge
     {
