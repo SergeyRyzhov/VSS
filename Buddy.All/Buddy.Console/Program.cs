@@ -46,7 +46,12 @@ namespace Buddy.Console
             s = string.IsNullOrEmpty(s) ? "5" : s;
             var a = int.Parse(s);
             //TODO: число итерайций в параметры
-            IPlacer placer = new ForceDirectedPlacer { Iterations = 1 };
+
+            ISettings settings = new Settings()
+            {
+                Iterations = a
+            };
+            IPlacer placer = new ForceDirectedPlacer(settings);
             IList<Coordinate> result = coords.ToList();
             for (var i = 1; i <= a; i++)
             {

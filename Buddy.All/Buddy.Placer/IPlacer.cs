@@ -1,5 +1,4 @@
-﻿using Buddy.Common;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Drawing;
 using Buddy.Common.Structures;
 
@@ -7,16 +6,16 @@ namespace Buddy.Placer
 {
     public interface IPlacer
     {
-        //TODO report with argumnets
-        //settings in constructor
-        //delete
+        //TODO report with argumnets, delete this
         IList<Coordinate> PlaceGraph(ISocialGraph graph, IList<Coordinate> coordinates, Size size);
 
+        void PlaceGraph(
+            int nodes, int[] radiuses, 
+            int[] columnIndexes, int[] rowIndexes, int[] weights, 
+            double width, double height,
+            double[] initialX, double[] initialY, 
+            out double[] resultX, out double[] resultY);
 
-        void PlaceGraph(int nodes, int[] rowIndexes, int[] colIndexes, int[] weights, int[] coeff, double sizeX,
-            double sizeY, double[] x, double[] y, out double[] resultX, out double[] resulY);
-
-        //delete
-        int Iterations { get; set; }
+        ISettings Settings { get; }
     }
 }

@@ -8,6 +8,10 @@ namespace Buddy.Placer
 {
     public class ForceDirectedPlacer : BasePlacer
     {
+        public ForceDirectedPlacer(ISettings settings) : base(settings)
+        {
+        }
+
         private static bool CrossingVertices(Vertex u, Vertex v, IList<Coordinate> coordinates)
         {
             return Distance(coordinates[u.Id], coordinates[v.Id]) <= u.Radius + v.Radius;
@@ -118,7 +122,7 @@ namespace Buddy.Placer
         public override IList<Coordinate> PlaceGraph(ISocialGraph graph, IList<Coordinate> coordinates, Size size)
         {
             var newCoord = coordinates.ToList();
-
+            var iterations = Settings.Iterations;
             do
             {
                 var totoalVectors = TotalVectorsOfForces(graph, coordinates);
@@ -131,8 +135,8 @@ namespace Buddy.Placer
                     newPosition.Y = newPosition.Y + newCoord[i].Y;
                     newCoord[i] = newPosition;
                 }
-                Iterations--;
-            } while (Iterations > 0);
+                iterations--;
+            } while (iterations > 0);
             return newCoord;
         }
     }
