@@ -1,6 +1,12 @@
-Ссылки на графы.
-http://www.cise.ufl.edu/research/sparse/matrices/Meszaros/farm.html
-http://www.cise.ufl.edu/research/sparse/matrices/Meszaros/p0033.html
-http://www.cise.ufl.edu/research/sparse/matrices/JGD_Relat/relat4.html
-http://www.cise.ufl.edu/research/sparse/matrices/Newman/lesmis.html
-http://www.cise.ufl.edu/research/sparse/matrices/Pajek/GD96_d.html
+﻿Ссылки на графы.
+http://www.cise.ufl.edu/research/sparse/matrices/Pajek/Ragusa18
+http://www.cise.ufl.edu/research/sparse/matrices/Pajek/Sandi_authors
+http://www.cise.ufl.edu/research/sparse/matrices/Pajek/Stranke94
+http://www.cise.ufl.edu/research/sparse/matrices/JGD_Trefethen/Trefethen_20
+http://www.cise.ufl.edu/research/sparse/matrices/JGD_Trefethen/Trefethen_20b
+http://www.cise.ufl.edu/research/sparse/matrices/Newman/lesmis
+http://www.cise.ufl.edu/research/sparse/matrices/Pajek/Ragusa16
+http://www.cise.ufl.edu/research/sparse/matrices/Pajek/GD97_b
+http://www.cise.ufl.edu/research/sparse/matrices/Pajek/GD96_d
+http://www.cise.ufl.edu/research/sparse/matrices/Pajek/GD01_c
+http://www.cise.ufl.edu/research/sparse/matrices/Pajek/football
