@@ -1,0 +1,8 @@
+C:\Users\Александр\Documents\GitHub\VSS\Buddy.All\Buddy.Viewer\bin\Debug\Buddy.Viewer.exe.config
+C:\Users\Александр\Documents\GitHub\VSS\Buddy.All\Buddy.Viewer\bin\Debug\Buddy.Viewer.exe
+C:\Users\Александр\Documents\GitHub\VSS\Buddy.All\Buddy.Viewer\bin\Debug\Buddy.Viewer.pdb
+C:\Users\Александр\Documents\GitHub\VSS\Buddy.All\Buddy.Viewer\obj\Debug\Buddy.Viewer.csprojResolveAssemblyReference.cache
+C:\Users\Александр\Documents\GitHub\VSS\Buddy.All\Buddy.Viewer\obj\Debug\Buddy.Viewer.Properties.Resources.resources
+C:\Users\Александр\Documents\GitHub\VSS\Buddy.All\Buddy.Viewer\obj\Debug\Buddy.Viewer.csproj.GenerateResource.Cache
+C:\Users\Александр\Documents\GitHub\VSS\Buddy.All\Buddy.Viewer\obj\Debug\Buddy.Viewer.exe
+C:\Users\Александр\Documents\GitHub\VSS\Buddy.All\Buddy.Viewer\obj\Debug\Buddy.Viewer.pdb

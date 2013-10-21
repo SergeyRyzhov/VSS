@@ -43,6 +43,7 @@
   <ItemGroup>
     <Compile Include="BasePlacer.cs" />
     <Compile Include="DefaultSettings.cs" />
+    <Compile Include="FirstPlacer.cs" />
     <Compile Include="ForceDirectedPlacer.cs" />
     <Compile Include="IPlacer.cs" />
     <Compile Include="ISettings.cs" />

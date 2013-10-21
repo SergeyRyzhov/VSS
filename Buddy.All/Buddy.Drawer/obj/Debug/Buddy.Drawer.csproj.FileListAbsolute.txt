@@ -1,0 +1,9 @@
+C:\Users\Александр\Documents\GitHub\VSS\Buddy.All\Buddy.Drawer\bin\Debug\WindowsFormsApplication1.exe.config
+C:\Users\Александр\Documents\GitHub\VSS\Buddy.All\Buddy.Drawer\bin\Debug\WindowsFormsApplication1.exe
+C:\Users\Александр\Documents\GitHub\VSS\Buddy.All\Buddy.Drawer\bin\Debug\WindowsFormsApplication1.pdb
+C:\Users\Александр\Documents\GitHub\VSS\Buddy.All\Buddy.Drawer\obj\Debug\Buddy.Drawer.csprojResolveAssemblyReference.cache
+C:\Users\Александр\Documents\GitHub\VSS\Buddy.All\Buddy.Drawer\obj\Debug\WindowsFormsApplication1.Form1.resources
+C:\Users\Александр\Documents\GitHub\VSS\Buddy.All\Buddy.Drawer\obj\Debug\WindowsFormsApplication1.Properties.Resources.resources
+C:\Users\Александр\Documents\GitHub\VSS\Buddy.All\Buddy.Drawer\obj\Debug\Buddy.Drawer.csproj.GenerateResource.Cache
+C:\Users\Александр\Documents\GitHub\VSS\Buddy.All\Buddy.Drawer\obj\Debug\WindowsFormsApplication1.exe
+C:\Users\Александр\Documents\GitHub\VSS\Buddy.All\Buddy.Drawer\obj\Debug\WindowsFormsApplication1.pdb

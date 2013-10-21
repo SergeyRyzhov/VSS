@@ -1,0 +1,7 @@
+C:\Users\Александр\Documents\GitHub\VSS\Buddy.All\Buddy.Placer\bin\Debug\Buddy.Placer.dll
+C:\Users\Александр\Documents\GitHub\VSS\Buddy.All\Buddy.Placer\bin\Debug\Buddy.Placer.pdb
+C:\Users\Александр\Documents\GitHub\VSS\Buddy.All\Buddy.Placer\bin\Debug\Buddy.Common.dll
+C:\Users\Александр\Documents\GitHub\VSS\Buddy.All\Buddy.Placer\bin\Debug\Buddy.Common.pdb
+C:\Users\Александр\Documents\GitHub\VSS\Buddy.All\Buddy.Placer\obj\Debug\Buddy.Placer.csprojResolveAssemblyReference.cache
+C:\Users\Александр\Documents\GitHub\VSS\Buddy.All\Buddy.Placer\obj\Debug\Buddy.Placer.dll
+C:\Users\Александр\Documents\GitHub\VSS\Buddy.All\Buddy.Placer\obj\Debug\Buddy.Placer.pdb

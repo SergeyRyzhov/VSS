@@ -30,11 +30,11 @@ namespace Buddy.Console
                 coords.Add(new Coordinate(x, y));
             }
 
-            //TODO: Печеть информации в параметры
+            //TODO: Печать информации в параметры
             const bool print = false;
 
 
-            //TODO: Заполнени окружности вершины в параметры
+            //TODO: Заполнение окружности вершины в параметры
             const bool fill = false;
 
             if(print)

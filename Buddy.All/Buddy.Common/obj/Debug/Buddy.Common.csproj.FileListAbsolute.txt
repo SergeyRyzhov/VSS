@@ -1,0 +1,5 @@
+C:\Users\Александр\Documents\GitHub\VSS\Buddy.All\Buddy.Common\bin\Debug\Buddy.Common.dll
+C:\Users\Александр\Documents\GitHub\VSS\Buddy.All\Buddy.Common\bin\Debug\Buddy.Common.pdb
+C:\Users\Александр\Documents\GitHub\VSS\Buddy.All\Buddy.Common\obj\Debug\Buddy.Common.csprojResolveAssemblyReference.cache
+C:\Users\Александр\Documents\GitHub\VSS\Buddy.All\Buddy.Common\obj\Debug\Buddy.Common.dll
+C:\Users\Александр\Documents\GitHub\VSS\Buddy.All\Buddy.Common\obj\Debug\Buddy.Common.pdb
