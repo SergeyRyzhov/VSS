@@ -49,7 +49,7 @@ namespace Buddy.Console
 
             ISettings settings = new Settings()
             {
-                Iterations = a
+                Iterations = 1
             };
             IPlacer placer = new ForceDirectedPlacer(settings);
             IList<Coordinate> result = coords.ToList();

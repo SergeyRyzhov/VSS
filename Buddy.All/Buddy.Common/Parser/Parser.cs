@@ -46,10 +46,10 @@ namespace Buddy.Common.Parser
                 }
 
                 graph.Weight[i] = Double.Parse(matrixLine[2]);
-                var col = UInt32.Parse(matrixLine[1]);
+                var col = UInt32.Parse(matrixLine[1]) - 1;
                 graph.ColumnIndex[i] = col;
 
-                var row = UInt32.Parse(matrixLine[0]);
+                var row = UInt32.Parse(matrixLine[0]) - 1;
                 if (currentRow != row)
                 {
                     graph.RowIndex[rowPosition++] = i;
@@ -61,6 +61,8 @@ namespace Buddy.Common.Parser
             }
 
             graph.RowIndex[rowPosition] = nonzeros;
+            reader.Close();
+            stream.Close();
             return graph;
         }
 
@@ -118,6 +120,8 @@ namespace Buddy.Common.Parser
                 ++linecount;
                 line = reader.ReadLine();
             }
+            reader.Close();
+            stream.Close();
             return graph;
         }
     }
