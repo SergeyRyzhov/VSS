@@ -16,19 +16,32 @@ namespace Buddy.Console
         private static void Main()
         {
             //TODO: пока так, потом через аргументы командной строки
-            const string filename = "../../../../Matrix/lesmis(77x77)/lesmis.mtx";
+            const string filename = "../../../../Matrix/Grids/400.mtx";
+            //  const string filename = "../../../../Matrix/GD96_d(180x180)/GD96_d.mtx";
+
             var rnd = new Random();
             var parser = new Parser();
             var graph = parser.Parse(filename);
             var size = new Size(640, 480);
             var coords = new List<Coordinate>();
 
-            for (var i = 0; i < graph.Vertices.Count; i++)
+            //for (var i = 0; i < graph.Vertices.Count; i++)
+            //{
+            //    var x = (float) rnd.NextDouble()*size.Width;
+            //    var y = (float) rnd.NextDouble()*size.Height;
+            //    coords.Add(new Coordinate(x, y));
+            //}
+
+            var k = 20;
+            do
             {
-                var x = (float) rnd.NextDouble()*size.Width;
-                var y = (float) rnd.NextDouble()*size.Height;
-                coords.Add(new Coordinate(x, y));
-            }
+                for (var j = 1; j < Math.Sqrt(graph.Vertices.Count) + 1; j++)
+                {
+                    var p = new Coordinate(j * 20, k);
+                    coords.Add(p);
+                }
+                k += 20;
+            } while (k != (Math.Sqrt(graph.Vertices.Count) * 20 + 20));
 
             //TODO: Печеть информации в параметры
             const bool print = false;
@@ -37,7 +50,7 @@ namespace Buddy.Console
             //TODO: Заполнени окружности вершины в параметры
             const bool fill = false;
 
-            if(print)
+            if (print)
                 PrintCoordinates(coords);
 
             DrawGraph(size, graph, coords, "input.bmp", fill);
@@ -102,10 +115,10 @@ namespace Buddy.Console
                 const int scale = 1;
                 foreach (var vertex in graph.Vertices)
                 {
-                    var x = coords[vertex.Id];
-                    var radius = vertex.Radius*scale;
-                    x.X -= radius/2;
-                    x.Y -= radius/2;
+                    var x = new Coordinate(coords[vertex.Id].X, coords[vertex.Id].Y);
+                    var radius = vertex.Radius * scale;
+                    x.X -= radius / 2;
+                    x.Y -= radius / 2;
                     if (fill)
                     {
                         image.FillEllipse(vertexBrush, x.FloatX, x.FloatY, (float)radius, (float)radius);

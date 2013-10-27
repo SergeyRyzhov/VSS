@@ -10,7 +10,7 @@ namespace Buddy.Common.Parser
         {
             var stream = new FileStream(filename, FileMode.Open);
             var reader = new StreamReader(stream);
-            char[] delimiters = {' '};
+            char[] delimiters = { ' ' };
             uint currentRow = 0;
             uint rowPosition = 0;
 
@@ -19,7 +19,7 @@ namespace Buddy.Common.Parser
                 line = reader.ReadLine() ?? "";
 
             var matrixInfo = line.Split(delimiters, StringSplitOptions.RemoveEmptyEntries);
-                
+
             if (matrixInfo.Length != 3)
             {
                 throw new Exception("Invalid MTX file");
@@ -37,7 +37,7 @@ namespace Buddy.Common.Parser
             var graph = new Graph(rows, nonzeros);
             graph.RowIndex[rowPosition++] = 0;
             for (uint i = 0; i < nonzeros; i++)
-            { 
+            {
                 var matrixLine = line.Split(delimiters, StringSplitOptions.RemoveEmptyEntries);
 
                 if (matrixInfo.Length != 3)
@@ -70,14 +70,14 @@ namespace Buddy.Common.Parser
         {
             var stream = new FileStream(filename, FileMode.Open);
             var reader = new StreamReader(stream);
-            char[] delimiters = {' '};
+            char[] delimiters = { ' ' };
             var linecount = 0;
             ISocialGraph graph = new SocialGraph();
 
             var line = reader.ReadLine();
-            while (line != null && line.Contains("%")) 
+            while (line != null && line.Contains("%"))
                 line = reader.ReadLine();
-            for (;;)
+            for (; ; )
             {
                 if (line == null) break;
                 if (linecount == 0)
@@ -90,7 +90,7 @@ namespace Buddy.Common.Parser
                     }
                     for (var i = 0; i < vertexCount; i++)
                     {
-                        var v = new Vertex {Id = i};
+                        var v = new Vertex { Id = i };
                         graph.Vertices.Add(v);
                     }
                     //NumRows = Int32.Parse(matrixInfo[0]);
@@ -107,8 +107,8 @@ namespace Buddy.Common.Parser
 
                     var e = new Edge
                     {
-                        U = graph.Vertices[uId], 
-                        V = graph.Vertices[vId], 
+                        U = graph.Vertices[uId],
+                        V = graph.Vertices[vId],
                         Weight = weight
                     };
 
