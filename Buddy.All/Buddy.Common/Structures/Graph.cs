@@ -2,6 +2,7 @@
 {
     public class Graph : IGraph
     {
+        public uint[] Indexes { get; private set; }
         public double[] Radius { get; private set; }
         public double[] Weight { get; private set; }
 
@@ -17,11 +18,17 @@
             VerticesAmount = verticesAmount;
             EdgesAmount = edgesAmount;
 
+            Indexes = new uint[verticesAmount];
+
             Radius = new double[verticesAmount];
             Weight = new double[edgesAmount];
 
             ColumnIndex = new uint[edgesAmount];
             RowIndex = new uint[verticesAmount + 1];
+        }
+
+        public virtual void Update()
+        {
         }
     }
 }
