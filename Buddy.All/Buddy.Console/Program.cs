@@ -16,42 +16,32 @@ namespace Buddy.Console
         private static void Main()
         {
             //TODO: пока так, потом через аргументы командной строки
-            const string filename = "../../../../Matrix/Grids/400.mtx";
-            //  const string filename = "../../../../Matrix/GD96_d(180x180)/GD96_d.mtx";
-
+           const string filename = "../../../../Matrix/Grids/400.mtx";
+            
             var rnd = new Random();
             var parser = new Parser();
-            var graph = parser.Parse(filename);
-            var size = new Size(640, 480);
-            var coords = new List<Coordinate>();
+            var graph = parser.ParseCrsGraph(filename);
+            
 
-            //for (var i = 0; i < graph.Vertices.Count; i++)
-            //{
-            //    var x = (float) rnd.NextDouble()*size.Width;
-            //    var y = (float) rnd.NextDouble()*size.Height;
-            //    coords.Add(new Coordinate(x, y));
-            //}
-
-            var k = 20;
-            do
+           var size = new Size(640, 480);
+           var coords = new List<Coordinate>();
+         
+            for (var i = 0; i < graph.VerticesAmount; i++)
             {
-                for (var j = 1; j < Math.Sqrt(graph.Vertices.Count) + 1; j++)
-                {
-                    var p = new Coordinate(j * 20, k);
-                    coords.Add(p);
-                }
-                k += 20;
-            } while (k != (Math.Sqrt(graph.Vertices.Count) * 20 + 20));
+                var x = (float)rnd.NextDouble() * size.Width;
+                var y = (float)rnd.NextDouble() * size.Height;
+                coords.Add(new Coordinate(x, y));
+            }
 
-            //TODO: Печать информации в параметры
+            //TODO: Печеть информации в параметры
             const bool print = false;
 
 
-            //TODO: Заполнение окружности вершины в параметры
+            //TODO: Заполнени окружности вершины в параметры
             const bool fill = false;
 
-            if (print)
-                PrintCoordinates(coords);
+            //if (print)
+            //    PrintCoordinates(coords);
 
             DrawGraph(size, graph, coords, "input.bmp", fill);
             System.Console.WriteLine("Число итераций");
@@ -62,30 +52,33 @@ namespace Buddy.Console
 
             ISettings settings = new Settings()
             {
-                Iterations = 1
-            };
-            IPlacer placer = new ForceDirectedPlacer(settings);
-            IList<Coordinate> result = coords.ToList();
+                Iterations = 1,
+              };
+          //  IPlacer placer = new ForceDirectedPlacer(settings);
+            var placer = new ForceDirectedCSR(settings);
+           IList<Coordinate> result = coords.ToList();
+            
             for (var i = 1; i <= a; i++)
             {
 
-                result = placer.PlaceGraph(graph, result.ToArray(), size);
+                result = placer.PlaceGraph(graph, result, size); //result.ToArray(), size);
+              
 
-                if (print)
-                    PrintCoordinates(result);
+                //if (print)
+                //    PrintCoordinates(result);
 
                 DrawGraph(size, graph, result, string.Format("iteration {0}.bmp", i), fill);
             }
 
 
-            if (print)
-                PrintCoordinates(result);
+            //if (print)
+            //    PrintCoordinates(result);
 
             DrawGraph(size, graph, result, "output.bmp", fill);
             Process.Start("input.bmp");
 
-            var printer = new ConsolePrinter(graph);
-            printer.Info();
+          //  var printer = new ConsolePrinter(graph);
+           // printer.Info();
         }
 
         private static void PrintCoordinates(IEnumerable<Coordinate> coords)
@@ -96,7 +89,7 @@ namespace Buddy.Console
             }
         }
 
-        private static void DrawGraph(Size size, ISocialGraph graph, IList<Coordinate> coords, string fileName, bool fill)
+        private static void DrawGraph(Size size, IGraph graph, IList<Coordinate> coords, string fileName, bool fill)
         {
             var vertexBrush = Brushes.Red;
             var vertexPen = new Pen(Color.Red, 1);
@@ -105,18 +98,32 @@ namespace Buddy.Console
             var bitmap = new Bitmap(size.Width, size.Height);
             using (var image = Graphics.FromImage(bitmap))
             {
-                foreach (var edge in graph.Edges)
+                //foreach (var edge in graph.Edges)
+                //{
+                //    var a = coords[edge.U.Id];
+                //    var b = coords[edge.V.Id];
+                //    image.DrawLine(edgePen, a.FloatX, a.FloatY, b.FloatX, b.FloatY);
+                //}
+                for (var i = 0; i < graph.RowIndex.Length - 1; i++)
                 {
-                    var a = coords[edge.U.Id];
-                    var b = coords[edge.V.Id];
-                    image.DrawLine(edgePen, a.FloatX, a.FloatY, b.FloatX, b.FloatY);
+                    for (var k = graph.RowIndex[i]; k < graph.RowIndex[i + 1]; k++)
+                    {
+                        var j = (int)graph.ColumnIndex[k];
+                        var a = coords[i];
+                        var b = coords[j];
+                        image.DrawLine(edgePen, a.FloatX, a.FloatY, b.FloatX, b.FloatY);
+                    }
                 }
 
                 const int scale = 1;
-                foreach (var vertex in graph.Vertices)
+               // foreach (var vertex in graph.Vertices)
+                for(var i=0;i<graph.VerticesAmount;i++)
                 {
-                    var x = new Coordinate(coords[vertex.Id].X, coords[vertex.Id].Y);
-                    var radius = vertex.Radius * scale;
+                    //var x = new Coordinate(coords[vertex.Id].X, coords[vertex.Id].Y);
+                    //var radius = vertex.Radius * scale;
+                    var x = new Coordinate(coords[i].X, coords[i].Y);
+                    var radius = graph.Radius[i] * scale;
+
                     x.X -= radius / 2;
                     x.Y -= radius / 2;
                     if (fill)

@@ -27,6 +27,16 @@
             RowIndex = new uint[verticesAmount + 1];
         }
 
+        public Graph(uint verticesAmount, uint edgesAmount, double[] radius, double[] weight, uint[] columnIndex, uint[] rowIndex)
+        {
+            VerticesAmount = verticesAmount;
+            EdgesAmount = edgesAmount;
+            Radius = radius;
+            Weight = weight;
+            ColumnIndex = columnIndex;
+            RowIndex = rowIndex;
+        }
+
         public virtual void Update()
         {
         }
