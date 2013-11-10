@@ -38,18 +38,21 @@ namespace Buddy.Common.Parser
             graph.RowIndex[rowPosition++] = 0;
             for (uint i = 0; i < nonzeros; i++)
             {
+                line = reader.ReadLine();
                 var matrixLine = line.Split(delimiters, StringSplitOptions.RemoveEmptyEntries);
 
-                if (matrixInfo.Length != 3)
+                if (matrixLine.Length != 3)
                 {
                     throw new Exception("Invalid MTX file");
                 }
 
                 graph.Weight[i] = Double.Parse(matrixLine[2]);
                 var col = UInt32.Parse(matrixLine[1]) - 1;
-                graph.ColumnIndex[i] = col;
-
                 var row = UInt32.Parse(matrixLine[0]) - 1;
+                if (row > col) {var tmp = col;col = row;row = tmp;}
+                
+                
+                graph.ColumnIndex[i] = col;
                 if (currentRow != row)
                 {
                     graph.RowIndex[rowPosition++] = i;
@@ -60,11 +63,13 @@ namespace Buddy.Common.Parser
                 graph.Radius[col]++;
             }
 
-            graph.RowIndex[rowPosition] = nonzeros;
+            graph.RowIndex[rowPosition++] = nonzeros;
             reader.Close();
             stream.Close();
             return graph;
         }
+
+        
 
         public ISocialGraph Parse(string filename)
         {
@@ -93,9 +98,7 @@ namespace Buddy.Common.Parser
                         var v = new Vertex { Id = i };
                         graph.Vertices.Add(v);
                     }
-                    //NumRows = Int32.Parse(matrixInfo[0]);
-                    //NumCows = Int32.Parse(matrixInfo[1]);
-                    //NumNonzero = Int32.Parse(matrixInfo[2]);
+                    
                 }
                 else
                 {
