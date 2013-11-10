@@ -1,5 +1,0 @@
-C:\Users\Александр\Documents\GitHub\VSS\Buddy.All\Buddy.Placer.Tests\bin\Debug\Buddy.Placer.Tests.dll
-C:\Users\Александр\Documents\GitHub\VSS\Buddy.All\Buddy.Placer.Tests\bin\Debug\Buddy.Placer.Tests.pdb
-C:\Users\Александр\Documents\GitHub\VSS\Buddy.All\Buddy.Placer.Tests\obj\Debug\Buddy.Placer.Tests.csprojResolveAssemblyReference.cache
-C:\Users\Александр\Documents\GitHub\VSS\Buddy.All\Buddy.Placer.Tests\obj\Debug\Buddy.Placer.Tests.dll
-C:\Users\Александр\Documents\GitHub\VSS\Buddy.All\Buddy.Placer.Tests\obj\Debug\Buddy.Placer.Tests.pdb
