@@ -13,7 +13,7 @@ namespace Buddy.Placer
 
         public abstract IList<Coordinate> PlaceGraph(ISocialGraph graph, IList<Coordinate> coordinates, Size size);
 
-        public void PlaceGraph(int nodes, int[] radiuses, int[] columnIndexes, int[] rowIndexes, int[] weights, double width,
+        public virtual void PlaceGraph(int nodes, int[] radiuses, int[] columnIndexes, int[] rowIndexes, int[] weights, double width,
             double height, double[] initialX, double[] initialY, out double[] resultX, out double[] resultY)
         {
             //TODO converter

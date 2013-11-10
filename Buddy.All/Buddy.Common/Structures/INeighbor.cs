@@ -18,6 +18,6 @@ namespace Buddy.Common.Structures
         /// <summary>
         /// Обновление внутренних структур
         /// </summary>
-        void CreateBlocks(IList<Coordinate> coordinate, System.Drawing.Size size, ArrayCoordinate arr);
+        void CreateBlocks(IList<Coordinate> coordinate, Size size, ArrayCoordinate arr);
     }
 }

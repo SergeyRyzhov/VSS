@@ -164,7 +164,7 @@ namespace Buddy.Common.Structures
     }
 
     // обертка для вершин
-    struct Node
+    public struct Node
     {
         public uint number;
         public Coordinate coord;
