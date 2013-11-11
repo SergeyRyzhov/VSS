@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Drawing;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -31,6 +32,11 @@ namespace Buddy.Placer
         public override IList<Coordinate> PlaceGraph(ISocialGraph graph, IList<Coordinate> coordinates, System.Drawing.Size size)
         {
             return SearchPerimeterVertexes(coordinates, size, 5, 5);
+        }
+
+        public override IList<Coordinate> PlaceGraph(IGraph graph, IList<Coordinate> coordinate, Size size)
+        {
+            throw new NotImplementedException();
         }
     }
 }

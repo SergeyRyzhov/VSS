@@ -15,7 +15,12 @@ namespace Buddy.Placer
             throw new System.NotImplementedException();
         }
 
-        public override void PlaceGraph(int nodes, int[] radiuses, int[] columnIndexes, int[] rowIndexes, int[] weights, double width,
+        public override IList<Coordinate> PlaceGraph(IGraph graph, IList<Coordinate> coordinate, Size size)
+        {
+            throw new System.NotImplementedException();
+        }
+
+        public void PlaceGraph(int nodes, int[] radiuses, int[] columnIndexes, int[] rowIndexes, int[] weights, double width,
             double height, double[] initialX, double[] initialY, out double[] resultX, out double[] resultY)
         {
             var plaser = new ForceDirectedPlacer(Settings);

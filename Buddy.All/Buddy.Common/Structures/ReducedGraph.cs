@@ -39,12 +39,14 @@ namespace Buddy.Common.Structures
         public void Algorithm()
         {
             //исходная матрица
-            int[] rows = new int[8] { 0, 1, 2, 3, 4, 5, 6, 7 };
+            int[] rows = new int[10] { 0, 1, 2, 3, 4, 5, 6, 7, 8, 9 };
             int count = rows.Length;
-            int[] cols = new int[11] { 1, 7, 3, 7, 3, 4, 5, 4, 6, 6, 6 };
-            int[] indexrows = new int[7] { 0, 2, 4, 7, 9, 10, 11 };
+            //int[] cols = new int[11] { 1, 7, 3, 7, 3, 4, 5, 4, 6, 6, 6 };
+            int[] cols = new int[15] { 1, 3, 4, 2, 5, 7, 6, 9, 6, 7, 8, 9, 8, 8, 9 };
+            //int[] indexrows = new int[7] { 0, 2, 4, 7, 9, 10, 11 };
+            int[] indexrows = new int[10] { 0, 3, 6, 8, 10, 12, 12, 13, 15, 16 };
             //новая матрица
-            int[] metka = new int[8] { 0, 0, 4, 1, 3, 4, 2, 1 };
+            int[] metka = new int[10] { 0, 0, 1, 1, 2, 2, 3, 3, 4, 4 };
             int h;
             int maxValue = metka.Max();
             List<List<int>> newVertex = new List<List<int>>();
@@ -71,12 +73,15 @@ namespace Buddy.Common.Structures
             for (int i = 0; i < NeightVertexs.Length; i++)
             {
                 int k = indexrows[i];
-                if (i == rows.Length - 2)
+                if (indexrows[i + 1] == indexrows[indexrows.Length - 1])
                 {
                     break;
                 }
+
                 for (int ind = indexrows[i]; ind < indexrows[i + 1]; ind++)
                 {
+                    if (ind == indexrows[i + 1])
+                    { break; }
                     int vertex = cols[ind];
                     NeightVertexs[i].Add(vertex);
                     NeightVertexs[vertex].Add(i);
@@ -92,7 +97,21 @@ namespace Buddy.Common.Structures
                     {
                         foreach (int k in NeightVertexs[vertex])
                         {
-                            NewNeightVertex.Add(k);
+                            if (NewNeightVertex.Count == 0)
+                            { NewNeightVertex.Add(k); }
+                            else
+                            {
+                                for (int j = 0; j < NewNeightVertex.Count; j++)
+                                {
+
+                                    if (k != NewNeightVertex[j] && j == NewNeightVertex.Count - 1)
+                                    { NewNeightVertex.Add(k); break; }
+                                    if (k == NewNeightVertex[j])
+                                    { break; }
+
+                                }
+                            }
+
                         }
 
                     }
@@ -102,18 +121,18 @@ namespace Buddy.Common.Structures
                     }
                     NewNeightVertex.Sort();
 
-                    for (int k = 0; k < NewNeightVertex.Count; k++)
-                    {
-                        int w = -1;
-                        for (int j = 1; j < NewNeightVertex.Count; j++)
-                        {
-                            if (NewNeightVertex[j - 1] == NewNeightVertex[j])
-                            { w = j; break; }
-                        }
-                        if (w == -1)
-                            break;
-                        NewNeightVertex.Remove(NewNeightVertex[w]);
-                    }
+                    //for (int k = 0; k < NewNeightVertex.Count; k++)
+                    //{
+                    //    int w = -1;
+                    //    for (int j = 1; j < NewNeightVertex.Count; j++)
+                    //    {
+                    //        if (NewNeightVertex[j - 1] == NewNeightVertex[j])
+                    //        { w = j; break; }
+                    //    }
+                    //    if (w == -1)
+                    //        break;                        
+                    //    NewNeightVertex.Remove(NewNeightVertex[w]);
+                    //}
 
                 }
                 foreach (int row in NewNeightVertex)
