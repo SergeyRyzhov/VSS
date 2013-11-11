@@ -13,17 +13,17 @@ namespace Buddy.Placer
 
         public abstract IList<Coordinate> PlaceGraph(ISocialGraph graph, IList<Coordinate> coordinates, Size size);
 
-        public void PlaceGraph(int nodes, double[] radiuses, uint[] columnIndexes, uint[] rowIndexes, double[] weights, double width,
+        public virtual void PlaceGraph(uint nodes, double[] radiuses, uint[] columnIndexes, uint[] rowIndexes, double[] weights, double width,
             double height, double[] initialX, double[] initialY, out double[] resultX, out double[] resultY)
         {
             IGraph graph = new Graph((uint)nodes, rowIndexes[rowIndexes.Length - 1], radiuses, weights, columnIndexes, rowIndexes);
-            var Coord = new List<Coordinate>();
+            var coordinate = new List<Coordinate>();
             for (var i = 0; i < nodes; i++)
             {
-                Coord.Add(new Coordinate(initialX[i], initialY[i]));
+                coordinate.Add(new Coordinate(initialX[i], initialY[i]));
             }
             var size = new Size((int)width, (int)height);
-            var coord = PlaceGraph(graph, Coord, size);
+            var coord = PlaceGraph(graph, coordinate, size);
             resultX = new double[nodes];
             resultY = new double[nodes];
             for (var i = 0; i < nodes; i++)

@@ -43,6 +43,7 @@
     <Compile Include="Printers\ConsolePrinter.cs" />
     <Compile Include="Printers\IPrinter.cs" />
     <Compile Include="Parser\Parser.cs" />
+    <Compile Include="Statistic.cs" />
     <Compile Include="Structures\ArrayCoordinate.cs" />
     <Compile Include="Structures\Coordinate.cs" />
     <Compile Include="Structures\GraphBuilderStatistics.cs" />

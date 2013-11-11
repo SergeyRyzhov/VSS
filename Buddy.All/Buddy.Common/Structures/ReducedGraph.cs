@@ -33,7 +33,7 @@ namespace Buddy.Common.Structures
 
         public IGraph Reduce(/*IGraph graph, */uint[] labels) //если выносить, то меньть интерфейс
         {
-            throw new System.NotImplementedException();
+            return m_graph;
         }
 
         public void Algorithm()

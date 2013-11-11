@@ -11,7 +11,7 @@ namespace Buddy.Placer
 
        
         void PlaceGraph(
-            int nodes, double[] radiuses,
+            uint nodes, double[] radiuses,
             uint[] columnIndexes, uint[] rowIndexes, double[] weights,
             double width, double height,
             double[] initialX, double[] initialY,
