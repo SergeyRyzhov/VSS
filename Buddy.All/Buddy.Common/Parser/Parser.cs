@@ -115,8 +115,8 @@ namespace Buddy.Common.Parser
                         Weight = weight
                     };
 
-                    graph.Vertices[uId].Radius++;
-                    graph.Vertices[vId].Radius++;
+                    graph.Vertices[uId].Radius += 2;
+                    graph.Vertices[vId].Radius += 2;
 
                     graph.Edges.Add(e);
                 }
