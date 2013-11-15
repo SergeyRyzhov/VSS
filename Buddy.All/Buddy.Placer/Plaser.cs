@@ -43,8 +43,8 @@ namespace Buddy.Placer
 
             var labels = GetReduceLabels(nodes, graph);
 
-            IGraph rgraph = dec.Reduce(labels.Select(x => (uint)x).ToArray());
-
+            //IGraph rgraph = dec.Reduce(labels.Select(x => (uint)x).ToArray());
+            IGraph rgraph = graph;
             localPlaser.PlaceGraph(rgraph.VerticesAmount, rgraph.Radius, rgraph.ColumnIndex, rgraph.RowIndex,
                 rgraph.Weight, width, height, initialX, initialY, out resultX, out resultY);
 

@@ -2,8 +2,6 @@
 {
     public interface IGraph
     {
-        uint[] Indexes { get; }
-    
         double[] Radius { get; }
         double[] Weight { get; }
 
