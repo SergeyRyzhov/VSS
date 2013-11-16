@@ -60,24 +60,76 @@ namespace Buddy.Common
         private static double Collision(double x1, double y1, double r1, double x2, double y2, double r2)
         {
             //TODO реализовать расчёт площади пересечения кругов
-            double f1, f2, d, s1, s2, s = 0;
+            double R,r,d, d1, d2,A1,A2, s = 0;
             d = Math.Sqrt(Math.Pow(x2 - x1, 2) + Math.Pow(y2 - y1, 2));
-            if (d == r1)
+            if (d == 0)//центры совпадают
             {
-                s = Math.PI * r1 * r1;
+                if (r1 == r2)
+                {
+                    s = Math.PI * r1 * r1;
+                }
+                if (r1 > r2)
+                {
+                    s = Math.PI * r2 * r2;
+                }
+                if (r2 > r1)
+                {
+                    s = Math.PI * r1 * r1;
+                }
             }
-            if (d == r2)
+            if (d > r1 + r2)//вершины далеко друг от друга
             {
-                s = Math.PI * r2 * r2;
+                s = 0;
             }
-            if (d < r1 + r2)
+            if (d< r1+r2)//вершины пересекаются
             {
-                f2 = 2 * Math.Acos((Math.Pow(r1, 2) - Math.Pow(r2, 2) + Math.Pow(d, 2)) / (2 * r1 * d));
-                f1 = 2 * Math.Acos((Math.Pow(r2, 2) - Math.Pow(r1, 2) + Math.Pow(d, 2)) / (2 * r2 * d));
-                s1 = Math.Pow(r1, 2) * (f1 - Math.Sin(f1)) / 2;
-                s2 = Math.Pow(r2, 2) * (f2 - Math.Sin(f2)) / 2;
-                s = s1 + s2;
+                if (r1 == r2)
+                {
+                    s = 2 * r1 * r1 * Math.Pow(Math.Cos(d / 2 * r1), -1) - (1 / 2) * d * Math.Sqrt(4 * r1 * r1 - d * d);
+                }
+                if (r1 > r2)
+                {
+                    R = r1;
+                    r = r2;
+                    d1 = (Math.Pow(d, 2) + Math.Pow(R, 2) - Math.Pow(r, 2)) / 2d;
+                    d2 = (Math.Pow(d, 2) + Math.Pow(r, 2) - Math.Pow(R, 2)) / 2d;
+                    A1 = Math.Pow(r, 2) * Math.Pow(Math.Cos(d2 / r), -1);
+                    A2 = Math.Pow(R, 2) * Math.Pow(Math.Cos(d1 / R), -1);
+                    s = A1 + A2 - (1 / 2) * (Math.Sqrt((-d + r - R) * (-d - r + R) * (-d + r + R) * (d + r + R)));
+                }
+                if (r2 > r1)
+                {
+                    R = r2;
+                    r = r1;
+                    d1 = (Math.Pow(d, 2) + Math.Pow(R, 2) - Math.Pow(r, 2)) / 2d;
+                    d2 = (Math.Pow(d, 2) + Math.Pow(r, 2) - Math.Pow(R, 2)) / 2d;
+                    A1 = Math.Pow(r, 2) * Math.Pow(Math.Cos(d2 / r), -1);
+                    A2 = Math.Pow(R, 2) * Math.Pow(Math.Cos(d1 / R), -1);
+                    s = A1 + A2 - (1 / 2) * (Math.Sqrt((-d + r - R) * (-d - r + R) * (-d + r + R) * (d + r + R)));
+                }
+                if (d == r1 + r2)
+                {
+                    s = 0;
+                }
             }
+            
+            
+            //if (d == r1)
+            //{
+            //    s = Math.PI * r1 * r1;
+            //}
+            //if (d == r2)
+            //{
+            //    s = Math.PI * r2 * r2;
+            //}
+            //if (d < r1 + r2)
+            //{
+            //    f2 = 2 * Math.Acos((Math.Pow(r1, 2) - Math.Pow(r2, 2) + Math.Pow(d, 2)) / (2 * r1 * d));
+            //    f1 = 2 * Math.Acos((Math.Pow(r2, 2) - Math.Pow(r1, 2) + Math.Pow(d, 2)) / (2 * r2 * d));
+            //    s1 = Math.Pow(r1, 2) * (f1 - Math.Sin(f1)) / 2;
+            //    s2 = Math.Pow(r2, 2) * (f2 - Math.Sin(f2)) / 2;
+            //    s = s1 + s2;
+            //}
             return s;
         }
 
