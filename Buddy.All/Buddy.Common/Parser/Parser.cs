@@ -59,8 +59,8 @@ namespace Buddy.Common.Parser
                     currentRow = row;
                 }
 
-                graph.Radius[row]++;
-                graph.Radius[col]++;
+                graph.Radius[row] += 2;
+                graph.Radius[col] += 2;
             }
 
             graph.RowIndex[rowPosition++] = nonzeros;

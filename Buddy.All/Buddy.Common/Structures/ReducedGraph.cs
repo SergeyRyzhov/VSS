@@ -35,13 +35,15 @@ namespace Buddy.Common.Structures
 
             var rowIndex = new uint[verticesAmount + 1];
 
+
+            //расчёт радиусов
             for (int i = 0; i < verticesAmount; i++)
             {
                 var current = labels[i];
                 radiuses[current] += Radius[i];
             }
 
-
+            //оценка количества рёбер
             var mask = new uint[verticesAmount];
             foreach (var label in localLabels)
             {
