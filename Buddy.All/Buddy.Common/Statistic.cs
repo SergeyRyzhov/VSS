@@ -85,7 +85,12 @@ namespace Buddy.Common
             {
                 if (r1 == r2)
                 {
-                    s = 2 * r1 * r1 * Math.Pow(Math.Cos(d / 2 * r1), -1) - (1 / 2) * d * Math.Sqrt(4 * r1 * r1 - d * d);
+                    double cos = Math.Cos(d /( 2 * r1));
+                    if (cos < 0)
+                    {
+                        cos = -1*cos;
+                    }
+                    s = 2 * r1 * r1 * Math.Pow(cos, -1) -  d * Math.Sqrt(4 * r1 * r1 - d * d)/2;
                 }
                 if (r1 > r2)
                 {
@@ -93,9 +98,15 @@ namespace Buddy.Common
                     r = r2;
                     d1 = (Math.Pow(d, 2) + Math.Pow(R, 2) - Math.Pow(r, 2)) / 2d;
                     d2 = (Math.Pow(d, 2) + Math.Pow(r, 2) - Math.Pow(R, 2)) / 2d;
-                    A1 = Math.Pow(r, 2) * Math.Pow(Math.Cos(d2 / r), -1);
-                    A2 = Math.Pow(R, 2) * Math.Pow(Math.Cos(d1 / R), -1);
-                    s = A1 + A2 - (1 / 2) * (Math.Sqrt((-d + r - R) * (-d - r + R) * (-d + r + R) * (d + r + R)));
+                    double cos1 = Math.Cos(d2 / r);
+                    double cos2 = Math.Cos(d1 / R);
+                    if (cos1 < 0)
+                    { cos1 =-1*cos1;}
+                    if (cos2 < 0)
+                    { cos2 = -1 * cos2; }
+                    A1 = Math.Pow(r, 2) * Math.Pow(cos1, -1);
+                    A2 = Math.Pow(R, 2) * Math.Pow(cos2, -1);
+                    s = A1 + A2 - (Math.Sqrt((-d + r - R) * (-d - r + R) * (-d + r + R) * (d + r + R)))/2;
                 }
                 if (r2 > r1)
                 {
@@ -103,33 +114,23 @@ namespace Buddy.Common
                     r = r1;
                     d1 = (Math.Pow(d, 2) + Math.Pow(R, 2) - Math.Pow(r, 2)) / 2d;
                     d2 = (Math.Pow(d, 2) + Math.Pow(r, 2) - Math.Pow(R, 2)) / 2d;
-                    A1 = Math.Pow(r, 2) * Math.Pow(Math.Cos(d2 / r), -1);
-                    A2 = Math.Pow(R, 2) * Math.Pow(Math.Cos(d1 / R), -1);
-                    s = A1 + A2 - (1 / 2) * (Math.Sqrt((-d + r - R) * (-d - r + R) * (-d + r + R) * (d + r + R)));
+                    double cos1 = Math.Cos(d2 / r);
+                    double cos2 = Math.Cos(d1 / R);
+                    if (cos1 < 0)
+                    { cos1 = -1 * cos1; }
+                    if (cos2 < 0)
+                    { cos2 = -1 * cos2; }
+                    A1 = Math.Pow(r, 2) * Math.Pow(cos1, -1);
+                    A2 = Math.Pow(R, 2) * Math.Pow(cos2, -1);
+                    s = A1 + A2 - (Math.Sqrt((-d + r - R) * (-d - r + R) * (-d + r + R) * (d + r + R)))/2;
                 }
                 if (d == r1 + r2)
                 {
                     s = 0;
                 }
+               
             }
-            
-            
-            //if (d == r1)
-            //{
-            //    s = Math.PI * r1 * r1;
-            //}
-            //if (d == r2)
-            //{
-            //    s = Math.PI * r2 * r2;
-            //}
-            //if (d < r1 + r2)
-            //{
-            //    f2 = 2 * Math.Acos((Math.Pow(r1, 2) - Math.Pow(r2, 2) + Math.Pow(d, 2)) / (2 * r1 * d));
-            //    f1 = 2 * Math.Acos((Math.Pow(r2, 2) - Math.Pow(r1, 2) + Math.Pow(d, 2)) / (2 * r2 * d));
-            //    s1 = Math.Pow(r1, 2) * (f1 - Math.Sin(f1)) / 2;
-            //    s2 = Math.Pow(r2, 2) * (f2 - Math.Sin(f2)) / 2;
-            //    s = s1 + s2;
-            //}
+          
             return s;
         }
 

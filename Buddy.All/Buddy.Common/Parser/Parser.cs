@@ -64,6 +64,7 @@ namespace Buddy.Common.Parser
             }
 
             graph.RowIndex[rowPosition++] = nonzeros;
+            graph.RowIndex[rowPosition++] = nonzeros + 1;
             reader.Close();
             stream.Close();
             return graph;
