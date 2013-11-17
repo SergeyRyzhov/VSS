@@ -13,25 +13,25 @@ namespace Buddy.Common.Structures
 
 
         // создаем граф
-        void CreateTestCraph(uint verticesamount, short powermin, short powermax) // powermax - powermin - вилка инцидентности
+        void CreateTestCraph(int verticesamount, short powermin, short powermax) // powermax - powermin - вилка инцидентности
         {
             var rand = new Random((int)DateTime.Now.Ticks & 0x0000FFFF);
             //Thread.Sleep(10);
             bool f;
 
             // делаем массив, где будут храниться количества ненулевых элементов в каждой строке
-            uint[] cntInRows = new uint[verticesamount];
+            int[] cntInRows = new int[verticesamount];
 
-            for (uint x = 0; x < verticesamount; x++)
+            for (int x = 0; x < verticesamount; x++)
             {
                 // устанавливаем число ненулевых элементов в строке, т.е
                 // фактически число ребер, которые есть у каждой вершины
-                cntInRows[x] = (uint)rand.Next(powermin, powermax);
+                cntInRows[x] = (int)rand.Next(powermin, powermax);
             }
 
 
             // создаем экземпляр графа
-            uint edgesAmount = 0;
+            int edgesAmount = 0;
 
             for (int y = 0; y < cntInRows.Length; y++)
             {
@@ -42,14 +42,14 @@ namespace Buddy.Common.Structures
 
 
             // create nodes
-            for (uint i = 0; i < verticesamount; i++)
+            for (int i = 0; i < verticesamount; i++)
             {
                 // формируем номера столбцов в строке i
                 for (int j = 0; j < cntInRows[i]; j++) // cntInRows[i] т.к для каждой строки свое число ненулевых элементов
                 {
                     do
                     {
-                        graph.ColumnIndex[i * cntInRows[i] + j] = (uint)rand.Next((int)verticesamount);
+                        graph.ColumnIndex[i * cntInRows[i] + j] = (int)rand.Next((int)verticesamount);
                         f = false;
                         
                         // заполняем разными числами, поэтому проверка на равенство
@@ -69,7 +69,7 @@ namespace Buddy.Common.Structures
                     {
                         if ((graph.ColumnIndex[i * cntInRows[i] + k]) > (graph.ColumnIndex[i * cntInRows[i] + k + 1]))
                         {
-                            uint tmp = graph.ColumnIndex[i * cntInRows[i] + k];
+                            int tmp = graph.ColumnIndex[i * cntInRows[i] + k];
                             graph.ColumnIndex[i * cntInRows[i] + k] = graph.ColumnIndex[i * cntInRows[i] + k + 1];
                             graph.ColumnIndex[i * cntInRows[i] + k + 1] = tmp;
                         }
@@ -79,12 +79,12 @@ namespace Buddy.Common.Structures
             }
 
             // Заполняем массив значений 
-            for (uint i = 0; i < edgesAmount; i++) 
+            for (int i = 0; i < edgesAmount; i++) 
                 graph.Weight[i] =  Convert.ToDouble(rand.Next(10000) / 100); 
             
             // Заполняем массив индексов строк 
-            uint c = 0; 
-            for (uint i = 0; i <= verticesamount; i++)
+            int c = 0; 
+            for (int i = 0; i <= verticesamount; i++)
             {
                 graph.RowIndex[i] = c; 
                 c += cntInRows[i]; 

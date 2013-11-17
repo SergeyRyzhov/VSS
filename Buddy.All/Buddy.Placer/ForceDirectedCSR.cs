@@ -57,7 +57,7 @@ namespace Buddy.Placer
         private static void CulcAttractiveForces(IGraph graph, IList<Coordinate> coordinates,
             IList<Coordinate> vectors)
         {
-            for (var i = 0; i < graph.RowIndex.Length-1; i++)
+            for (var i = 0; i < graph.RowIndex.Length-2; i++)
             {
                 for (var k = graph.RowIndex[i]; k < graph.RowIndex[i+1]; k++)
                 {

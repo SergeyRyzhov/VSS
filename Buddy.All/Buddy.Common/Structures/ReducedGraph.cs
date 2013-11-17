@@ -16,24 +16,24 @@ namespace Buddy.Common.Structures
 
         public double[] Radius { get { return m_graph.Radius; } }
         public double[] Weight { get { return m_graph.Weight; } }
-        public uint[] ColumnIndex { get { return m_graph.ColumnIndex; } }
-        public uint[] RowIndex { get { return m_graph.RowIndex; } }
-        public uint EdgesAmount { get { return m_graph.EdgesAmount; } }
-        public uint VerticesAmount { get { return m_graph.VerticesAmount; } }
+        public int[] ColumnIndex { get { return m_graph.ColumnIndex; } }
+        public int[] RowIndex { get { return m_graph.RowIndex; } }
+        public int EdgesAmount { get { return m_graph.EdgesAmount; } }
+        public int VerticesAmount { get { return m_graph.VerticesAmount; } }
 
         public void Update()
         {
             m_graph.Update();
         }
 
-        public IGraph Reduce(uint[] labels)
+        public IGraph Reduce(int[] labels)
         {
             var localLabels = labels.Distinct().ToArray();
 
             var verticesAmount = localLabels.Count();
             var radiuses = new double[verticesAmount];
 
-            var rowIndex = new uint[verticesAmount + 1];
+            var rowIndex = new int[verticesAmount + 1];
 
 
             //расчёт радиусов
@@ -44,14 +44,14 @@ namespace Buddy.Common.Structures
             }
 
             //оценка количества рёбер
-            var mask = new uint[verticesAmount];
+            var mask = new int[verticesAmount];
             foreach (var label in localLabels)
             {
                 var local = label;
                 var amount = labels.Where(l => l == local).Count();
-                var vertices = new uint[amount];
+                var vertices = new int[amount];
                 var index = 0;
-                for (uint i = 0; i < labels.Length; i++)
+                for (int i = 0; i < labels.Length; i++)
                 {
                     if (labels[i] == label)
                     {
@@ -72,10 +72,10 @@ namespace Buddy.Common.Structures
             }
 
             var edgesAmount = mask.Count(x => x > 0);
-            var columnIndex = new uint[edgesAmount];
+            var columnIndex = new int[edgesAmount];
             var weight = new double[edgesAmount];
 
-            var graph = new Graph((uint)verticesAmount, (uint)edgesAmount, radiuses, weight, columnIndex, rowIndex);
+            var graph = new Graph((int)verticesAmount, (int)edgesAmount, radiuses, weight, columnIndex, rowIndex);
 
             return graph;
         }

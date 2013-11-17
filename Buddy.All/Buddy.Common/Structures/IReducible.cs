@@ -5,6 +5,6 @@
         /// <summary>
         /// Получение редуцированного графа
         /// </summary>
-        IGraph Reduce(uint[] labels);
+        IGraph Reduce(int[] labels);
     }
 }

@@ -26,9 +26,9 @@ namespace Buddy.Common
         public static double SumDistances(IGraph graph, double[] x, double[] y)
         {
             var distance = 0.0;
-            for (uint i = 0; i < graph.VerticesAmount; i++)
+            for (int i = 0; i < graph.VerticesAmount; i++)
             {
-                for (uint j = graph.RowIndex[i]; j < graph.RowIndex[i + 1]; j++)
+                for (int j = graph.RowIndex[i]; j < graph.RowIndex[i + 1]; j++)
                 {
                     var first = graph.ColumnIndex[j];
                     var second = i;
@@ -43,9 +43,9 @@ namespace Buddy.Common
         public static double CollisionArea(IGraph graph, double[] x, double[] y)
         {
             var distance = 0.0;
-            for (uint i = 0; i < graph.VerticesAmount; i++)
+            for (int i = 0; i < graph.VerticesAmount; i++)
             {
-                for (uint j = graph.RowIndex[i]; j < graph.RowIndex[i + 1]; j++)
+                for (int j = graph.RowIndex[i]; j < graph.RowIndex[i + 1]; j++)
                 {
                     var first = graph.ColumnIndex[j];
                     var second = i;

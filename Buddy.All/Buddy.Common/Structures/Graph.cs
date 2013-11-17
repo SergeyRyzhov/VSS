@@ -5,14 +5,14 @@
         public double[] Radius { get; private set; }
         public double[] Weight { get; private set; }
 
-        public uint[] ColumnIndex { get; private set; }
-        public uint[] RowIndex { get; private set; }
+        public int[] ColumnIndex { get; private set; }
+        public int[] RowIndex { get; private set; }
 
-        public uint EdgesAmount { get; private set; }
+        public int EdgesAmount { get; private set; }
 
-        public uint VerticesAmount { get; private set; }
+        public int VerticesAmount { get; private set; }
 
-        public Graph(uint verticesAmount, uint edgesAmount)
+        public Graph(int verticesAmount, int edgesAmount)
         {
             VerticesAmount = verticesAmount;
             EdgesAmount = edgesAmount;
@@ -21,11 +21,11 @@
             Radius = new double[verticesAmount];
             Weight = new double[edgesAmount];
 
-            ColumnIndex = new uint[edgesAmount];
-            RowIndex = new uint[verticesAmount + 1];
+            ColumnIndex = new int[edgesAmount];
+            RowIndex = new int[verticesAmount + 1];
         }
 
-        public Graph(uint verticesAmount, uint edgesAmount, double[] radius, double[] weight, uint[] columnIndex, uint[] rowIndex)
+        public Graph(int verticesAmount, int edgesAmount, double[] radius, double[] weight, int[] columnIndex, int[] rowIndex)
         {
             VerticesAmount = verticesAmount;
             EdgesAmount = edgesAmount;

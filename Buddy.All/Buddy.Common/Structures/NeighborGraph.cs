@@ -17,11 +17,11 @@ namespace Buddy.Common.Structures
 
         Node[] ndmass;                             // массив оберток для вершин, где держим все вершины
         Coordinate[,] blockscoordinate;            // массив для хранения координат блоков
-        uint m;
+        int m;
         double height;
         double width;
 
-        public NeighborGraph(IGraph graph, uint m)
+        public NeighborGraph(IGraph graph, int m)
         {
             m_graph = graph;
             this.m = m;
@@ -30,13 +30,13 @@ namespace Buddy.Common.Structures
         /// <summary>
         /// Заполнить обращения к внутреннему графу 
         /// </summary>
-        public uint[] Indexes { get; private set; }
+        public int[] Indexes { get; private set; }
         public double[] Radius { get; private set; }
         public double[] Weight { get; private set; }
-        public uint[] ColumnIndex { get; private set; }
-        public uint[] RowIndex { get; private set; }
-        public uint EdgesAmount { get; private set; }
-        public uint VerticesAmount { get; private set; }
+        public int[] ColumnIndex { get; private set; }
+        public int[] RowIndex { get; private set; }
+        public int EdgesAmount { get; private set; }
+        public int VerticesAmount { get; private set; }
 
         public void Update()
         {
@@ -44,9 +44,9 @@ namespace Buddy.Common.Structures
            // CreateBlocks();
         }
 
-        public uint[] Neighborhood(Coordinate x, uint vertex)
+        public int[] Neighborhood(Coordinate x, int vertex)
         {
-            uint tmp = 0;
+            int tmp = 0;
             double radius = Indexes[vertex];
            
             // ищем номер вершины, т.е. номер блока, куда попадает вершина 
@@ -58,7 +58,7 @@ namespace Buddy.Common.Structures
                     {
                         if ((x.Y >= blockscoordinate[i, j].Y) && (x.Y < blockscoordinate[i, j].Y))
                         {
-                            tmp = (uint)(i + j * m);
+                            tmp = (int)(i + j * m);
                         }
                     }
                 }
@@ -69,17 +69,17 @@ namespace Buddy.Common.Structures
 
             // ищем вершины в блоках над основым
             List<Node> highervertices = (from Node nd in ndmass
-                                         where (nd.number <= ((uint)(tmp + 1 - m)) && (nd.number >= ((uint)(tmp + 1 - m)))
+                                         where (nd.number <= ((int)(tmp + 1 - m)) && (nd.number >= ((int)(tmp + 1 - m)))
                                              )
                                          select nd).ToList<Node>();
 
             List<Node> vertices = (from Node nd in ndmass
-                                   where (nd.number <= ((uint)(tmp + 1)) && (nd.number >= ((uint)(tmp - 1))))
+                                   where (nd.number <= ((int)(tmp + 1)) && (nd.number >= ((int)(tmp - 1))))
                                    select nd).ToList<Node>();
 
             // ищем вершины в блоках под основым
             List<Node> lowvertices = (from Node nd in ndmass
-                                      where (nd.number <= ((uint)(tmp - 1 + m)) && (nd.number >= ((uint)(tmp + 1 + m))))
+                                      where (nd.number <= ((int)(tmp - 1 + m)) && (nd.number >= ((int)(tmp + 1 + m))))
                                       select nd).ToList<Node>();
 
             highervertices.Concat(vertices);
@@ -99,7 +99,7 @@ namespace Buddy.Common.Structures
             }
 
             // массив, который будет хранить номера возвращаемых вершин, т.е вершин, которые входят в окружность данной вершины.
-            uint[] massOfVertices = new uint[nodelist.Count];
+            int[] massOfVertices = new int[nodelist.Count];
 
             for (int q = 0; q < nodelist.Count; q++)
             {
@@ -138,7 +138,7 @@ namespace Buddy.Common.Structures
                         {
                             if ((coordinate[t].Y >= leftCorner.Y) && (coordinate[t].Y < leftCorner.Y))
                             {
-                                ndmass[indexOfMassive] = new Node(coordinate[t], (uint)(j + i * m), (uint)t);
+                                ndmass[indexOfMassive] = new Node(coordinate[t], (int)(j + i * m), (int)t);
                                 indexOfMassive++;
                             }
                         }
@@ -166,11 +166,11 @@ namespace Buddy.Common.Structures
     // обертка для вершин
     public struct Node
     {
-        public uint number;
+        public int number;
         public Coordinate coord;
-        public uint indexOfVertex;
+        public int indexOfVertex;
 
-        public Node(Coordinate c, uint number, uint indexOfVertex)
+        public Node(Coordinate c, int number, int indexOfVertex)
         {
             this.coord = c;
             this.number = number;

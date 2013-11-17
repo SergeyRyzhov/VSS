@@ -13,7 +13,7 @@ namespace Buddy.Common.Structures
         /// <summary>
         /// Номера соседних вершин
         /// </summary>
-        uint[] Neighborhood(Coordinate x, uint vertex);
+        int[] Neighborhood(Coordinate x, int vertex);
 
         /// <summary>
         /// Обновление внутренних структур

@@ -54,7 +54,7 @@ namespace Buddy.Console
                 Iterations = 1,
             };
 
-            var placer = new Plaser(settings);
+            var placer = new Plaсer(settings);
             IList<Coordinate> result = coords.ToList();
 
             for (var i = 1; i <= a; i++)

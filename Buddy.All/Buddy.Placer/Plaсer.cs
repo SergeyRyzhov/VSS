@@ -6,9 +6,9 @@ using Buddy.Common.Structures;
 
 namespace Buddy.Placer
 {
-    public class Plaser : BasePlacer
+    public class Plaсer : BasePlacer
     {
-        public Plaser(ISettings settings) : base(settings)
+        public Plaсer(ISettings settings) : base(settings)
         {
         }
 
@@ -31,7 +31,7 @@ namespace Buddy.Placer
             return resultX.Select((t, i) => new Coordinate(t, resultY[i])).ToList();
         }
 
-        public override void PlaceGraph(uint nodes, double[] radiuses, uint[] columnIndexes, uint[] rowIndexes,
+        public override void PlaceGraph(int nodes, double[] radiuses, int[] columnIndexes, int[] rowIndexes,
             double[] weights, double width,
             double height, double[] initialX, double[] initialY, out double[] resultX, out double[] resultY)
         {
@@ -43,7 +43,7 @@ namespace Buddy.Placer
 
             var labels = GetReduceLabels(nodes, graph);
 
-            //IGraph rgraph = dec.Reduce(labels.Select(x => (uint)x).ToArray());
+            //IGraph rgraph = dec.Reduce(labels.Select(x => (int)x).ToArray());
 
             IGraph rgraph = graph;
 
@@ -54,7 +54,7 @@ namespace Buddy.Placer
             //localPlaser.PlaceGraph(nodes, radiuses, columnIndexes, rowIndexes, weights, width, height, initialX,initialY, out resultX, out resultY);
         }
 
-        private static IEnumerable<int> GetReduceLabels(uint nodes, IGraph graph)
+        private static IEnumerable<int> GetReduceLabels(int nodes, IGraph graph)
         {
             var labels = new int[nodes];
 
@@ -64,9 +64,9 @@ namespace Buddy.Placer
             }
 
             var current = 0;
-            for (uint i = 0; i < graph.VerticesAmount; i++)
+            for (int i = 0; i < graph.VerticesAmount; i++)
             {
-                for (uint j = graph.RowIndex[i]; j < graph.RowIndex[i + 1]; j++)
+                for (int j = graph.RowIndex[i]; j < graph.RowIndex[i + 1]; j++)
                 {
                     var first = graph.ColumnIndex[j];
                     var second = i;

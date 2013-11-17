@@ -5,12 +5,12 @@
         double[] Radius { get; }
         double[] Weight { get; }
 
-        uint[] ColumnIndex { get; }
-        uint[] RowIndex { get; }
+        int[] ColumnIndex { get; }
+        int[] RowIndex { get; }
 
-        uint EdgesAmount { get; }
+        int EdgesAmount { get; }
 
-        uint VerticesAmount { get; }
+        int VerticesAmount { get; }
 
         /// <summary>
         /// Обновление внутренних структур
