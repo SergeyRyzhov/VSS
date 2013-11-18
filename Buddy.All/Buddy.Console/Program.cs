@@ -1,5 +1,6 @@
 ﻿using Buddy.Common;
 using Buddy.Common.Parser;
+using Buddy.Common.Printers;
 using Buddy.Common.Structures;
 using Buddy.Placer;
 using System;
@@ -42,7 +43,7 @@ namespace Buddy.Console
             //if (print)
             //    PrintCoordinates(coords);
 
-            Drawer.DrawGraph(size, graph, coords, "input.bmp", fill);
+            Drawer.DrawGraph(size, graph, coords, "zinput.bmp", fill);
             System.Console.WriteLine("Число итераций");
             var s = System.Console.ReadLine();
             s = string.IsNullOrEmpty(s) ? "5" : s;
@@ -54,20 +55,18 @@ namespace Buddy.Console
                 Iterations = 1,
             };
 
-            var placer = new Plaсer(settings);
+            var localPlacer = new ForceDirectedCSR(new Settings {Iterations = a});
+
+            var placer = new MultilevelPlaсer(settings, localPlacer);
+
             IList<Coordinate> result = coords.ToList();
 
-            for (var i = 1; i <= a; i++)
-            {
-                result = placer.PlaceGraph(graph, result, size);
-
-                //                Drawer.DrawGraph(size, graph, result, string.Format("iteration {0}.bmp", i), fill);
-            }
+            result = placer.PlaceGraph(graph, result, size);
 
             Statistic.PrintStatistic(graph, result.Select(c => c.X).ToArray(), result.Select(c => c.Y).ToArray());
 
-            Drawer.DrawGraph(size, graph, result, "output.bmp", fill);
-            Process.Start("input.bmp");
+            Drawer.DrawGraph(size, graph, result, "aoutput.bmp", fill);
+            Process.Start("zinput.bmp");
         }
     }
 }

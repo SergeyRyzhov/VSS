@@ -41,6 +41,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Printers\ConsolePrinter.cs" />
+    <Compile Include="Printers\Drawer.cs" />
     <Compile Include="Printers\IPrinter.cs" />
     <Compile Include="Parser\Parser.cs" />
     <Compile Include="Statistic.cs" />

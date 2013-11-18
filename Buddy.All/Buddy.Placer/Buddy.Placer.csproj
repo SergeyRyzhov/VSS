@@ -48,7 +48,7 @@
     <Compile Include="ForceDirectedPlacer.cs" />
     <Compile Include="IPlacer.cs" />
     <Compile Include="ISettings.cs" />
-    <Compile Include="Plaсer.cs" />
+    <Compile Include="MultilevelPlaсer.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Settings.cs" />
   </ItemGroup>

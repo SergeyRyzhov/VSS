@@ -63,7 +63,7 @@ namespace Buddy.Placer
                 {
                     var j =(int) graph.ColumnIndex[k];
                     var u = FindForceVector(coordinates[i], coordinates[j],
-                    AttractiveForce(coordinates[i], coordinates[j], graph.Weight[j]));
+                    AttractiveForce(coordinates[i], coordinates[j], graph.Weight[k]));
                     vectors[i].X += u.X;
                     vectors[i].Y += u.Y;
                     vectors[j].X -= u.X;

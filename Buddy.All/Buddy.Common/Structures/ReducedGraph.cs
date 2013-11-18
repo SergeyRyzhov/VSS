@@ -1,7 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Runtime.Remoting;
 
 namespace Buddy.Common.Structures
 {
@@ -15,10 +13,15 @@ namespace Buddy.Common.Structures
         }
 
         public double[] Radius { get { return m_graph.Radius; } }
+
         public double[] Weight { get { return m_graph.Weight; } }
+
         public int[] ColumnIndex { get { return m_graph.ColumnIndex; } }
+
         public int[] RowIndex { get { return m_graph.RowIndex; } }
+
         public int EdgesAmount { get { return m_graph.EdgesAmount; } }
+
         public int VerticesAmount { get { return m_graph.VerticesAmount; } }
 
         public void Update()
@@ -35,183 +38,133 @@ namespace Buddy.Common.Structures
 
             var rowIndex = new int[verticesAmount + 1];
 
+            ComputeRadiuses(labels, radiuses, verticesAmount);
 
-            //расчёт радиусов
-            for (int i = 0; i < verticesAmount; i++)
-            {
-                var current = labels[i];
-                radiuses[current] += Radius[i];
-            }
-
-            //оценка количества рёбер
-            var mask = new int[verticesAmount];
-            foreach (var label in localLabels)
-            {
-                var local = label;
-                var amount = labels.Where(l => l == local).Count();
-                var vertices = new int[amount];
-                var index = 0;
-                for (int i = 0; i < labels.Length; i++)
-                {
-                    if (labels[i] == label)
-                    {
-                        vertices[index++] = i;
-                    }
-                }
-                foreach (var u in vertices)
-                {
-                    for (int i = 0; i < verticesAmount; i++)
-                    {
-                        var current = labels[i];
-
-                        if (u != i && current != label)
-                            mask[label] += 1;
-                    }
-                }
-                
-            }
-
-            var edgesAmount = mask.Count(x => x > 0);
+            var edgesAmount = EdgesAmount;
             var columnIndex = new int[edgesAmount];
             var weight = new double[edgesAmount];
 
-            var graph = new Graph((int)verticesAmount, (int)edgesAmount, radiuses, weight, columnIndex, rowIndex);
+            int[] xadjency;
+            int[] adjency;
+            double[] aweight;
+
+            CrsToGraph(out xadjency, out adjency, out aweight);
+
+            Reduction(labels, localLabels, xadjency, adjency, aweight, columnIndex, rowIndex, weight);
+
+            edgesAmount = rowIndex[verticesAmount];
+            columnIndex = SubArray(columnIndex, 0, edgesAmount);
+            weight = SubArray(weight, 0, edgesAmount);
+
+            var graph = new Graph(verticesAmount, edgesAmount, radiuses, weight, columnIndex, rowIndex);
 
             return graph;
         }
 
-        public void Algorithm()
+        private static T[] SubArray<T>(T[] data, int index, int length)
         {
-            //исходная матрица
-            int[] rows = new int[10] { 0, 1, 2, 3, 4, 5, 6, 7, 8, 9 };
-            int count = rows.Length;
-            //int[] cols = new int[11] { 1, 7, 3, 7, 3, 4, 5, 4, 6, 6, 6 };
-            int[] cols = new int[15] { 1, 3, 4, 2, 5, 7, 6, 9, 6, 7, 8, 9, 8, 8, 9 };
-            //int[] indexrows = new int[7] { 0, 2, 4, 7, 9, 10, 11 };
-            int[] indexrows = new int[10] { 0, 3, 6, 8, 10, 12, 12, 13, 15, 16 };
-            //новая матрица
-            int[] metka = new int[10] { 0, 0, 1, 1, 2, 2, 3, 3, 4, 4 };
-            int h;
-            int maxValue = metka.Max();
-            List<List<int>> newVertex = new List<List<int>>();
-            for (int i = 0; i < maxValue + 1; i++)
-            {
-                newVertex.Add(new List<int>());
-            }
-            for (int i = 0; i < metka.Length; i++)
-            {
-                newVertex[metka[i]].Add(i);
-            }
-            List<int> NewIndexCols = new List<int>();// массив столбцов
-            List<int> NewNeightVertex = new List<int>(); //список соседних вершин новогой графа
-            List<int> newRowIndex = new List<int>();
-            newRowIndex.Add(0);
-            List<int> allvertex = new List<int>();
-            List<int>[] NeightVertexs = new List<int>[count];//соседние вершины для каждой вершины
-            int count2 = 0;
-            for (int i = 0; i < NeightVertexs.Length; i++)
-            {
-                NeightVertexs[i] = new List<int>();
-            }
+            var result = new T[length];
+            Array.Copy(data, index, result, 0, length);
+            return result;
+        }
 
-            for (int i = 0; i < NeightVertexs.Length; i++)
+        private static void Reduction(int[] labels, int[] localLabels, int[] xadjency, int[] adjency, double[] aweight, int[] columnIndex,
+            int[] rowIndex, double[] weight)
+        {
+            var lastI = 0;
+            var mask = new int[localLabels.Length];
+            foreach (var vertex in localLabels)
             {
-                int k = indexrows[i];
-                if (indexrows[i + 1] == indexrows[indexrows.Length - 1])
+                var local = vertex;
+                var amount = labels.Where(l => l == local).Count();
+                var vertices = new int[amount];
+                var index = 0;
+                for (var i = 0; i < labels.Length; i++)
                 {
-                    break;
-                }
-
-                for (int ind = indexrows[i]; ind < indexrows[i + 1]; ind++)
-                {
-                    if (ind == indexrows[i + 1])
-                    { break; }
-                    int vertex = cols[ind];
-                    NeightVertexs[i].Add(vertex);
-                    NeightVertexs[vertex].Add(i);
-                }
-            }
-
-            foreach (List<int> NewV in newVertex) //для каждой метки            
-            {
-
-                for (int i = 0; i < NewV.Count; i++)
-                {
-                    foreach (int vertex in NewV)
+                    if (labels[i] == vertex)
                     {
-                        foreach (int k in NeightVertexs[vertex])
+                        vertices[index++] = i;
+                    }
+                }
+
+                foreach (var i in vertices)
+                {
+                    for (var pos = xadjency[i]; pos < xadjency[i + 1]; pos++)
+                    {
+                        var second = adjency[pos];
+                        var secondLabel = labels[second];
+                        if (secondLabel > vertex)
                         {
-                            if (NewNeightVertex.Count == 0)
-                            { NewNeightVertex.Add(k); }
-                            else
+                            if (mask[secondLabel] == 0)
                             {
-                                for (int j = 0; j < NewNeightVertex.Count; j++)
-                                {
-
-                                    if (k != NewNeightVertex[j] && j == NewNeightVertex.Count - 1)
-                                    { NewNeightVertex.Add(k); break; }
-                                    if (k == NewNeightVertex[j])
-                                    { break; }
-
-                                }
+                                mask[secondLabel] = 1;
+                                weight[lastI] = aweight[secondLabel];
+                                columnIndex[lastI++] = secondLabel;
                             }
-
                         }
-
                     }
-                    foreach (int vertex in NewV)
+                }
+
+                rowIndex[vertex + 1] = lastI;
+                Array.Sort(columnIndex, rowIndex[vertex], lastI - rowIndex[vertex]);
+                Array.Clear(mask, 0, localLabels.Length);
+            }
+        }
+
+        protected virtual void CrsToGraph(out int[] xadjency, out int[] adjency, out double[] aweight)
+        {
+            var n = VerticesAmount;
+            var nz = EdgesAmount * 2;
+
+            xadjency = new int[n + 1];
+            adjency = new int[nz];
+            aweight = new double[nz];
+
+            for (int i = 0; i < nz; i++)
+            {
+                adjency[i] = -1;
+            }
+
+            var lastI = 0;
+            for (int i = 0; i < n; i++)
+            {
+                for (int j = 0; j <= i - 1; j++)
+                {
+                    var second = -1;
+                    for (int k = RowIndex[j]; k < RowIndex[j + 1]; k++)
                     {
-                        NewNeightVertex.Remove(vertex);
+                        if (ColumnIndex[k] != i)
+                            continue;
+                        second = j;
                     }
-                    NewNeightVertex.Sort();
-
-                    //for (int k = 0; k < NewNeightVertex.Count; k++)
-                    //{
-                    //    int w = -1;
-                    //    for (int j = 1; j < NewNeightVertex.Count; j++)
-                    //    {
-                    //        if (NewNeightVertex[j - 1] == NewNeightVertex[j])
-                    //        { w = j; break; }
-                    //    }
-                    //    if (w == -1)
-                    //        break;                        
-                    //    NewNeightVertex.Remove(NewNeightVertex[w]);
-                    //}
-
-                }
-                foreach (int row in NewNeightVertex)
-                {
-                    int newrow = metka[row];
-                    allvertex.Add(newrow);
-                }
-                NewNeightVertex.Clear();
-                allvertex.Sort();
-                for (int j = 0; j < allvertex.Count; j++)
-                {
-                    int w = -1;
-                    for (int i = 1; i < allvertex.Count; i++)
+                    if (second != -1)
                     {
-                        if (allvertex[i - 1] == allvertex[i])
-                        { w = i; break; }
+                        aweight[lastI] = Weight[j];
+                        adjency[lastI++] = second;
                     }
-                    if (w == -1)
-                        break;
-                    allvertex.Remove(allvertex[w]);
                 }
 
-                foreach (int al in allvertex)
+                for (int j = RowIndex[i]; j < RowIndex[i + 1]; j++)
                 {
-                    if (al > newVertex.IndexOf(NewV))
-                    { NewIndexCols.Add(al); }
+                    aweight[lastI] = Weight[j];
+                    adjency[lastI++] = ColumnIndex[j];
                 }
-                if (count2 == NewIndexCols.Count)
-                { newRowIndex.Add(count2 + 1); break; }
-                int count4 = NewIndexCols.Count - count2;
-                count2 = NewIndexCols.Count;
-                allvertex.Clear();
-                int count3 = newRowIndex[newRowIndex.Count - 1];
-                newRowIndex.Add(count4 + count3);
 
+                xadjency[i + 1] = lastI;
+            }
+        }
+
+        protected virtual void ComputeRadiuses(int[] labels, double[] radiuses, int verticesAmount)
+        {
+            for (var i = 0; i < VerticesAmount; i++)
+            {
+                var current = labels[i];
+                radiuses[current] += Radius[i] * Radius[i];
+            }
+
+            for (var i = 0; i < verticesAmount; i++)
+            {
+                radiuses[i] = Math.Sqrt(radiuses[i]);
             }
         }
     }

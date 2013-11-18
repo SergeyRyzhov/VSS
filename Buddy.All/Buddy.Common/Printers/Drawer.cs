@@ -2,9 +2,9 @@
 using System.Drawing;
 using Buddy.Common.Structures;
 
-namespace Buddy.Console
+namespace Buddy.Common.Printers
 {
-    internal class Drawer
+    public class Drawer
     {
         public static void DrawGraph(Size size, IGraph graph, IList<Coordinate> coords, string fileName, bool fill)
         {
