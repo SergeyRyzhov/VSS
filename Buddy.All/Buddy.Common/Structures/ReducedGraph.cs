@@ -159,13 +159,13 @@ namespace Buddy.Common.Structures
             for (var i = 0; i < VerticesAmount; i++)
             {
                 var current = labels[i];
-                radiuses[current] += Radius[i] * Radius[i];
+                radiuses[current] += Radius[i];// * Radius[i];
             }
 
-            for (var i = 0; i < verticesAmount; i++)
-            {
-                radiuses[i] = Math.Sqrt(radiuses[i]);
-            }
+            //for (var i = 0; i < verticesAmount; i++)
+            //{
+            //    radiuses[i] = Math.Sqrt(radiuses[i]);
+            //}
         }
     }
 }

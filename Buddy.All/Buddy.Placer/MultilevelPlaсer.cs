@@ -59,11 +59,11 @@ namespace Buddy.Placer
             m_localPlacer.PlaceGraph(rgraph.VerticesAmount, rgraph.Radius, rgraph.ColumnIndex, rgraph.RowIndex,
                 rgraph.Weight, width, height, localInitialX, localInitialY, out localResultX, out localResultY);
 
-            Drawer.DrawGraph(new Size(640, 480), rgraph,
-                localResultX.Select((t, i) => new Coordinate(t, localResultY[i])).ToList(), string.Format("step{0}.bmp",nodes), false);
+            Drawer.DrawGraph(new Size((int)width, (int)height), rgraph,
+                localResultX.Select((t, i) => new Coordinate(t, localResultY[i])).ToList(), string.Format("multulevel_down_{0}.bmp",nodes), false);
 
 
-            if (rgraph.VerticesAmount > 5)
+            if (rgraph.VerticesAmount > 50)
             {
                 var res = PlaceGraph(rgraph, localResultX.Select((x, i) => new Coordinate(x, localResultY[i])).ToList(),
                     new Size((int) width, (int) height));
@@ -75,11 +75,32 @@ namespace Buddy.Placer
 
             resultX = new double[nodes];
             resultY = new double[nodes];
+            var rnd = new Random();
             for (int i = 0; i < nodes; i++)
             {
-                resultX[i] = localResultX[labels[i]];
-                resultY[i] = localResultY[labels[i]];
+                resultX[i] = localResultX[labels[i]] + rnd.Next((int) (2 * graph.Radius[i])) - graph.Radius[i];
+
+                resultY[i] = localResultY[labels[i]] + rnd.Next((int)(2 * graph.Radius[i])) - graph.Radius[i];
             }
+
+            if (false)
+            {
+                var xx = new double[nodes];
+                var yy = new double[nodes];
+
+                m_localPlacer.PlaceGraph(graph.VerticesAmount, graph.Radius, graph.ColumnIndex, graph.RowIndex,
+                    graph.Weight, width, height, resultX.ToArray(), resultY.ToArray(), out xx, out yy);
+
+
+                Drawer.DrawGraph(new Size((int) width, (int) height), graph,
+                    xx.Select((t, i) => new Coordinate(t, yy[i])).ToList(),
+                    string.Format("multulevel_up_{0}.bmp", nodes), false);
+
+
+                resultX = xx.ToArray();
+                resultY = yy.ToArray();
+            }
+
         }
 
         private static void ComputePositions(int nodes, double[] initialX, double[] initialY, int count, int[] labels,

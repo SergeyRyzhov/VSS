@@ -22,7 +22,7 @@ namespace Buddy.Console
             var parser = new Parser();
             var graph = parser.ParseCrsGraph(filename);
 
-            var size = new Size(640, 480);
+            var size = new Size(1280, 960);
             var coords = new List<Coordinate>();
 
             for (var i = 0; i < graph.VerticesAmount; i++)
@@ -43,7 +43,7 @@ namespace Buddy.Console
             //if (print)
             //    PrintCoordinates(coords);
 
-            Drawer.DrawGraph(size, graph, coords, "zinput.bmp", fill);
+            Drawer.DrawGraph(size, graph, coords, "input.bmp", fill);
             System.Console.WriteLine("Число итераций");
             var s = System.Console.ReadLine();
             s = string.IsNullOrEmpty(s) ? "5" : s;
@@ -65,8 +65,8 @@ namespace Buddy.Console
 
             Statistic.PrintStatistic(graph, result.Select(c => c.X).ToArray(), result.Select(c => c.Y).ToArray());
 
-            Drawer.DrawGraph(size, graph, result, "aoutput.bmp", fill);
-            Process.Start("zinput.bmp");
+            Drawer.DrawGraph(size, graph, result, "output.bmp", fill);
+            Process.Start("0. input.bmp");
         }
     }
 }

@@ -6,6 +6,8 @@ namespace Buddy.Common.Printers
 {
     public class Drawer
     {
+        private static int _number;
+
         public static void DrawGraph(Size size, IGraph graph, IList<Coordinate> coords, string fileName, bool fill)
         {
             var vertexBrush = Brushes.Red;
@@ -44,7 +46,7 @@ namespace Buddy.Common.Printers
                     }
                 }
             }
-            bitmap.Save(fileName);
+            bitmap.Save(string.Format("{0}. {1}",_number++, fileName));
             edgePen.Dispose();
             vertexPen.Dispose();
         }
