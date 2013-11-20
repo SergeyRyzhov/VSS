@@ -1,5 +1,4 @@
-﻿
-namespace Buddy.Common.Structures
+﻿namespace Buddy.Common.Structures
 {
     public class Coordinate
     {
@@ -19,10 +18,11 @@ namespace Buddy.Common.Structures
 
         public double Y { get; set; }
 
-        public float FloatX {
+        public float FloatX
+        {
             get
             {
-                return (float) X;
+                return (float)X;
             }
         }
 
@@ -30,7 +30,7 @@ namespace Buddy.Common.Structures
         {
             get
             {
-                return (float) Y;
+                return (float)Y;
             }
         }
     }

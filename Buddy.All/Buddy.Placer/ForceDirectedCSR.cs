@@ -13,13 +13,8 @@ namespace Buddy.Placer
             
         }
 
-       public override IList<Coordinate> PlaceGraph(ISocialGraph graph, IList<Coordinate> coordinates, Size size)
-        {
-            throw new NotImplementedException();
-        }
 
-     
-        private static double Distance(Coordinate a, Coordinate b)
+       private static double Distance(Coordinate a, Coordinate b)
         {
             return Math.Sqrt(Math.Pow(a.X - b.X, 2) + Math.Pow(a.Y - b.Y, 2));
         }
@@ -160,7 +155,6 @@ namespace Buddy.Placer
                 };
                 coordinates[i] = newCoord;
             }
-
         }
 
 

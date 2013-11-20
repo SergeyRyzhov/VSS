@@ -1,18 +1,16 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Threading;
 
 namespace Buddy.Common.Structures
 {
-    class NeighborTest
+    internal class NeighborTest
     {
         public int N { get; set; }
-        double[,] coord; 
-        double[] Radius; 
-        int[] Indexes;
+
+        private double[,] coord;
+        private double[] Radius;
+        private int[] Indexes;
 
         public NeighborTest(int n = 10000)
         {
@@ -20,7 +18,7 @@ namespace Buddy.Common.Structures
             this.CreateRandomGraph(n);
         }
 
-        void CreateRandomGraph(int n)
+        private void CreateRandomGraph(int n)
         {
             var randx = new Random((int)DateTime.Now.Ticks & 0x0000FFFF);
             Thread.Sleep(10);
@@ -32,14 +30,13 @@ namespace Buddy.Common.Structures
 
             // массив с координатами из x и y
             coord = new double[2, n];
-            Radius = new double [n];
-            Indexes = new int [n];
+            Radius = new double[n];
+            Indexes = new int[n];
 
             for (int i = 0; i < n; i++)
             {
                 Indexes[i] = i;
             }
-
 
             for (int j = 0; j < n; j++)
             {
@@ -60,7 +57,7 @@ namespace Buddy.Common.Structures
 
         public int[] getNeighbors(Coordinate x, int index)
         {
-            List<int> temp = new List<int>((int)N/20);
+            List<int> temp = new List<int>((int)N / 20);
 
             for (int k = 0; k < N; k++)
             {
@@ -73,7 +70,7 @@ namespace Buddy.Common.Structures
             return temp.ToArray();
         }
 
-        public void Print (int [] x)
+        public void Print(int[] x)
         {
             for (int i = 0; i < x.Length; i++)
             {
@@ -82,7 +79,7 @@ namespace Buddy.Common.Structures
         }
 
         // проверяем, равны ли массивы вершин,которые найдены моим методом, и которые есть
-        public bool EqualsOfArrays(int [] es, int [] ex)
+        public bool EqualsOfArrays(int[] es, int[] ex)
         {
             Array.Sort(es);
             Array.Sort(ex);

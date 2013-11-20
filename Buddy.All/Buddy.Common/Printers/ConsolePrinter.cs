@@ -1,5 +1,5 @@
-﻿using System;
-using Buddy.Common.Structures;
+﻿using Buddy.Common.Structures;
+using System;
 
 namespace Buddy.Common.Printers
 {

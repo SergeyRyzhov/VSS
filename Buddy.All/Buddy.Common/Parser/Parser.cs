@@ -1,6 +1,6 @@
-﻿using System;
+﻿using Buddy.Common.Structures;
+using System;
 using System.IO;
-using Buddy.Common.Structures;
 
 namespace Buddy.Common.Parser
 {
@@ -44,9 +44,8 @@ namespace Buddy.Common.Parser
                 graph.Weight[i] = Double.Parse(matrixLine[2]);
                 var col = Int32.Parse(matrixLine[1]) - 1;
                 var row = Int32.Parse(matrixLine[0]) - 1;
-                if (row > col) {var tmp = col;col = row;row = tmp;}
-                
-                
+                if (row > col) { var tmp = col; col = row; row = tmp; }
+
                 graph.ColumnIndex[i] = col;
                 if (currentRow != row)
                 {
@@ -64,8 +63,6 @@ namespace Buddy.Common.Parser
             stream.Close();
             return graph;
         }
-
-        
 
         public ISocialGraph Parse(string filename)
         {
@@ -94,7 +91,6 @@ namespace Buddy.Common.Parser
                         var v = new Vertex { Id = i };
                         graph.Vertices.Add(v);
                     }
-                    
                 }
                 else
                 {

@@ -1,4 +1,4 @@
-﻿ namespace Buddy.Common.Printers
+﻿namespace Buddy.Common.Printers
 {
     public interface IPrinter
     {

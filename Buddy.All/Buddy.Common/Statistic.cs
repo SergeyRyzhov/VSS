@@ -60,7 +60,7 @@ namespace Buddy.Common
         private static double Collision(double x1, double y1, double r1, double x2, double y2, double r2)
         {
             //TODO реализовать расчёт площади пересечения кругов
-            double R,r,d, d1, d2,A1,A2, s = 0;
+            double R, r, d, d1, d2, A1, A2, s = 0;
             d = Math.Sqrt(Math.Pow(x2 - x1, 2) + Math.Pow(y2 - y1, 2));
             if (d == 0)//центры совпадают
             {
@@ -81,16 +81,16 @@ namespace Buddy.Common
             {
                 s = 0;
             }
-            if (d< r1+r2)//вершины пересекаются
+            if (d < r1 + r2)//вершины пересекаются
             {
                 if (r1 == r2)
                 {
-                    double cos = Math.Cos(d /( 2 * r1));
+                    double cos = Math.Cos(d / (2 * r1));
                     if (cos < 0)
                     {
-                        cos = -1*cos;
+                        cos = -1 * cos;
                     }
-                    s = 2 * r1 * r1 * Math.Pow(cos, -1) -  d * Math.Sqrt(4 * r1 * r1 - d * d)/2;
+                    s = 2 * r1 * r1 * Math.Pow(cos, -1) - d * Math.Sqrt(4 * r1 * r1 - d * d) / 2;
                 }
                 if (r1 > r2)
                 {
@@ -101,12 +101,12 @@ namespace Buddy.Common
                     double cos1 = Math.Cos(d2 / r);
                     double cos2 = Math.Cos(d1 / R);
                     if (cos1 < 0)
-                    { cos1 =-1*cos1;}
+                    { cos1 = -1 * cos1; }
                     if (cos2 < 0)
                     { cos2 = -1 * cos2; }
                     A1 = Math.Pow(r, 2) * Math.Pow(cos1, -1);
                     A2 = Math.Pow(R, 2) * Math.Pow(cos2, -1);
-                    s = A1 + A2 - (Math.Sqrt((-d + r - R) * (-d - r + R) * (-d + r + R) * (d + r + R)))/2;
+                    s = A1 + A2 - (Math.Sqrt((-d + r - R) * (-d - r + R) * (-d + r + R) * (d + r + R))) / 2;
                 }
                 if (r2 > r1)
                 {
@@ -122,15 +122,14 @@ namespace Buddy.Common
                     { cos2 = -1 * cos2; }
                     A1 = Math.Pow(r, 2) * Math.Pow(cos1, -1);
                     A2 = Math.Pow(R, 2) * Math.Pow(cos2, -1);
-                    s = A1 + A2 - (Math.Sqrt((-d + r - R) * (-d - r + R) * (-d + r + R) * (d + r + R)))/2;
+                    s = A1 + A2 - (Math.Sqrt((-d + r - R) * (-d - r + R) * (-d + r + R) * (d + r + R))) / 2;
                 }
                 if (d == r1 + r2)
                 {
                     s = 0;
                 }
-               
             }
-          
+
             return s;
         }
 

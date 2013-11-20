@@ -1,6 +1,6 @@
-﻿using System.Collections.Generic;
+﻿using Buddy.Common.Structures;
+using System.Collections.Generic;
 using System.Drawing;
-using Buddy.Common.Structures;
 
 namespace Buddy.Placer
 {
@@ -10,8 +10,6 @@ namespace Buddy.Placer
         {
             Settings = settings;
         }
-
-        public abstract IList<Coordinate> PlaceGraph(ISocialGraph graph, IList<Coordinate> coordinates, Size size);
 
         public virtual void PlaceGraph(int nodes, double[] radiuses, int[] columnIndexes, int[] rowIndexes, double[] weights, double width,
             double height, double[] initialX, double[] initialY, out double[] resultX, out double[] resultY)
@@ -33,9 +31,8 @@ namespace Buddy.Placer
             }
         }
 
-       
         public abstract IList<Coordinate> PlaceGraph(IGraph graph, IList<Coordinate> coordinate, Size size);
-        
+
         public ISettings Settings { get; private set; }
     }
 }

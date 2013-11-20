@@ -3,9 +3,11 @@
     public interface IGraph
     {
         double[] Radius { get; }
+
         double[] Weight { get; }
 
         int[] ColumnIndex { get; }
+
         int[] RowIndex { get; }
 
         int EdgesAmount { get; }

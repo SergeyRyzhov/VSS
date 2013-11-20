@@ -1,6 +1,6 @@
-﻿using System.Collections.Generic;
+﻿using Buddy.Common.Structures;
+using System.Collections.Generic;
 using System.Drawing;
-using Buddy.Common.Structures;
 
 namespace Buddy.Common.Printers
 {
@@ -29,7 +29,7 @@ namespace Buddy.Common.Printers
                 }
 
                 const int scale = 1;
-                for(var i=0;i<graph.VerticesAmount;i++)
+                for (var i = 0; i < graph.VerticesAmount; i++)
                 {
                     var x = new Coordinate(coords[i].X, coords[i].Y);
                     var radius = graph.Radius[i] * scale;
@@ -46,7 +46,7 @@ namespace Buddy.Common.Printers
                     }
                 }
             }
-            bitmap.Save(string.Format("{0}. {1}",_number++, fileName));
+            bitmap.Save(string.Format("{0}. {1}", _number++, fileName));
             edgePen.Dispose();
             vertexPen.Dispose();
         }

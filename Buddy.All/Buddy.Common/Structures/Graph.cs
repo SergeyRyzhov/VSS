@@ -3,9 +3,11 @@
     public class Graph : IGraph
     {
         public double[] Radius { get; private set; }
+
         public double[] Weight { get; private set; }
 
         public int[] ColumnIndex { get; private set; }
+
         public int[] RowIndex { get; private set; }
 
         public int EdgesAmount { get; private set; }
@@ -16,7 +18,6 @@
         {
             VerticesAmount = verticesAmount;
             EdgesAmount = edgesAmount;
-
 
             Radius = new double[verticesAmount];
             Weight = new double[edgesAmount];

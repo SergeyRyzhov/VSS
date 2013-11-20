@@ -2,11 +2,9 @@
 {
     public class Settings : DefaultSettings
     {
-        public Settings() : base()
+        public Settings()
+            : base()
         {
-
         }
-
-
     }
 }

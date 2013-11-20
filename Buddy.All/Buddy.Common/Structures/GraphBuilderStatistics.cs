@@ -1,19 +1,13 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Threading;
 
 namespace Buddy.Common.Structures
 {
-    class GraphBuilderStatistics
+    internal class GraphBuilderStatistics
     {
         public Graph graph;
 
-
         // создаем граф
-        void CreateTestCraph(int verticesamount, short powermin, short powermax) // powermax - powermin - вилка инцидентности
+        private void CreateTestCraph(int verticesamount, short powermin, short powermax) // powermax - powermin - вилка инцидентности
         {
             var rand = new Random((int)DateTime.Now.Ticks & 0x0000FFFF);
             //Thread.Sleep(10);
@@ -29,7 +23,6 @@ namespace Buddy.Common.Structures
                 cntInRows[x] = (int)rand.Next(powermin, powermax);
             }
 
-
             // создаем экземпляр графа
             int edgesAmount = 0;
 
@@ -39,7 +32,6 @@ namespace Buddy.Common.Structures
             }
 
             graph = new Graph(verticesamount, edgesAmount);
-
 
             // create nodes
             for (int i = 0; i < verticesamount; i++)
@@ -51,7 +43,7 @@ namespace Buddy.Common.Structures
                     {
                         graph.ColumnIndex[i * cntInRows[i] + j] = (int)rand.Next((int)verticesamount);
                         f = false;
-                        
+
                         // заполняем разными числами, поэтому проверка на равенство
                         for (int k = 0; k < j; k++)
                         {
@@ -73,21 +65,20 @@ namespace Buddy.Common.Structures
                             graph.ColumnIndex[i * cntInRows[i] + k] = graph.ColumnIndex[i * cntInRows[i] + k + 1];
                             graph.ColumnIndex[i * cntInRows[i] + k + 1] = tmp;
                         }
-
                     }
-                }   
+                }
             }
 
-            // Заполняем массив значений 
-            for (int i = 0; i < edgesAmount; i++) 
-                graph.Weight[i] =  Convert.ToDouble(rand.Next(10000) / 100); 
-            
-            // Заполняем массив индексов строк 
-            int c = 0; 
+            // Заполняем массив значений
+            for (int i = 0; i < edgesAmount; i++)
+                graph.Weight[i] = Convert.ToDouble(rand.Next(10000) / 100);
+
+            // Заполняем массив индексов строк
+            int c = 0;
             for (int i = 0; i <= verticesamount; i++)
             {
-                graph.RowIndex[i] = c; 
-                c += cntInRows[i]; 
+                graph.RowIndex[i] = c;
+                c += cntInRows[i];
             }
         }
     }

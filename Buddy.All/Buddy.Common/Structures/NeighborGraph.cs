@@ -1,9 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Drawing;
 
 namespace Buddy.Common.Structures
 {
@@ -15,11 +12,11 @@ namespace Buddy.Common.Structures
         private readonly IGraph m_graph;
         private IGraph graph;
 
-        Node[] ndmass;                             // массив оберток для вершин, где держим все вершины
-        Coordinate[,] blockscoordinate;            // массив для хранения координат блоков
-        int m;
-        double height;
-        double width;
+        private Node[] ndmass;                             // массив оберток для вершин, где держим все вершины
+        private Coordinate[,] blockscoordinate;            // массив для хранения координат блоков
+        private int m;
+        private double height;
+        private double width;
 
         public NeighborGraph(IGraph graph, int m)
         {
@@ -28,28 +25,34 @@ namespace Buddy.Common.Structures
         }
 
         /// <summary>
-        /// Заполнить обращения к внутреннему графу 
+        /// Заполнить обращения к внутреннему графу
         /// </summary>
         public int[] Indexes { get; private set; }
+
         public double[] Radius { get; private set; }
+
         public double[] Weight { get; private set; }
+
         public int[] ColumnIndex { get; private set; }
+
         public int[] RowIndex { get; private set; }
+
         public int EdgesAmount { get; private set; }
+
         public int VerticesAmount { get; private set; }
 
         public void Update()
         {
             m_graph.Update();
-           // CreateBlocks();
+            // CreateBlocks();
         }
 
         public int[] Neighborhood(Coordinate x, int vertex)
         {
             int tmp = 0;
             double radius = Indexes[vertex];
-           
-            // ищем номер вершины, т.е. номер блока, куда попадает вершина 
+
+            // ищем номер вершины, т.е. номер блока, куда попадает вершина
             for (int i = 0; i < m; i++)
             {
                 for (int j = 0; j < m; j++)
@@ -95,7 +98,6 @@ namespace Buddy.Common.Structures
                 {
                     nodelist.Add(nd);
                 }
-
             }
 
             // массив, который будет хранить номера возвращаемых вершин, т.е вершин, которые входят в окружность данной вершины.
@@ -114,10 +116,10 @@ namespace Buddy.Common.Structures
             height = size.Height / m;
             width = size.Width / m;
 
-            ndmass = new Node [coordinate.Count];
+            ndmass = new Node[coordinate.Count];
             blockscoordinate = new Coordinate[coordinate.Count, coordinate.Count];
 
-            // проходим по числу блоков, чтобы для каждого блока на лету 
+            // проходим по числу блоков, чтобы для каждого блока на лету
             // узнать, какие именно вершины попадают в каждый конкретный блок
             int indexOfMassive = 0;
 
@@ -143,7 +145,6 @@ namespace Buddy.Common.Structures
                             }
                         }
                     }
-
                 }
             }
 
@@ -178,6 +179,3 @@ namespace Buddy.Common.Structures
         }
     }
 }
-
-
-    

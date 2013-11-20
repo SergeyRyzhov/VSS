@@ -55,7 +55,7 @@ namespace Buddy.Console
                 Iterations = 1,
             };
 
-            var localPlacer = new ForceDirectedCSR(new Settings {Iterations = a});
+            var localPlacer = new ForceDirectedCSR(new Settings { Iterations = a });
 
             var placer = new MultilevelPlaсer(settings, localPlacer);
 
