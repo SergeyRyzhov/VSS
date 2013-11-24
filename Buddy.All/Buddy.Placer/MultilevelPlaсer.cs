@@ -9,7 +9,7 @@ namespace Buddy.Placer
 {
     public class MultilevelPlaсer : BasePlacer
     {
-        private IPlacer m_localPlacer;
+        private readonly IPlacer m_localPlacer;
 
         public MultilevelPlaсer(ISettings settings, IPlacer localPlacer)
             : base(settings)
@@ -90,18 +90,18 @@ namespace Buddy.Placer
                 var xx = resultX.ToArray();
                 var yy = resultY.ToArray();
 
-                //m_localPlacer.PlaceGraph(graph.VerticesAmount, graph.Radius, graph.ColumnIndex, graph.RowIndex,
-                //    graph.Weight, width, height, xx, yy, out xx, out yy);
-                //
-                //if (yy.Any(double.IsNaN))
-                //{
-                //    throw new Exception();
-                //}
-                //
-                //if (xx.Any(double.IsNaN))
-                //{
-                //    throw new Exception();
-                //}
+                m_localPlacer.PlaceGraph(graph.VerticesAmount, graph.Radius, graph.ColumnIndex, graph.RowIndex,
+                    graph.Weight, width, height, xx, yy, out xx, out yy);
+                
+                if (yy.Any(double.IsNaN))
+                {
+                    throw new Exception();
+                }
+                
+                if (xx.Any(double.IsNaN))
+                {
+                    throw new Exception();
+                }
 
                 Drawer.DrawGraph(new Size((int)width, (int)height), graph,
                     xx.Select((t, i) => new Coordinate(t, yy[i])).ToList(),

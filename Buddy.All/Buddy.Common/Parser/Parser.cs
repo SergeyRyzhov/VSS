@@ -53,8 +53,8 @@ namespace Buddy.Common.Parser
                     currentRow = row;
                 }
 
-                graph.Radius[row]++;
-                graph.Radius[col]++;
+                graph.Radius[row]+= 4;
+                graph.Radius[col]+= 4;
             }
 
             graph.RowIndex[rowPosition++] = nonzeros;
@@ -107,8 +107,8 @@ namespace Buddy.Common.Parser
                         Weight = weight
                     };
 
-                    graph.Vertices[uId].Radius++;
-                    graph.Vertices[vId].Radius++;
+                    graph.Vertices[uId].Radius+=4;
+                    graph.Vertices[vId].Radius+=4;
 
                     graph.Edges.Add(e);
                 }

@@ -173,8 +173,8 @@ namespace Buddy.Placer
                     newCoord[i].Y += gradient[i].Y;
                 }
                 iterations--;
+                Scale(size, newCoord,graph);
             } while (iterations > 0);
-            Scale(size, newCoord,graph);
             return newCoord;
         }
     }
