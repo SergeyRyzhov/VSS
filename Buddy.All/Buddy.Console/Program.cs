@@ -15,8 +15,10 @@ namespace Buddy.Console
     {
         private static void Main()
         {
+            Drawer.Skip = true;
+            
             //TODO: пока так, потом через аргументы командной строки
-            const string filename = "../../../../Matrix/Grids/400.mtx";
+            const string filename = "../../../../Matrix/grids/400.mtx";
 
             var rnd = new Random();
             var parser = new Parser();
@@ -60,8 +62,10 @@ namespace Buddy.Console
             var placer = new MultilevelPlaсer(settings, localPlacer);
 
             IList<Coordinate> result = coords.ToList();
-
+            var start = DateTime.Now;
             result = placer.PlaceGraph(graph, result, size);
+            var workTime = DateTime.Now - start;
+            System.Console.WriteLine("Time: {0}", workTime);
 
             Statistic.PrintStatistic(graph, result.Select(c => c.X).ToArray(), result.Select(c => c.Y).ToArray());
 

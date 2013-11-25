@@ -2,12 +2,19 @@
 
 namespace Buddy.Common.Structures
 {
-    internal class GraphBuilderStatistics
+    public class GraphGraphBuilderStatistics : IGraphBuilder
     {
-        public Graph graph;
+        public void GenerateGraph(int verticesAmount, int minDegree, int maxDegree, int width, int height,
+            out IGraph graph, out double[] x, out double[] y)
+        {
+            graph = new Graph(verticesAmount, 1);
+            x = new double[1];
+            y = new double[1];
+        }
+
 
         // создаем граф
-        private void CreateTestCraph(int verticesamount, short powermin, short powermax) // powermax - powermin - вилка инцидентности
+        public IGraph CreateTestCraph(int verticesamount, short powermin, short powermax) // powermax - powermin - вилка инцидентности
         {
             var rand = new Random((int)DateTime.Now.Ticks & 0x0000FFFF);
             //Thread.Sleep(10);
@@ -31,7 +38,7 @@ namespace Buddy.Common.Structures
                 edgesAmount += cntInRows[y];
             }
 
-            graph = new Graph(verticesamount, edgesAmount);
+            var graph = new Graph(verticesamount, edgesAmount);
 
             // create nodes
             for (int i = 0; i < verticesamount; i++)
@@ -80,6 +87,25 @@ namespace Buddy.Common.Structures
                 graph.RowIndex[i] = c;
                 c += cntInRows[i];
             }
+
+            return graph;
         }
+    }
+
+    public interface IGraphBuilder
+    {
+        /// <summary>
+        /// Генерация графа. Веса и радиусы варшин должны быть сконфигурены.
+        /// </summary>
+        /// <param name="verticesAmount">Количество вершин</param>
+        /// <param name="minDegree">Минимальная степень</param>
+        /// <param name="maxDegree">Максимальная степень</param>
+        /// <param name="width">Ширина области</param>
+        /// <param name="height">Высота области</param>
+        /// <param name="graph">Полученный граф</param>
+        /// <param name="x">Координаты X начального размещения</param>
+        /// <param name="y">Координаты Y начального размещения</param>
+        void GenerateGraph(int verticesAmount, int minDegree, int maxDegree, int width, int height,
+            out IGraph graph, out double[] x, out double[] y);
     }
 }

@@ -6,10 +6,20 @@ namespace Buddy.Common.Printers
 {
     public class Drawer
     {
-        private static int _number;
+        private static int m_number;
+
+        public static bool Skip { get; set; }
+
+        static Drawer()
+        {
+            Skip = false;
+        }
 
         public static void DrawGraph(Size size, IGraph graph, IList<Coordinate> coords, string fileName, bool fill)
         {
+            if (Skip)
+                return;
+
             var vertexBrush = Brushes.Red;
             var vertexPen = new Pen(Color.Red, 1);
             var edgePen = new Pen(Color.Blue, 1);
@@ -46,7 +56,7 @@ namespace Buddy.Common.Printers
                     }
                 }
             }
-            bitmap.Save(string.Format("{0}. {1}", _number++, fileName));
+            bitmap.Save(string.Format("{0}. {1}", m_number++, fileName));
             edgePen.Dispose();
             vertexPen.Dispose();
         }
