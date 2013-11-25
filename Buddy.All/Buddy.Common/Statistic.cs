@@ -5,8 +5,8 @@ namespace Buddy.Common
 {
     public class Statistic
     {
-        private static double _lastDistance;
-        private static double _lastCollision;
+        private static double m_lastDistance;
+        private static double m_lastCollision;
 
         public static void PrintStatistic(IGraph graph, double[] x, double[] y)
         {
@@ -15,12 +15,12 @@ namespace Buddy.Common
 
             Console.WriteLine("Statistic:");
             Console.WriteLine("Distance = {0:f} {1}", distance,
-                _lastDistance < distance ? '+' : Math.Abs(_lastDistance - distance) < double.Epsilon ? ' ' : '-');
+                m_lastDistance < distance ? '+' : Math.Abs(m_lastDistance - distance) < double.Epsilon ? ' ' : '-');
             Console.WriteLine("Collision = {0:f} {1}", collision,
-                _lastCollision < collision ? '+' : Math.Abs(_lastCollision - collision) < double.Epsilon ? ' ' : '-');
+                m_lastCollision < collision ? '+' : Math.Abs(m_lastCollision - collision) < double.Epsilon ? ' ' : '-');
 
-            _lastDistance = distance;
-            _lastCollision = collision;
+            m_lastDistance = distance;
+            m_lastCollision = collision;
         }
 
         public static double SumDistances(IGraph graph, double[] x, double[] y)
@@ -59,12 +59,11 @@ namespace Buddy.Common
 
         private static double Collision(double x1, double y1, double r1, double x2, double y2, double r2)
         {
-            //TODO реализовать расчёт площади пересечения кругов
             double R, r, d, d1, d2, A1, A2, s = 0;
             d = Math.Sqrt(Math.Pow(x2 - x1, 2) + Math.Pow(y2 - y1, 2));
-            if (d == 0)//центры совпадают
+            if (d <= Double.Epsilon)//центры совпадают
             {
-                if (Math.Abs( r1- r2) < Double.Epsilon)
+                if (Math.Abs( r1- r2) <= Double.Epsilon)
                 {
                     s = Math.PI * r1 * r1;
                 }
