@@ -64,7 +64,7 @@ namespace Buddy.Common
             d = Math.Sqrt(Math.Pow(x2 - x1, 2) + Math.Pow(y2 - y1, 2));
             if (d == 0)//центры совпадают
             {
-                if (r1 == r2)
+                if (Math.Abs( r1- r2) < Double.Epsilon)
                 {
                     s = Math.PI * r1 * r1;
                 }
@@ -83,7 +83,7 @@ namespace Buddy.Common
             }
             if (d < r1 + r2)//вершины пересекаются
             {
-                if (r1 == r2)
+                if (Math.Abs(r1 - r2) < Double.Epsilon)
                 {
                     double cos = Math.Cos(d / (2 * r1));
                     if (cos < 0)
@@ -124,7 +124,7 @@ namespace Buddy.Common
                     A2 = Math.Pow(R, 2) * Math.Pow(cos2, -1);
                     s = A1 + A2 - (Math.Sqrt((-d + r - R) * (-d - r + R) * (-d + r + R) * (d + r + R))) / 2;
                 }
-                if (d == r1 + r2)
+                if (Math.Abs(d-r1 - r2) < Double.Epsilon)
                 {
                     s = 0;
                 }
