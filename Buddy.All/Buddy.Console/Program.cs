@@ -20,7 +20,6 @@ namespace Buddy.Console
             //TODO: пока так, потом через аргументы командной строки
             const string filename = "../../../../Matrix/grids/400.mtx";
 
-            var rnd = new Random();
             var parser = new Parser();
             var graph = parser.ParseCrsGraph(filename);
 

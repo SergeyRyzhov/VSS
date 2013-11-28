@@ -71,9 +71,10 @@ namespace Buddy.Placer
             var rnd = new Random();
             for (int i = 0; i < nodes; i++)
             {
-                resultX[i] = localResultX[labels[i]] + rnd.Next((int)(2 * graph.Radius[i])) - graph.Radius[i];
+                var j = labels[i];
+                resultX[i] = localResultX[j] + rnd.Next((int)(2 * rgraph.Radius[j])) - rgraph.Radius[j];
 
-                resultY[i] = localResultY[labels[i]] + rnd.Next((int)(2 * graph.Radius[i])) - graph.Radius[i];
+                resultY[i] = localResultY[j] + rnd.Next((int)(2 * rgraph.Radius[j])) - rgraph.Radius[j];
 
                 if (resultX[i] < 0)
                     resultX[i] = -resultX[i];
