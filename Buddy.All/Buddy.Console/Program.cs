@@ -15,7 +15,7 @@ namespace Buddy.Console
     {
         private static void Main()
         {
-            Drawer.Skip = true;
+            Drawer.Skip = false;
             
             //TODO: пока так, потом через аргументы командной строки
             const string filename = "../../../../Matrix/grids/400.mtx";
@@ -25,13 +25,30 @@ namespace Buddy.Console
             var graph = parser.ParseCrsGraph(filename);
 
             var size = new Size(1280, 960);
+
+            var randPlacer = new RandomPlacer();
+            double[] x;
+            double[] y;
+
+            var saver = (randPlacer as IPersistable);
+
+            const bool load = true;
+
+            if (load)
+            {
+                saver.Load("400.pos", out x, out y);
+            }
+            else
+            {
+                randPlacer.PlaceGraph(graph.VerticesAmount,null,null,null,null,size.Width, size.Height,null,null, out x, out y);
+                saver.Persist("400.pos",x,y);
+            }
+
             var coords = new List<Coordinate>();
 
             for (var i = 0; i < graph.VerticesAmount; i++)
             {
-                var x = (float)rnd.NextDouble() * size.Width;
-                var y = (float)rnd.NextDouble() * size.Height;
-                coords.Add(new Coordinate(x, y));
+                coords.Add(new Coordinate(x[i], y[i]));
             }
 
             Statistic.PrintStatistic(graph, coords.Select(c => c.X).ToArray(), coords.Select(c => c.Y).ToArray());

@@ -45,10 +45,12 @@
     <Compile Include="DefaultSettings.cs" />
     <Compile Include="FirstPlacer.cs" />
     <Compile Include="ForceDirectedCSR.cs" />
+    <Compile Include="IPersistable.cs" />
     <Compile Include="IPlacer.cs" />
     <Compile Include="ISettings.cs" />
     <Compile Include="MultilevelPlaсer.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="RandomPlacer.cs" />
     <Compile Include="Settings.cs" />
   </ItemGroup>
   <ItemGroup>

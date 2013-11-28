@@ -1,4 +1,6 @@
-﻿namespace Buddy.Placer
+﻿using Buddy.Common.Structures;
+
+namespace Buddy.Placer
 {
     public interface IPlacer
     {
