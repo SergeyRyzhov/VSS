@@ -1,4 +1,5 @@
-﻿using Buddy.Common.Structures;
+﻿using System.Linq;
+using Buddy.Common.Structures;
 using System;
 
 namespace Buddy.Common
@@ -8,10 +9,10 @@ namespace Buddy.Common
         private static double m_lastDistance;
         private static double m_lastCollision;
 
-        public static void PrintStatistic(ISymmetricGraph symmetricGraph, double[] x, double[] y)
+        public static void PrintStatistic(IGraph graph, double[] x, double[] y)
         {
-            var distance = SumDistances(symmetricGraph, x, y);
-            var collision = CollisionArea(symmetricGraph, x, y);
+            var distance = SumDistances(graph, x, y);
+            var collision = CollisionArea(graph, x, y);
 
             Console.WriteLine("Statistic:");
             Console.WriteLine("Distance = {0:f} {1}", distance,
@@ -23,38 +24,23 @@ namespace Buddy.Common
             m_lastCollision = collision;
         }
 
-        public static double SumDistances(ISymmetricGraph symmetricGraph, double[] x, double[] y)
+        public static double SumDistances(IGraph graph, double[] x, double[] y)
         {
-            var distance = 0.0;
-            for (int i = 0; i < symmetricGraph.VerticesAmount; i++)
-            {
-                for (int j = symmetricGraph.RowIndex[i]; j < symmetricGraph.RowIndex[i + 1]; j++)
-                {
-                    var first = symmetricGraph.ColumnIndex[j];
-                    var second = i;
-
-                    distance += Distance(x[first], y[first], x[second], y[second]);
-                }
-            }
-
-            return distance;
+            return
+                graph.Vertices.Sum(
+                    vertex => graph.SymAdj(vertex).Sum(second => Distance(x[vertex], y[vertex], x[second], y[second])));
         }
 
-        public static double CollisionArea(ISymmetricGraph symmetricGraph, double[] x, double[] y)
+        public static double CollisionArea(IGraph graph, double[] x, double[] y)
         {
-            var distance = 0.0;
-            for (int i = 0; i < symmetricGraph.VerticesAmount; i++)
-            {
-                for (int j = symmetricGraph.RowIndex[i]; j < symmetricGraph.RowIndex[i + 1]; j++)
-                {
-                    var first = symmetricGraph.ColumnIndex[j];
-                    var second = i;
-
-                    distance += Collision(x[first], y[first], symmetricGraph.Radius[first], x[second], y[second], symmetricGraph.Radius[second]);
-                }
-            }
-
-            return distance;
+            return
+                graph.Vertices.Sum(
+                    vertex =>
+                        graph.Adj(vertex)
+                            .Sum(
+                                second =>
+                                    Collision(x[vertex], y[vertex], graph.Radius[vertex], x[second], y[second],
+                                        graph.Radius[second])));
         }
 
         private static double Collision(double x1, double y1, double r1, double x2, double y2, double r2)

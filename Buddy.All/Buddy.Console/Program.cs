@@ -21,11 +21,11 @@ namespace Buddy.Console
             const string filename = "../../../../Matrix/grids/400.mtx";
 
             var parser = new Parser();
-            //var fgraph = parser.ParseCrsGraph(filename);
+            var graph = parser.ParseCrsGraph(filename);
 
 
 
-            var graph = parser.ParseSymmetricCrsGraph(filename);
+            //var graph = parser.ParseSymmetricCrsGraph(filename);
             var size = new Size(1280, 960);
 
             var randPlacer = new RandomPlacer();
@@ -73,12 +73,12 @@ namespace Buddy.Console
 
             ISettings settings = new Settings()
             {
-                Iterations = 1,
+                Iterations = a,
             };
 
             var localPlacer = new ForceDirectedCSR(new Settings { Iterations = a });
 
-            var placer = new MultilevelPlaсer(settings, localPlacer);
+            var placer = new ForceDirectedCSR(settings);//, localPlacer);
 
             IList<Coordinate> result = coords.ToList();
             var start = DateTime.Now;

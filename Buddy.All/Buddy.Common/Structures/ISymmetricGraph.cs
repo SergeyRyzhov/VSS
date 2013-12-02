@@ -40,9 +40,13 @@ namespace Buddy.Common.Structures
         int VerticesAmount { get; }
 
         IEnumerable<int> Adj(int vertex);
+
+        IEnumerable<int> SymAdj(int vertex);
+
+        IEnumerable<int> Vertices { get;}
     }
 
-    class Graph : IGraph
+    public class Graph : IGraph
     {
         public Graph(int verticesAmount, int[] xAdj, int[] adjency, double[] radius, double[] weight)
         {
@@ -66,6 +70,30 @@ namespace Buddy.Common.Structures
             for (var i = XAdj[vertex]; i < XAdj[vertex + 1]; i++)
             {
                 yield return Adjency[i];
+            }
+        }
+
+        public IEnumerable<int> SymAdj(int vertex)
+        {
+            for (var i = XAdj[vertex]; i < XAdj[vertex + 1]; i++)
+            {
+                if (Adjency[i] <= vertex)
+                {
+                    continue;
+                }
+                
+                yield return Adjency[i];
+            }
+        }
+
+        public IEnumerable<int> Vertices
+        {
+            get
+            {
+                for (var i = 0; i < VerticesAmount; i++)
+                {
+                    yield return i;
+                }
             }
         }
     }

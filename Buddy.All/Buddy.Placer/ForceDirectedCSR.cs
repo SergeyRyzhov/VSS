@@ -6,7 +6,7 @@ using Buddy.Common.Structures;
 
 namespace Buddy.Placer
 {
-   public class ForceDirectedCSR:BasePlacer
+   public class ForceDirectedCSR : BasePlacer
     {
         public ForceDirectedCSR(ISettings settings) : base(settings)
         {
@@ -64,16 +64,16 @@ namespace Buddy.Placer
         }
 
 
-        private static void CulcAttractiveForces(ISymmetricGraph graph, IList<Coordinate> coordinates,
+        private static void CulcAttractiveForces(IGraph graph, IList<Coordinate> coordinates,
             IList<Coordinate> vectors)
         {
-            for (var i = 0; i < graph.RowIndex.Length-1; i++)
+            for (var i = 0; i < graph.XAdj.Length-1; i++)
             {
-                for (var k = graph.RowIndex[i]; k < graph.RowIndex[i+1]; k++)
+                for (var k = graph.XAdj[i]; k < graph.XAdj[i+1]; k++)
                 {
                     
-                    var j =(int) graph.ColumnIndex[k];
-                  //  if (j < i) continue;
+                    var j = graph.Adjency[k];
+                    if (j < i) continue;
                     var u = FindForceVector(coordinates[i], coordinates[j],
                     AttractiveForce(coordinates[i], coordinates[j], graph.Weight[k]));
                     vectors[i].X += u.X;
@@ -84,7 +84,7 @@ namespace Buddy.Placer
             }
         }
 
-        private static void CulcRepulsiveForces(ISymmetricGraph graph, IList<Coordinate> coordinates,
+        private static void CulcRepulsiveForces(IGraph graph, IList<Coordinate> coordinates,
             IList<Coordinate> vectors)
         { 
             for (var i = 0; i < graph.VerticesAmount; i++)
@@ -103,20 +103,20 @@ namespace Buddy.Placer
             }
         }
 
-        private static double MaxStep(Size size, ISymmetricGraph graph)
+        private static double MaxStep(Size size, IGraph graph)
         {
             //var maxRadus = graph.Radius.Max();
             //var maxStep = Math.Sqrt(Math.Pow(size.Width, 2) + Math.Pow(size.Height, 2)) / maxRadus;
             return 10;
         }
 
-        private static double ReductionCoef(Size size, ISymmetricGraph graph, IList<Coordinate> vectors)
+        private static double ReductionCoef(Size size, IGraph graph, IList<Coordinate> vectors)
         {
             var maxModule = vectors.Max(v => Norma(v));
             return MaxStep(size, graph) / maxModule;
         }
 
-        private static List<Coordinate> CulcGradient(ISymmetricGraph graph, IList<Coordinate> coordinates, Size size)
+        private static List<Coordinate> CulcGradient(IGraph graph, IList<Coordinate> coordinates, Size size)
         {
             var vectors1 = new List<Coordinate>();
             var vectors2 = new List<Coordinate>();
@@ -144,7 +144,7 @@ namespace Buddy.Placer
             return vectors1;
         }
 
-        public static void Scale(Size size, IList<Coordinate> coordinates, ISymmetricGraph graph)
+        public static void Scale(Size size, IList<Coordinate> coordinates, IGraph graph)
         {
 
             var maxX = coordinates.Max(c => c.X);
@@ -179,15 +179,15 @@ namespace Buddy.Placer
         }
 
 
-        public override IList<Coordinate> PlaceGraph(ISymmetricGraph graph, IList<Coordinate> coordinate, Size size)
+        public override IList<Coordinate> PlaceGraph(IGraph graph, IList<Coordinate> coordinate, Size size)
         {
             IList<Coordinate> newCoord = coordinate.ToList();
             var iterations = Settings.Iterations;
-
+        
             do
             {
                 var gradient = CulcGradient(graph, newCoord, size);
-
+        
                 for (var i = 0; i < graph.VerticesAmount; i++)
                 {
                     newCoord[i].X += gradient[i].X;

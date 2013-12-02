@@ -58,7 +58,7 @@
     <Compile Include="Structures\SymmetricGraph.cs" />
     <Compile Include="Structures\NeighborSymmetricGraph.cs" />
     <Compile Include="Structures\NeighborTest.cs" />
-    <Compile Include="Structures\ReducedSymmetricGraph.cs" />
+    <Compile Include="Structures\ReducedGraph.cs" />
     <Compile Include="Structures\SocialGraph.cs" />
     <Compile Include="Structures\Vertex.cs" />
   </ItemGroup>
