@@ -6,6 +6,8 @@ namespace Buddy.Common.Parser
     {
         IGraph ParseCrsGraph(string filename);
 
+        ISymmetricGraph ParseSymmetricCrsGraph(string filename);
+
         ISocialGraph Parse(string filename);
     }
 }

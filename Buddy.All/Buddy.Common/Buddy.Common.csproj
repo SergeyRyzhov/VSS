@@ -52,13 +52,13 @@
     <Compile Include="Structures\IReducible.cs" />
     <Compile Include="Structures\ISocialGraph.cs" />
     <Compile Include="Structures\Edge.cs" />
-    <Compile Include="Structures\IGraph.cs" />
+    <Compile Include="Structures\ISymmetricGraph.cs" />
     <Compile Include="Parser\IParser.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Structures\Graph.cs" />
-    <Compile Include="Structures\NeighborGraph.cs" />
+    <Compile Include="Structures\SymmetricGraph.cs" />
+    <Compile Include="Structures\NeighborSymmetricGraph.cs" />
     <Compile Include="Structures\NeighborTest.cs" />
-    <Compile Include="Structures\ReducedGraph.cs" />
+    <Compile Include="Structures\ReducedSymmetricGraph.cs" />
     <Compile Include="Structures\SocialGraph.cs" />
     <Compile Include="Structures\Vertex.cs" />
   </ItemGroup>

@@ -17,7 +17,7 @@ namespace Buddy.Placer
             m_localPlacer = localPlacer;
         }
 
-        public override IList<Coordinate> PlaceGraph(IGraph graph, IList<Coordinate> coordinate, Size size)
+        public override IList<Coordinate> PlaceGraph(ISymmetricGraph symmetricGraph, IList<Coordinate> coordinate, Size size)
         {
             double width = size.Width;
             double height = size.Height;
@@ -26,7 +26,7 @@ namespace Buddy.Placer
             double[] resultX;
             double[] resultY;
 
-            PlaceGraph(graph.VerticesAmount, graph.Radius, graph.ColumnIndex, graph.RowIndex, graph.Weight, width,
+            PlaceGraph(symmetricGraph.VerticesAmount, symmetricGraph.Radius, symmetricGraph.ColumnIndex, symmetricGraph.RowIndex, symmetricGraph.Weight, width,
                 height, initialX, initialY, out resultX, out resultY);
 
             return resultX.Select((t, i) => new Coordinate(t, resultY[i])).ToList();
@@ -36,10 +36,10 @@ namespace Buddy.Placer
             double[] weights, double width,
             double height, double[] initialX, double[] initialY, out double[] resultX, out double[] resultY)
         {
-            IGraph graph = new Graph(nodes, rowIndexes[nodes], radiuses, weights, columnIndexes, rowIndexes);
+            ISymmetricGraph symmetricGraph = new SymmetricGraph(nodes, rowIndexes[nodes], radiuses, weights, columnIndexes, rowIndexes);
 
-            var dec = new ReducedGraph(graph);
-            var labels = GetReduceLabels(nodes, graph).ToArray();
+            var dec = new ReducedSymmetricGraph(symmetricGraph);
+            var labels = GetReduceLabels(nodes, symmetricGraph).ToArray();
 
             var rgraph = dec.Reduce(labels.Select(x => x).ToArray());
 
@@ -91,8 +91,8 @@ namespace Buddy.Placer
                 var xx = resultX.ToArray();
                 var yy = resultY.ToArray();
 
-                m_localPlacer.PlaceGraph(graph.VerticesAmount, graph.Radius, graph.ColumnIndex, graph.RowIndex,
-                    graph.Weight, width, height, xx, yy, out xx, out yy);
+                m_localPlacer.PlaceGraph(symmetricGraph.VerticesAmount, symmetricGraph.Radius, symmetricGraph.ColumnIndex, symmetricGraph.RowIndex,
+                    symmetricGraph.Weight, width, height, xx, yy, out xx, out yy);
                 
                 if (yy.Any(double.IsNaN))
                 {
@@ -104,7 +104,7 @@ namespace Buddy.Placer
                     throw new Exception();
                 }
 
-                Drawer.DrawGraph(new Size((int)width, (int)height), graph,
+                Drawer.DrawGraph(new Size((int)width, (int)height), symmetricGraph,
                     xx.Select((t, i) => new Coordinate(t, yy[i])).ToList(),
                     string.Format("multulevel_up_{0}.bmp", nodes), false);
 
@@ -146,7 +146,7 @@ namespace Buddy.Placer
             }
         }
 
-        private static IEnumerable<int> GetReduceLabels(int nodes, IGraph graph)
+        private static IEnumerable<int> GetReduceLabels(int nodes, ISymmetricGraph symmetricGraph)
         {
             var labels = new int[nodes];
 
@@ -156,11 +156,11 @@ namespace Buddy.Placer
             }
 
             var current = 0;
-            for (int i = 0; i < graph.VerticesAmount; i++)
+            for (int i = 0; i < symmetricGraph.VerticesAmount; i++)
             {
-                for (int j = graph.RowIndex[i]; j < graph.RowIndex[i + 1]; j++)
+                for (int j = symmetricGraph.RowIndex[i]; j < symmetricGraph.RowIndex[i + 1]; j++)
                 {
-                    var first = graph.ColumnIndex[j];
+                    var first = symmetricGraph.ColumnIndex[j];
                     var second = i;
 
                     if (labels[first] == -1 && labels[second] == -1)

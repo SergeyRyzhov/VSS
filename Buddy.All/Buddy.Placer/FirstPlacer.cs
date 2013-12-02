@@ -29,7 +29,7 @@ namespace Buddy.Placer
             return ver.ToList<Coordinate>();
         }
 
-        public override IList<Coordinate> PlaceGraph(IGraph graph, IList<Coordinate> coordinates, Size size)
+        public override IList<Coordinate> PlaceGraph(ISymmetricGraph symmetricGraph, IList<Coordinate> coordinates, Size size)
         {
             return SearchPerimeterVertexes(coordinates, size, 5, 5);
         }

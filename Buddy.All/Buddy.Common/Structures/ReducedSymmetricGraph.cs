@@ -1,35 +1,41 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 
 namespace Buddy.Common.Structures
 {
-    public class ReducedGraph : IGraph, IReducible
+    public class ReducedSymmetricGraph : ISymmetricGraph, IReducible
     {
-        private readonly IGraph m_graph;
+        private readonly ISymmetricGraph m_symmetricGraph;
 
-        public ReducedGraph(IGraph graph)
+        public ReducedSymmetricGraph(ISymmetricGraph symmetricGraph)
         {
-            m_graph = graph;
+            m_symmetricGraph = symmetricGraph;
         }
 
-        public double[] Radius { get { return m_graph.Radius; } }
+        public double[] Radius { get { return m_symmetricGraph.Radius; } }
 
-        public double[] Weight { get { return m_graph.Weight; } }
+        public double[] Weight { get { return m_symmetricGraph.Weight; } }
 
-        public int[] ColumnIndex { get { return m_graph.ColumnIndex; } }
+        public int[] ColumnIndex { get { return m_symmetricGraph.ColumnIndex; } }
 
-        public int[] RowIndex { get { return m_graph.RowIndex; } }
+        public int[] RowIndex { get { return m_symmetricGraph.RowIndex; } }
 
-        public int EdgesAmount { get { return m_graph.EdgesAmount; } }
+        public int EdgesAmount { get { return m_symmetricGraph.EdgesAmount; } }
 
-        public int VerticesAmount { get { return m_graph.VerticesAmount; } }
+        public int VerticesAmount { get { return m_symmetricGraph.VerticesAmount; } }
+
+        public IEnumerable<int> Adj(int vertex)
+        {
+            return m_symmetricGraph.Adj(vertex);
+        }
 
         public void Update()
         {
-            m_graph.Update();
+            m_symmetricGraph.Update();
         }
 
-        public IGraph Reduce(int[] labels)
+        public ISymmetricGraph Reduce(int[] labels)
         {
             var localLabels = labels.Distinct().ToArray();
 
@@ -56,7 +62,7 @@ namespace Buddy.Common.Structures
             columnIndex = SubArray(columnIndex, 0, edgesAmount);
             weight = SubArray(weight, 0, edgesAmount);
 
-            var graph = new Graph(verticesAmount, edgesAmount, radiuses, weight, columnIndex, rowIndex);
+            var graph = new SymmetricGraph(verticesAmount, edgesAmount, radiuses, weight, columnIndex, rowIndex);
 
             return graph;
         }

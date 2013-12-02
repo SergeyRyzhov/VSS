@@ -1,6 +1,8 @@
-﻿namespace Buddy.Common.Structures
+﻿using System.Collections.Generic;
+
+namespace Buddy.Common.Structures
 {
-    public class Graph : IGraph
+    public class SymmetricGraph : ISymmetricGraph
     {
         public double[] Radius { get; private set; }
 
@@ -14,7 +16,7 @@
 
         public int VerticesAmount { get; private set; }
 
-        public Graph(int verticesAmount, int edgesAmount)
+        public SymmetricGraph(int verticesAmount, int edgesAmount)
         {
             VerticesAmount = verticesAmount;
             EdgesAmount = edgesAmount;
@@ -26,7 +28,7 @@
             RowIndex = new int[verticesAmount + 1];
         }
 
-        public Graph(int verticesAmount, int edgesAmount, double[] radius, double[] weight, int[] columnIndex, int[] rowIndex)
+        public SymmetricGraph(int verticesAmount, int edgesAmount, double[] radius, double[] weight, int[] columnIndex, int[] rowIndex)
         {
             VerticesAmount = verticesAmount;
             EdgesAmount = edgesAmount;
@@ -34,6 +36,14 @@
             Weight = weight;
             ColumnIndex = columnIndex;
             RowIndex = rowIndex;
+        }
+
+        public IEnumerable<int> Adj(int vertex)
+        {
+            for (int i = 0; i < RowIndex[vertex + 1]; i++)
+            {
+                yield return ColumnIndex[i];
+            }
         }
 
         public virtual void Update()

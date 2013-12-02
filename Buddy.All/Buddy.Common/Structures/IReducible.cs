@@ -5,6 +5,6 @@
         /// <summary>
         /// Получение редуцированного графа
         /// </summary>
-        IGraph Reduce(int[] labels);
+        ISymmetricGraph Reduce(int[] labels);
     }
 }

@@ -7,10 +7,10 @@ namespace Buddy.Common.Structures
     /// <summary>
     /// Декоратор над графом для быстрого получения соседних
     /// </summary>
-    public class NeighborGraph : IGraph, INeighbor
+    public class NeighborSymmetricGraph : ISymmetricGraph, INeighbor
     {
-        private readonly IGraph m_graph;
-        private IGraph graph;
+        private readonly ISymmetricGraph m_symmetricGraph;
+        private ISymmetricGraph symmetricGraph;
 
         private Node[] ndmass;                             // массив оберток для вершин, где держим все вершины
         private Coordinate[,] blockscoordinate;            // массив для хранения координат блоков
@@ -18,9 +18,9 @@ namespace Buddy.Common.Structures
         private double height;
         private double width;
 
-        public NeighborGraph(IGraph graph, int m)
+        public NeighborSymmetricGraph(ISymmetricGraph symmetricGraph, int m)
         {
-            m_graph = graph;
+            m_symmetricGraph = symmetricGraph;
             this.m = m;
         }
 
@@ -41,9 +41,14 @@ namespace Buddy.Common.Structures
 
         public int VerticesAmount { get; private set; }
 
+        public IEnumerable<int> Adj(int vertex)
+        {
+            return m_symmetricGraph.Adj(vertex);
+        }
+
         public void Update()
         {
-            m_graph.Update();
+            m_symmetricGraph.Update();
             // CreateBlocks();
         }
 

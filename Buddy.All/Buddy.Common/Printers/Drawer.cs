@@ -15,7 +15,7 @@ namespace Buddy.Common.Printers
             Skip = false;
         }
 
-        public static void DrawGraph(Size size, IGraph graph, IList<Coordinate> coords, string fileName, bool fill)
+        public static void DrawGraph(Size size, ISymmetricGraph symmetricGraph, IList<Coordinate> coords, string fileName, bool fill)
         {
             if (Skip)
                 return;
@@ -27,11 +27,11 @@ namespace Buddy.Common.Printers
             var bitmap = new Bitmap(size.Width, size.Height);
             using (var image = Graphics.FromImage(bitmap))
             {
-                for (var i = 0; i < graph.RowIndex.Length - 1; i++)
+                for (var i = 0; i < symmetricGraph.RowIndex.Length - 1; i++)
                 {
-                    for (var k = graph.RowIndex[i]; k < graph.RowIndex[i + 1]; k++)
+                    for (var k = symmetricGraph.RowIndex[i]; k < symmetricGraph.RowIndex[i + 1]; k++)
                     {
-                        var j = (int)graph.ColumnIndex[k];
+                        var j = (int)symmetricGraph.ColumnIndex[k];
                         var a = coords[i];
                         var b = coords[j];
                         image.DrawLine(edgePen, a.FloatX, a.FloatY, b.FloatX, b.FloatY);
@@ -39,10 +39,10 @@ namespace Buddy.Common.Printers
                 }
 
                 const int scale = 1;
-                for (var i = 0; i < graph.VerticesAmount; i++)
+                for (var i = 0; i < symmetricGraph.VerticesAmount; i++)
                 {
                     var x = new Coordinate(coords[i].X, coords[i].Y);
-                    var radius = graph.Radius[i] * scale;
+                    var radius = symmetricGraph.Radius[i] * scale;
 
                     x.X -= radius / 2;
                     x.Y -= radius / 2;
