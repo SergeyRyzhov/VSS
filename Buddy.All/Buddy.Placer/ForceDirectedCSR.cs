@@ -31,16 +31,31 @@ namespace Buddy.Placer
 
         private static double RepulsiveForce(Coordinate a, Coordinate b,double radiusA,double radiusB)
         {
+            if (Distance(a, b) == 0) return -(radiusA + radiusB);
             return -(radiusA+radiusB)/Distance(a, b);
         }
 
         private static Coordinate FindForceVector(Coordinate a, Coordinate b, double fourceModule)
         {
-            var newCoord = new Coordinate
+            Coordinate newCoord;
+            if ((Math.Abs(a.X - b.X) <double.Epsilon) && (Math.Abs(a.Y - b.Y) < double.Epsilon))
             {
-                X = b.X - a.X,
-                Y = b.Y - a.Y
-            };
+                Random r = new Random();
+                 newCoord = new Coordinate
+                {
+                    X = r.NextDouble() ,
+                    Y = r.NextDouble() 
+                };
+
+            }
+            else
+            {
+                newCoord = new Coordinate
+                {
+                    X = b.X - a.X,
+                    Y = b.Y - a.Y
+                };
+            }
             var norma = Norma(newCoord);
             newCoord.X = (newCoord.X / norma) * fourceModule;
             newCoord.Y = (newCoord.Y / norma) * fourceModule;
@@ -48,17 +63,19 @@ namespace Buddy.Placer
             return newCoord;
         }
 
-      
-        private static void CulcAttractiveForces(ISymmetricGraph symmetricGraph, IList<Coordinate> coordinates,
+
+        private static void CulcAttractiveForces(ISymmetricGraph graph, IList<Coordinate> coordinates,
             IList<Coordinate> vectors)
         {
-            for (var i = 0; i < symmetricGraph.RowIndex.Length-2; i++)
+            for (var i = 0; i < graph.RowIndex.Length-1; i++)
             {
-                for (var k = symmetricGraph.RowIndex[i]; k < symmetricGraph.RowIndex[i+1]; k++)
+                for (var k = graph.RowIndex[i]; k < graph.RowIndex[i+1]; k++)
                 {
-                    var j =(int) symmetricGraph.ColumnIndex[k];
+                    
+                    var j =(int) graph.ColumnIndex[k];
+                  //  if (j < i) continue;
                     var u = FindForceVector(coordinates[i], coordinates[j],
-                    AttractiveForce(coordinates[i], coordinates[j], symmetricGraph.Weight[k]));
+                    AttractiveForce(coordinates[i], coordinates[j], graph.Weight[k]));
                     vectors[i].X += u.X;
                     vectors[i].Y += u.Y;
                     vectors[j].X -= u.X;
@@ -67,14 +84,14 @@ namespace Buddy.Placer
             }
         }
 
-        private static void CulcRepulsiveForces(ISymmetricGraph symmetricGraph, IList<Coordinate> coordinates,
+        private static void CulcRepulsiveForces(ISymmetricGraph graph, IList<Coordinate> coordinates,
             IList<Coordinate> vectors)
         { 
-            for (var i = 0; i < symmetricGraph.VerticesAmount; i++)
+            for (var i = 0; i < graph.VerticesAmount; i++)
             {
-                for (var j = i + 1; j < symmetricGraph.VerticesAmount; j++)
+                for (var j = i + 1; j < graph.VerticesAmount; j++)
                 {
-                    var repulsiveForce = RepulsiveForce(coordinates[i], coordinates[j],symmetricGraph.Radius[i],symmetricGraph.Radius[j]);
+                    var repulsiveForce = RepulsiveForce(coordinates[i], coordinates[j],graph.Radius[i],graph.Radius[j]);
 
                     var u = FindForceVector(coordinates[i], coordinates[j], repulsiveForce);
                     vectors[i].X += u.X;
@@ -86,54 +103,48 @@ namespace Buddy.Placer
             }
         }
 
-        private static double MaxStep(Size size, ISymmetricGraph symmetricGraph)
+        private static double MaxStep(Size size, ISymmetricGraph graph)
         {
             //var maxRadus = graph.Radius.Max();
             //var maxStep = Math.Sqrt(Math.Pow(size.Width, 2) + Math.Pow(size.Height, 2)) / maxRadus;
             return 10;
         }
 
-        private static double ReductionCoef(Size size, ISymmetricGraph symmetricGraph, IList<Coordinate> vectors)
+        private static double ReductionCoef(Size size, ISymmetricGraph graph, IList<Coordinate> vectors)
         {
             var maxModule = vectors.Max(v => Norma(v));
-            return MaxStep(size, symmetricGraph) / maxModule;
+            return MaxStep(size, graph) / maxModule;
         }
 
-        private static List<Coordinate> CulcGradient(ISymmetricGraph symmetricGraph, IList<Coordinate> coordinates, Size size)
+        private static List<Coordinate> CulcGradient(ISymmetricGraph graph, IList<Coordinate> coordinates, Size size)
         {
             var vectors1 = new List<Coordinate>();
             var vectors2 = new List<Coordinate>();
 
-            for (var i = 0; i < symmetricGraph.VerticesAmount; i++)
+            for (var i = 0; i < graph.VerticesAmount; i++)
             {
                 vectors1.Add(new Coordinate(0, 0));
                 vectors2.Add(new Coordinate(0, 0));
             }
-            CulcAttractiveForces(symmetricGraph, coordinates, vectors1);
-            CulcRepulsiveForces(symmetricGraph, coordinates, vectors2);
-
-            var r1 = ReductionCoef(size, symmetricGraph, vectors1);
-            var r2 = ReductionCoef(size, symmetricGraph, vectors2);
+            CulcAttractiveForces(graph, coordinates, vectors1);
+            CulcRepulsiveForces(graph, coordinates, vectors2);                     
+           
+            for (var i = 0; i < vectors1.Count; i++)
+            {
+                vectors1[i].X += vectors2[i].X;
+                vectors1[i].Y += vectors2[i].Y;
+            } 
+            var r1 = ReductionCoef(size, graph, vectors1);
             foreach (var v in vectors1)
             {
                 v.X = v.X * r1;
                 v.Y = v.Y * r1;
             }
-            foreach (var v in vectors2)
-            {
-                v.X = v.X * r2;
-                v.Y = v.Y * r2;
-            }
-            for (var i = 0; i < vectors1.Count; i++)
-            {
-                vectors1[i].X += vectors2[i].X;
-                vectors1[i].Y += vectors2[i].Y;
-            }
 
             return vectors1;
         }
 
-        public static void Scale(Size size, IList<Coordinate> coordinates, ISymmetricGraph symmetricGraph)
+        public static void Scale(Size size, IList<Coordinate> coordinates, ISymmetricGraph graph)
         {
 
             var maxX = coordinates.Max(c => c.X);
@@ -141,39 +152,49 @@ namespace Buddy.Placer
             var maxY = coordinates.Max(c => c.Y);
             var minY = coordinates.Min(c => c.Y);
 
-            var weight = maxX - minX;
-            var height = maxY - minY;
-
-            var coeffx = (size.Width - 20) / weight;
-            var coeffy = (size.Height - 20) / height;
-            for (var i = 0; i < symmetricGraph.VerticesAmount; i++)
+            for (var i = 0; i < graph.VerticesAmount; i++)
             {
-                var newCoord = new Coordinate
+                if (coordinates[i].X + graph.Radius[i] > maxX) maxX = coordinates[i].X + graph.Radius[i];
+                if (coordinates[i].Y + graph.Radius[i] > maxY) maxY = coordinates[i].Y + graph.Radius[i];
+                if (coordinates[i].X - graph.Radius[i] < minX) minX = coordinates[i].X - graph.Radius[i];
+                if (coordinates[i].Y - graph.Radius[i] < minY) minY = coordinates[i].Y - graph.Radius[i];
+            }
+            if ((maxX > size.Width) || (maxY > size.Height) || (minX < 0) || (minY < 0))
+            {
+                var weight = maxX - minX;
+                var height = maxY - minY;
+
+                var coeffx = (size.Width - 20) / weight;
+                var coeffy = (size.Height - 20) / height;
+                for (var i = 0; i < graph.VerticesAmount; i++)
                 {
-                    X = (coordinates[i].X - minX) * coeffx + 10,
-                    Y = (coordinates[i].Y - minY) * coeffy + 10
-                };
-                coordinates[i] = newCoord;
+                    var newCoord = new Coordinate
+                    {
+                        X = (coordinates[i].X - minX) * coeffx + 10,
+                        Y = (coordinates[i].Y - minY) * coeffy + 10
+                    };
+                    coordinates[i] = newCoord;
+                }
             }
         }
 
 
-         public override IList<Coordinate> PlaceGraph(ISymmetricGraph symmetricGraph, IList<Coordinate> coordinate, Size size)
+        public override IList<Coordinate> PlaceGraph(ISymmetricGraph graph, IList<Coordinate> coordinate, Size size)
         {
             IList<Coordinate> newCoord = coordinate.ToList();
             var iterations = Settings.Iterations;
 
             do
             {
-                var gradient = CulcGradient(symmetricGraph, newCoord, size);
+                var gradient = CulcGradient(graph, newCoord, size);
 
-                for (var i = 0; i < symmetricGraph.VerticesAmount; i++)
+                for (var i = 0; i < graph.VerticesAmount; i++)
                 {
                     newCoord[i].X += gradient[i].X;
                     newCoord[i].Y += gradient[i].Y;
                 }
                 iterations--;
-                Scale(size, newCoord,symmetricGraph);
+                Scale(size, newCoord,graph);
             } while (iterations > 0);
             return newCoord;
         }

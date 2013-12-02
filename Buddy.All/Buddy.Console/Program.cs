@@ -18,7 +18,7 @@ namespace Buddy.Console
             Drawer.Skip = false;
             
             //TODO: пока так, потом через аргументы командной строки
-            const string filename = "../../../../Matrix/grids/3x3.mtx";
+            const string filename = "../../../../Matrix/grids/400.mtx";
 
             var parser = new Parser();
             //var fgraph = parser.ParseCrsGraph(filename);
