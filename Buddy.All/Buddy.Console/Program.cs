@@ -18,14 +18,11 @@ namespace Buddy.Console
             Drawer.Skip = false;
             
             //TODO: пока так, потом через аргументы командной строки
-            const string filename = "../../../../Matrix/grids/400.mtx";
+            const string filename = "../../../../Matrix/grids/100x100.mtx";
 
             var parser = new Parser();
             var graph = parser.ParseCrsGraph(filename);
 
-
-
-            //var graph = parser.ParseSymmetricCrsGraph(filename);
             var size = new Size(1280, 960);
 
             var randPlacer = new RandomPlacer();
@@ -34,7 +31,7 @@ namespace Buddy.Console
 
             var saver = (randPlacer as IPersistable);
 
-            const bool load = true;
+            const bool load = false;
 
             if (load)
             {
@@ -71,14 +68,17 @@ namespace Buddy.Console
             var a = int.Parse(s);
             //TODO: число итерайций в параметры
 
+            s = System.Console.ReadLine();
+            s = string.IsNullOrEmpty(s) ? "5" : s;
+            var b = int.Parse(s);
             ISettings settings = new Settings()
             {
-                Iterations = a,
+                Iterations = b,
             };
 
             var localPlacer = new ForceDirectedCSR(new Settings { Iterations = a });
 
-            var placer = new ForceDirectedCSR(settings);//, localPlacer);
+            var placer = new MultilevelPlaсer(settings, localPlacer);
 
             IList<Coordinate> result = coords.ToList();
             var start = DateTime.Now;

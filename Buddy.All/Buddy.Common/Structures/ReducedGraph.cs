@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace Buddy.Common.Structures
 {
@@ -61,7 +62,7 @@ namespace Buddy.Common.Structures
             var size = 0;
             for (var i = 0; i < VerticesAmount; i++)
                 size = Math.Max(size, map[i]);
-
+            size += 1;
             var fst = new int[size + 1];
             for (var i = 0; i <= size; i++)
                 fst[i] = -1;
@@ -82,18 +83,20 @@ namespace Buddy.Common.Structures
             for (var i = 0; i < size; i++)
             {
                 var j = fst[i];
+                var temp = new List<int>();
                 while (j != -1)
                 {
                     foreach (var e in Adj(j))
                     {
                         if (mask[map[e]] != i && map[e] != i)
                         {
-                            adjncy.Add(map[e]);
+                            temp.Add(map[e]);
                             mask[map[e]] = i;
                         }
                     }
                     j = nxt[j];
                 }
+                adjncy.AddRange(temp.OrderBy(e => e));
                 xadj[i + 1] = adjncy.Count;
             }
 
@@ -102,7 +105,7 @@ namespace Buddy.Common.Structures
 
             ComputeRadiuses(VerticesAmount, map, size, out radiuses);
 
-            ComputeWeights(VerticesAmount, map, size, out weight);
+            ComputeWeights(VerticesAmount, map, adjncy.Count, out weight);
 
             return new Graph(size, xadj, adjncy.ToArray(), radiuses, weight);
         }

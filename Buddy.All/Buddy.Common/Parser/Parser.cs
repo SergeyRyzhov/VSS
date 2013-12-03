@@ -39,7 +39,7 @@ namespace Buddy.Common.Parser
                     throw new Exception("Not a square matrix.");
                 }
 
-                nz = int.Parse(values[2]) * 2;
+                nz = int.Parse(values[2])*2;
             }
             catch (Exception exception)
             {
@@ -73,9 +73,8 @@ namespace Buddy.Common.Parser
                 crsGraph[u].Add(v);
                 crsGraph[v].Add(u);
 
-                radius[u]++;
-                radius[v]++;
-
+                radius[u] += 1;
+                radius[v] += 1;
                 dweight[u, v] = w;
                 dweight[v, u] = w;
             }

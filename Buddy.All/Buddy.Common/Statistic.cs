@@ -114,7 +114,10 @@ namespace Buddy.Common
                     s = 0;
                 }
             }
-
+            if (double.IsNaN(s))
+            {
+                Console.WriteLine(s);
+            }
             return s;
         }
 

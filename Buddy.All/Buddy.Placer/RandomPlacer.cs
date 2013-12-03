@@ -5,7 +5,7 @@ namespace Buddy.Placer
 {
     public class RandomPlacer : IPlacer, IPersistable
     {
-        public void PlaceGraph(int nodes, double[] radiuses, int[] columnIndexes, int[] rowIndexes, double[] weights, double width,
+        public void PlaceGraph(int nodes, double[] radiuses, int[] xAdj, int[] adjency, double[] weights, double width,
             double height, double[] initialX, double[] initialY, out double[] resultX, out double[] resultY)
         {
             resultX = new double[nodes];

@@ -32,7 +32,7 @@ namespace Buddy.Placer
         private static double RepulsiveForce(Coordinate a, Coordinate b,double radiusA,double radiusB)
         {
             if (Distance(a, b) == 0) return -(radiusA + radiusB);
-            return -(radiusA+radiusB)/Distance(a, b);
+            return -(radiusA + radiusB) / Distance(a, b) ;
         }
 
         private static Coordinate FindForceVector(Coordinate a, Coordinate b, double fourceModule)
