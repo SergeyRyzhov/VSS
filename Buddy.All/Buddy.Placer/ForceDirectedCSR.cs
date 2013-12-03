@@ -24,17 +24,7 @@ namespace Buddy.Placer
             return Math.Sqrt(Math.Pow(a.X, 2) + Math.Pow(a.Y, 2));
         }
 
-        private static double AttractiveForce(Coordinate a, Coordinate b, double weight)
-        {
-            return Distance(a, b)*weight;
-        }
-
-        private static double RepulsiveForce(Coordinate a, Coordinate b,double radiusA,double radiusB)
-        {
-            if (Distance(a, b) == 0) return -(radiusA + radiusB);
-            return -(radiusA + radiusB) / Distance(a, b) ;
-        }
-
+       
         private static Coordinate FindForceVector(Coordinate a, Coordinate b, double fourceModule)
         {
             Coordinate newCoord;
@@ -74,8 +64,8 @@ namespace Buddy.Placer
                     
                     var j = graph.Adjency[k];
                     if (j < i) continue;
-                    var u = FindForceVector(coordinates[i], coordinates[j],
-                    AttractiveForce(coordinates[i], coordinates[j], graph.Weight[k]));
+                    var AttrForce = Distance(coordinates[i], coordinates[j]) * graph.Weight[k];
+                    var u = FindForceVector(coordinates[i], coordinates[j], AttrForce);
                     vectors[i].X += u.X;
                     vectors[i].Y += u.Y;
                     vectors[j].X -= u.X;
@@ -85,15 +75,21 @@ namespace Buddy.Placer
         }
 
         private static void CulcRepulsiveForces(IGraph graph, IList<Coordinate> coordinates,
-            IList<Coordinate> vectors)
-        { 
+            IList<Coordinate> vectors, Size size)
+        {
+            INeighbor g = new NeighborTester.NeighborGraph(graph, size, coordinates);
+            double RepFoce;
             for (var i = 0; i < graph.VerticesAmount; i++)
             {
-                for (var j = i + 1; j < graph.VerticesAmount; j++)
+               var neighbors = g.Neighborhood(coordinates[i], i);
+              // for (var j = i + 1; j < graph.VerticesAmount; j++)
+               while(neighbors.MoveNext())
                 {
-                    var repulsiveForce = RepulsiveForce(coordinates[i], coordinates[j],graph.Radius[i],graph.Radius[j]);
-
-                    var u = FindForceVector(coordinates[i], coordinates[j], repulsiveForce);
+                    var j = neighbors.Current;
+                    if (Math.Abs(coordinates[i].X - coordinates[j].X) < double.Epsilon && Math.Abs(coordinates[i].Y - coordinates[j].Y) < double.Epsilon)
+                        RepFoce = 0;
+                    else RepFoce = -1 / Distance(coordinates[i], coordinates[j]);
+                    var u = FindForceVector(coordinates[i], coordinates[j], RepFoce);
                     vectors[i].X += u.X;
                     vectors[i].Y += u.Y;
                     vectors[j].X -= u.X;
@@ -105,8 +101,6 @@ namespace Buddy.Placer
 
         private static double MaxStep(Size size, IGraph graph)
         {
-            //var maxRadus = graph.Radius.Max();
-            //var maxStep = Math.Sqrt(Math.Pow(size.Width, 2) + Math.Pow(size.Height, 2)) / maxRadus;
             return 10;
         }
 
@@ -116,41 +110,39 @@ namespace Buddy.Placer
             return MaxStep(size, graph) / maxModule;
         }
 
-        private static List<Coordinate> CulcGradient(IGraph graph, IList<Coordinate> coordinates, Size size)
+        private static void CulcGradient(IGraph graph, IList<Coordinate> coordinates, Coordinate[] gradient, Size size)
         {
-            var vectors1 = new List<Coordinate>();
-            var vectors2 = new List<Coordinate>();
-
             for (var i = 0; i < graph.VerticesAmount; i++)
             {
-                vectors1.Add(new Coordinate(0, 0));
-                vectors2.Add(new Coordinate(0, 0));
+                gradient[i].X = 0;
+                gradient[i].Y = 0;
             }
-            CulcAttractiveForces(graph, coordinates, vectors1);
-            CulcRepulsiveForces(graph, coordinates, vectors2);                     
-           
-            for (var i = 0; i < vectors1.Count; i++)
-            {
-                vectors1[i].X += vectors2[i].X;
-                vectors1[i].Y += vectors2[i].Y;
-            } 
-            var r1 = ReductionCoef(size, graph, vectors1);
-            foreach (var v in vectors1)
+            CulcAttractiveForces(graph, coordinates, gradient);
+            CulcRepulsiveForces(graph, coordinates, gradient, size);
+            var r1 = ReductionCoef(size, graph, gradient);
+            foreach (var v in gradient)
             {
                 v.X = v.X * r1;
                 v.Y = v.Y * r1;
             }
-
-            return vectors1;
         }
 
         public static void Scale(Size size, IList<Coordinate> coordinates, IGraph graph)
         {
 
-            var maxX = coordinates.Max(c => c.X);
-            var minX = coordinates.Min(c => c.X);
-            var maxY = coordinates.Max(c => c.Y);
-            var minY = coordinates.Min(c => c.Y);
+            var maxX = coordinates[0].X;
+            var minX = coordinates[0].Y;
+            var maxY = coordinates[0].X;
+            var minY = coordinates[0].Y;
+
+            for (var i = 1; i < coordinates.Count; i++)
+            {
+                if (coordinates[i].X > maxX) maxX = coordinates[i].X;
+                if (coordinates[i].Y > maxY) maxY = coordinates[i].Y;
+                if (coordinates[i].X < minX) minX = coordinates[i].X;
+                if (coordinates[i].Y < minY) minY = coordinates[i].Y;
+
+            }
 
             for (var i = 0; i < graph.VerticesAmount; i++)
             {
@@ -168,14 +160,12 @@ namespace Buddy.Placer
                 var coeffy = (size.Height - 20) / height;
                 for (var i = 0; i < graph.VerticesAmount; i++)
                 {
-                    var newCoord = new Coordinate
-                    {
-                        X = (coordinates[i].X - minX) * coeffx + 10,
-                        Y = (coordinates[i].Y - minY) * coeffy + 10
-                    };
-                    coordinates[i] = newCoord;
+                    coordinates[i].X = (coordinates[i].X - minX) * coeffx + 10;
+                    coordinates[i].Y = (coordinates[i].Y - minY) * coeffy + 10;
+
                 }
             }
+
         }
 
 
@@ -183,19 +173,22 @@ namespace Buddy.Placer
         {
             IList<Coordinate> newCoord = coordinate.ToList();
             var iterations = Settings.Iterations;
-        
+            Coordinate[] gradient = new Coordinate[graph.VerticesAmount];
+            for (var i = 0; i < gradient.Length; i++)
+                gradient[i] = new Coordinate(0, 0);
             do
             {
-                var gradient = CulcGradient(graph, newCoord, size);
-        
+                CulcGradient(graph, newCoord, gradient, size);
+
                 for (var i = 0; i < graph.VerticesAmount; i++)
                 {
                     newCoord[i].X += gradient[i].X;
                     newCoord[i].Y += gradient[i].Y;
                 }
                 iterations--;
-                Scale(size, newCoord,graph);
+                Scale(size, newCoord, graph);
             } while (iterations > 0);
+
             return newCoord;
         }
     }
