@@ -77,17 +77,17 @@ namespace Buddy.Placer
         private static void CulcRepulsiveForces(IGraph graph, IList<Coordinate> coordinates,
             IList<Coordinate> vectors, Size size)
         {
-            INeighbor g = new NeighborTester.NeighborGraph(graph, size, coordinates);
+           // INeighbor g = new NeighborTester.NeighborGraph(graph, size, coordinates);
             double RepFoce;
             for (var i = 0; i < graph.VerticesAmount; i++)
-            {
-               var neighbors = g.Neighborhood(coordinates[i], i);
-              // for (var j = i + 1; j < graph.VerticesAmount; j++)
-               while(neighbors.MoveNext())
+            {//  var neighbors = g.Neighborhood(coordinates[i], i);
+             //  var etr = neighbors.GetEnumerator;
+               for (var j = i + 1; j < graph.VerticesAmount; j++)
+            //   while(etr.MoveNext())
                 {
-                    var j = neighbors.Current;
+                   // var j = etr.Current;
                     if (Math.Abs(coordinates[i].X - coordinates[j].X) < double.Epsilon && Math.Abs(coordinates[i].Y - coordinates[j].Y) < double.Epsilon)
-                        RepFoce = 0;
+                        RepFoce = -(graph.Radius[i]+graph.Radius[j]);
                     else RepFoce = -1 / Distance(coordinates[i], coordinates[j]);
                     var u = FindForceVector(coordinates[i], coordinates[j], RepFoce);
                     vectors[i].X += u.X;
