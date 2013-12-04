@@ -19,7 +19,7 @@ namespace Buddy.Common.Printers
         static Drawer()
         {
             Skip = false;
-            Fill = true;
+            Fill = false;
         }
 
         public static void DrawGraph(Size size, IGraph graph, IList<Coordinate> coords, string fileName)
@@ -50,15 +50,15 @@ namespace Buddy.Common.Printers
                     var x = new Coordinate(coords[i].X, coords[i].Y);
                     var radius = graph.Radiuses[i] * scale;
 
-                    x.X -= radius / 2;
-                    x.Y -= radius / 2;
+                    x.X -= radius;
+                    x.Y -= radius;
                     if (Fill)
                     {
-                        image.FillEllipse(vertexBrush, x.FloatX, x.FloatY, (float)radius, (float)radius);
+                        image.FillEllipse(vertexBrush, x.FloatX, x.FloatY, (float)radius*2, (float)radius*2);
                     }
                     else
                     {
-                        image.DrawEllipse(vertexPen, x.FloatX, x.FloatY, (float)radius, (float)radius);
+                        image.DrawEllipse(vertexPen, x.FloatX, x.FloatY, (float)radius*2, (float)radius*2);
                     }
                 }
                 
@@ -71,7 +71,7 @@ namespace Buddy.Common.Printers
             vertexPen.Dispose();
         }
 
-        public void OpenFirst()
+        public static void OpenFirst()
         {
             Process.Start(m_firstFile);
         }

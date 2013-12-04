@@ -15,7 +15,7 @@ namespace Buddy.Console
         private static void Main()
         {
             Drawer.Skip = false;
-            Drawer.Fill = true;
+            //Drawer.Fill = true;
             
             //TODO: пока так, потом через аргументы командной строки
             const string filename = "../../../../Matrix/grids/400.mtx";
@@ -23,7 +23,7 @@ namespace Buddy.Console
             var parser = new Parser();
             var graph = parser.ParseCrsGraph(filename);
 
-            var size = new Size(1280, 960);
+            var size = new Size(640, 480);
 
             var randPlacer = new RandomPlacer();
             double[] x;
@@ -86,9 +86,11 @@ namespace Buddy.Console
             Statistic.PrintStatistic(graph, result.Select(c => c.X).ToArray(), result.Select(c => c.Y).ToArray());
 
             saver.Persist("output.pos", result.Select(c => c.X).ToArray(), result.Select(c => c.Y).ToArray());
-            ForceDirectedCSR.Scale(size, result, graph,true);
+
+            //ForceDirectedCSR.Scale(size, result, graph,true);
+
             Drawer.DrawGraph(size, graph, result, "output.bmp");
-            
+            Drawer.OpenFirst();
         }
     }
 }

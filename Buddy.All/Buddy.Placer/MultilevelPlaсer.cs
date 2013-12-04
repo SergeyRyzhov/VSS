@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Drawing;
 using System.Linq;
+using System.Reflection.Emit;
 using Buddy.Common.Printers;
 using Buddy.Common.Structures;
 
@@ -83,9 +84,10 @@ namespace Buddy.Placer
                 //nodes, rowIndexes[nodes], radiuses, weights, columnIndexes, rowIndexes);
 
             var dec = new GraphReducer(graph);
-            int[] labels = GetReduceLabels(nodes, graph).ToArray();
+            
+            int[] labels;
 
-            IGraph rgraph = dec.Reduce(labels.Select(x => x).ToArray());
+            IGraph rgraph = dec.Reduce(out labels);
 
             double[] localInitialX;
             double[] localInitialY;
@@ -181,41 +183,6 @@ namespace Buddy.Placer
             }
         }
 
-        private static IEnumerable<int> GetReduceLabels(int nodes, IGraph symmetricGraph)
-        {
-            var labels = new int[nodes];
-
-            for (int i = 0; i < nodes; i++)
-            {
-                labels[i] = -1;
-            }
-
-            int current = 0;
-
-            foreach (int vertex in symmetricGraph.Vertices)
-            {
-                foreach (int label in symmetricGraph.SymAdj(vertex).OrderBy(e => -e))
-                {
-                    int first = vertex;
-                    int second = label;
-
-                    if (labels[first] == -1 && labels[second] == -1)
-                    {
-                        labels[first] = current;
-                        labels[second] = current;
-                        current++;
-                        break;
-                    }
-                }
-            }
-
-            for (int i = 0; i < nodes; i++)
-            {
-                if (labels[i] == -1)
-                    labels[i] = current++;
-            }
-
-            return labels;
-        }
+        
     }
 }

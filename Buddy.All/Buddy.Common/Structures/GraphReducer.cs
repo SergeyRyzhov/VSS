@@ -1,10 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 
 namespace Buddy.Common.Structures
 {
-    public class GraphReducer : IReducer
+    public class GraphReducer
     {
         private readonly IGraph m_graph;
 
@@ -13,9 +12,47 @@ namespace Buddy.Common.Structures
             m_graph = graph;
         }
 
-        protected virtual void ComputeRadiuses(int verticesAmount, int[] labels, int newSize, out double[] radiuses)
+        protected virtual void ComputeMap(out int size, out int[] map)
         {
-            radiuses = new double[newSize];
+            map = new int[m_graph.VerticesAmount];
+
+            for (var i = 0; i < m_graph.VerticesAmount; i++)
+            {
+                map[i] = -1;
+            }
+
+            var current = 0;
+
+            foreach (var vertex in m_graph.Vertices)
+            {
+                foreach (var label in m_graph.SymAdj(vertex).OrderBy(e => -e))
+                {
+                    var first = vertex;
+                    var second = label;
+
+                    if (map[first] != -1 || map[second] != -1)
+                    {
+                        continue;
+                    }
+
+                    map[first] = current;
+                    map[second] = current;
+                    current++;
+                    break;
+                }
+            }
+
+            for (var i = 0; i < m_graph.VerticesAmount; i++)
+            {
+                if (map[i] == -1)
+                    map[i] = current++;
+            }
+            size = map.Max() + 1;
+        }
+
+        protected virtual void ComputeRadiuses(int verticesAmount, int[] labels, out double[] radiuses)
+        {
+            radiuses = new double[verticesAmount];
             for (var i = 0; i < m_graph.VerticesAmount; i++)
             {
                 var current = labels[i];
@@ -23,22 +60,37 @@ namespace Buddy.Common.Structures
             }
         }
 
-        protected virtual void ComputeWeights(int verticesAmount, int[] labels, int newSize, out double[] weights)
+        protected virtual void ComputeWeights(int edgesAmount, int[] labels, out double[] weights)
         {
-            weights = new double[newSize];
+            weights = new double[edgesAmount];
 
-            for (int i = 0; i < newSize; i++)
+            for (var i = 0; i < edgesAmount; i++)
             {
                 weights[i] = 1;
             }
         }
 
-        public IGraph Reduce(int[] map)
+        public IGraph Reduce(out int[] map)
         {
-            var size = 0;
-            for (var i = 0; i < m_graph.VerticesAmount; i++)
-                size = Math.Max(size, map[i]);
-            size += 1;
+            int size;
+            int[] xadj;
+            List<int> adjncy;
+            double[] radiuses;
+            double[] weight;
+
+            ComputeMap(out size, out map);
+
+            MakeGraph(size, map, out xadj, out adjncy);
+
+            ComputeRadiuses(size, map, out radiuses);
+
+            ComputeWeights(adjncy.Count, map, out weight);
+
+            return new Graph(size, xadj, adjncy.ToArray(), radiuses, weight);
+        }
+
+        protected virtual int MakeGraph(int size, int[] map, out int[] xadj, out List<int> adjncy)
+        {
             var fst = new int[size + 1];
             for (var i = 0; i <= size; i++)
                 fst[i] = -1;
@@ -50,8 +102,8 @@ namespace Buddy.Common.Structures
                 fst[map[i]] = i;
             }
 
-            var xadj = new int[size + 1];
-            var adjncy = new List<int>();
+            xadj = new int[size + 1];
+            adjncy = new List<int>();
 
             var mask = new int[size + 1];
             for (var i = 0; i <= size; i++) mask[i] = -1;
@@ -75,15 +127,7 @@ namespace Buddy.Common.Structures
                 adjncy.AddRange(temp.OrderBy(e => e));
                 xadj[i + 1] = adjncy.Count;
             }
-
-            double[] radiuses;
-            double[] weight;
-
-            ComputeRadiuses(m_graph.VerticesAmount, map, size, out radiuses);
-
-            ComputeWeights(m_graph.VerticesAmount, map, adjncy.Count, out weight);
-
-            return new Graph(size, xadj, adjncy.ToArray(), radiuses, weight);
+            return size;
         }
     }
 }
