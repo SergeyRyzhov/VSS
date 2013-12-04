@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Drawing;
 using System.Linq;
 
 namespace Buddy.Common.Structures
@@ -7,10 +8,10 @@ namespace Buddy.Common.Structures
     /// <summary>
     /// Декоратор над графом для быстрого получения соседних
     /// </summary>
-    public class NeighborSymmetricGraph : ISymmetricGraph, INeighbor
+    public class NeighborSymmetricGraph : IGraph, INeighbor
     {
-        private readonly ISymmetricGraph m_symmetricGraph;
-        private ISymmetricGraph symmetricGraph;
+        private readonly IGraph m_symmetricGraph;
+        private IGraph symmetricGraph;
 
         private Node[] ndmass;                             // массив оберток для вершин, где держим все вершины
         private Coordinate[,] blockscoordinate;            // массив для хранения координат блоков
@@ -18,7 +19,7 @@ namespace Buddy.Common.Structures
         private double height;
         private double width;
 
-        public NeighborSymmetricGraph(ISymmetricGraph symmetricGraph, int m)
+        public NeighborSymmetricGraph(IGraph symmetricGraph, int m)
         {
             m_symmetricGraph = symmetricGraph;
             this.m = m;
@@ -37,20 +38,34 @@ namespace Buddy.Common.Structures
 
         public int[] RowIndex { get; private set; }
 
+        public double[] Radiuses { get; private set; }
+        public double[] Weights { get; private set; }
+        public int[] Adjency { get; private set; }
+        public int[] XAdj { get; private set; }
         public int EdgesAmount { get; private set; }
 
         public int VerticesAmount { get; private set; }
+        double IGraph.Radius(int vertex)
+        {
+            throw new NotImplementedException();
+        }
+
+        double IGraph.Weight(int u, int v)
+        {
+            throw new NotImplementedException();
+        }
 
         public IEnumerable<int> Adj(int vertex)
         {
             return m_symmetricGraph.Adj(vertex);
         }
 
-        public void Update()
+        public IEnumerable<int> SymAdj(int vertex)
         {
-            m_symmetricGraph.Update();
-            // CreateBlocks();
+            throw new NotImplementedException();
         }
+
+        public IEnumerable<int> Vertices { get; private set; }
 
         public int[] Neighborhood(Coordinate x, int vertex)
         {
@@ -116,7 +131,7 @@ namespace Buddy.Common.Structures
             return massOfVertices;
         }
 
-        public void CreateBlocks(IList<Coordinate> coordinate, System.Drawing.Size size, ArrayCoordinate arr)
+        public void CreateBlocks(IList<Coordinate> coordinate, System.Drawing.Size size, double[]x, double[]y)
         {
             height = size.Height / m;
             width = size.Width / m;
@@ -154,6 +169,16 @@ namespace Buddy.Common.Structures
             }
 
             Array.Sort(ndmass, new SortByNumberOfBlockMin());
+        }
+
+        public int[] Neighborhood(double x, double y, int vertex)
+        {
+            throw new NotImplementedException();
+        }
+
+        public void CreateBlocks(Size size, double[] x, double[] y)
+        {
+            throw new NotImplementedException();
         }
     }
 

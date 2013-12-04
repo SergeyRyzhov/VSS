@@ -4,22 +4,22 @@ using System.Linq;
 
 namespace Buddy.Common.Structures
 {
-    public class ReducedGraph : IGraph, IReducible
+    public class GraphReducer : IReducer
     {
-        private readonly IGraph m_symmetricGraph;
+        private readonly IGraph m_graph;
 
-        public ReducedGraph(IGraph symmetricGraph)
+        public GraphReducer(IGraph graph)
         {
-            m_symmetricGraph = symmetricGraph;
+            m_graph = graph;
         }
 
         protected virtual void ComputeRadiuses(int verticesAmount, int[] labels, int newSize, out double[] radiuses)
         {
             radiuses = new double[newSize];
-            for (var i = 0; i < VerticesAmount; i++)
+            for (var i = 0; i < m_graph.VerticesAmount; i++)
             {
                 var current = labels[i];
-                radiuses[current] += Radius[i];
+                radiuses[current] += m_graph.Radiuses[i];
             }
         }
 
@@ -33,42 +33,18 @@ namespace Buddy.Common.Structures
             }
         }
 
-        public double[] Radius { get { return m_symmetricGraph.Radius; } }
-
-        public double[] Weight { get { return m_symmetricGraph.Weight; } }
-
-        public int[] Adjency { get { return m_symmetricGraph.Adjency; } }
-
-        public int[] XAdj { get { return m_symmetricGraph.XAdj; } }
-
-        public int EdgesAmount { get { return m_symmetricGraph.EdgesAmount; } }
-
-        public int VerticesAmount { get { return m_symmetricGraph.VerticesAmount; } }
-
-        public IEnumerable<int> Adj(int vertex)
-        {
-            return m_symmetricGraph.Adj(vertex);
-        }
-
-        public IEnumerable<int> SymAdj(int vertex)
-        {
-            return m_symmetricGraph.SymAdj(vertex);
-        }
-
-        public IEnumerable<int> Vertices { get; private set; }
-
         public IGraph Reduce(int[] map)
         {
             var size = 0;
-            for (var i = 0; i < VerticesAmount; i++)
+            for (var i = 0; i < m_graph.VerticesAmount; i++)
                 size = Math.Max(size, map[i]);
             size += 1;
             var fst = new int[size + 1];
             for (var i = 0; i <= size; i++)
                 fst[i] = -1;
 
-            var nxt = new int[VerticesAmount];
-            for (var i = 0; i < VerticesAmount; i++)
+            var nxt = new int[m_graph.VerticesAmount];
+            for (var i = 0; i < m_graph.VerticesAmount; i++)
             {
                 nxt[i] = fst[map[i]];
                 fst[map[i]] = i;
@@ -86,7 +62,7 @@ namespace Buddy.Common.Structures
                 var temp = new List<int>();
                 while (j != -1)
                 {
-                    foreach (var e in Adj(j))
+                    foreach (var e in m_graph.Adj(j))
                     {
                         if (mask[map[e]] != i && map[e] != i)
                         {
@@ -103,9 +79,9 @@ namespace Buddy.Common.Structures
             double[] radiuses;
             double[] weight;
 
-            ComputeRadiuses(VerticesAmount, map, size, out radiuses);
+            ComputeRadiuses(m_graph.VerticesAmount, map, size, out radiuses);
 
-            ComputeWeights(VerticesAmount, map, adjncy.Count, out weight);
+            ComputeWeights(m_graph.VerticesAmount, map, adjncy.Count, out weight);
 
             return new Graph(size, xadj, adjncy.ToArray(), radiuses, weight);
         }

@@ -5,7 +5,6 @@ using Buddy.Common.Structures;
 using Buddy.Placer;
 using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.Drawing;
 using System.Linq;
 
@@ -16,9 +15,10 @@ namespace Buddy.Console
         private static void Main()
         {
             Drawer.Skip = false;
+            Drawer.Fill = true;
             
             //TODO: пока так, потом через аргументы командной строки
-            const string filename = "../../../../Matrix/grids/100x100.mtx";
+            const string filename = "../../../../Matrix/grids/400.mtx";
 
             var parser = new Parser();
             var graph = parser.ParseCrsGraph(filename);
@@ -35,12 +35,12 @@ namespace Buddy.Console
 
             if (load)
             {
-                saver.Load("400.pos", out x, out y);
+                saver.Load("output.pos", out x, out y);
             }
             else
             {
                 randPlacer.PlaceGraph(graph.VerticesAmount,null,null,null,null,size.Width, size.Height,null,null, out x, out y);
-                saver.Persist("400.pos",x,y);
+                saver.Persist("input.pos",x,y);
             }
 
             var coords = new List<Coordinate>();
@@ -55,13 +55,10 @@ namespace Buddy.Console
             //TODO: Печеть информации в параметры
             const bool print = false;
 
-            //TODO: Заполнени окружности вершины в параметры
-            const bool fill = false;
-
             //if (print)
             //    PrintCoordinates(coords);
 
-            Drawer.DrawGraph(size, graph, coords, "input.bmp", fill);
+            Drawer.DrawGraph(size, graph, coords, "input.bmp");
             System.Console.WriteLine("Число итераций");
             var s = System.Console.ReadLine();
             s = string.IsNullOrEmpty(s) ? "5" : s;
@@ -88,8 +85,10 @@ namespace Buddy.Console
 
             Statistic.PrintStatistic(graph, result.Select(c => c.X).ToArray(), result.Select(c => c.Y).ToArray());
 
-            Drawer.DrawGraph(size, graph, result, "output.bmp", fill);
-            Process.Start("0. input.bmp");
+            saver.Persist("output.pos", result.Select(c => c.X).ToArray(), result.Select(c => c.Y).ToArray());
+            ForceDirectedCSR.Scale(size, result, graph,true);
+            Drawer.DrawGraph(size, graph, result, "output.bmp");
+            
         }
     }
 }

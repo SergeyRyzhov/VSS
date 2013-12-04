@@ -1,4 +1,5 @@
-﻿using Buddy.Common.Structures;
+﻿using System.Diagnostics;
+using Buddy.Common.Structures;
 using System.Collections.Generic;
 using System.Drawing;
 
@@ -8,26 +9,31 @@ namespace Buddy.Common.Printers
     {
         private static int m_number;
 
+        private static string m_firstFile;
+
         public static bool Skip { get; set; }
+
+        public static bool Fill { get; set; }
+
 
         static Drawer()
         {
             Skip = false;
+            Fill = true;
         }
 
-        public static void DrawGraph(Size size, IGraph graph, IList<Coordinate> coords, string fileName, bool fill)
+        public static void DrawGraph(Size size, IGraph graph, IList<Coordinate> coords, string fileName)
         {
             if (Skip)
                 return;
 
-            var vertexBrush = Brushes.Red;
-            var vertexPen = new Pen(Color.Red, 1);
+            var vertexBrush = Brushes.OrangeRed;
+            var vertexPen = new Pen(Color.DarkOrange, 1);
             var edgePen = new Pen(Color.Blue, 1);
-
+            
             var bitmap = new Bitmap(size.Width, size.Height);
             using (var image = Graphics.FromImage(bitmap))
             {
-
                 foreach (var vertex in graph.Vertices)
                 {
                     foreach (var second in graph.SymAdj(vertex))
@@ -42,11 +48,11 @@ namespace Buddy.Common.Printers
                 for (var i = 0; i < graph.VerticesAmount; i++)
                 {
                     var x = new Coordinate(coords[i].X, coords[i].Y);
-                    var radius = graph.Radius[i] * scale;
+                    var radius = graph.Radiuses[i] * scale;
 
                     x.X -= radius / 2;
                     x.Y -= radius / 2;
-                    if (fill)
+                    if (Fill)
                     {
                         image.FillEllipse(vertexBrush, x.FloatX, x.FloatY, (float)radius, (float)radius);
                     }
@@ -55,10 +61,19 @@ namespace Buddy.Common.Printers
                         image.DrawEllipse(vertexPen, x.FloatX, x.FloatY, (float)radius, (float)radius);
                     }
                 }
+                
             }
-            bitmap.Save(string.Format("{0}. {1}", m_number++, fileName));
+            var file = string.Format("{0}. {1}", m_number++, fileName);
+            if (m_firstFile == null)
+                m_firstFile = file;
+            bitmap.Save(file);
             edgePen.Dispose();
             vertexPen.Dispose();
+        }
+
+        public void OpenFirst()
+        {
+            Process.Start(m_firstFile);
         }
     }
 }

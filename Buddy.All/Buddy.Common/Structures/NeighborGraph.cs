@@ -8,7 +8,6 @@ using System.Drawing;
 using Buddy.Common.Structures;
 
 
-
 // отдать  Юле схему построения
 namespace NeighborTester
 {
@@ -20,20 +19,19 @@ namespace NeighborTester
        // private readonly IGraph m_graph;
         
         Node[] ndmass;                             // массив оберток для вершин, где держим все вершины
-        Coordinate[,] blockscoordinate;            // массив для хранения координат блоков
+        //double[, ,] blockscoordinate;              // массив для хранения координат блоков: координата X по адресу blockscoordinate[i, j, 0], координата Y по адресу blockscoordinate[i, j, 1]
         int m;                                     // число блоков
         double height;
         double width;
+
 
         public NeighborGraph(IGraph graph, System.Drawing.Size size, IList<Coordinate> coordinate)
         {
             this.EdgesAmount = graph.EdgesAmount;
             this.VerticesAmount = graph.VerticesAmount;
 
-            //this.Indexes = graph.Indexes;
-
-            this.Radius = graph.Radius;
-            this.Weight = graph.Weight;
+            this.Radiuses = graph.Radiuses;
+            this.Weights = graph.Weights;
 
             this.ColumnIndex = graph.Adjency;                 // количество ненулевых элементов в матрице
             this.RowIndex = graph.XAdj;
@@ -44,10 +42,10 @@ namespace NeighborTester
             CreateBlocks(coordinate, size);
         }
 
-        public NeighborGraph(int verticesAmount, int edgesAmount, System.Drawing.Size size, int [] Indexes, double [] Radius, IList<Coordinate> coordinate)
+        public NeighborGraph(int verticesAmount, int edgesAmount, System.Drawing.Size size, int [] Indexes, double [] radiuses, IList<Coordinate> coordinate)
         {
             this.Indexes = Indexes;
-            this.Radius = Radius;
+            this.Radiuses = radiuses;
 
             // определяем число m
             defineColBlocks(size);
@@ -59,12 +57,35 @@ namespace NeighborTester
         /// Заполнить обращения к внутреннему графу 
         /// </summary>
         public int[] Indexes { get; private set; }
-        public double[] Radius { get; private set; }
-        public double[] Weight { get; private set; }
+        public double[] Radiuses { get; private set; }
+        public double[] Weights { get; private set; }
+        public int[] Adjency { get; private set; }
+        public int[] XAdj { get; private set; }
         public int[] ColumnIndex { get; private set; }
         public int[] RowIndex { get; private set; }
         public int EdgesAmount { get; private set; }
         public int VerticesAmount { get; private set; }
+        public double Radius(int vertex)
+        {
+            throw new NotImplementedException();
+        }
+
+        public double Weight(int u, int v)
+        {
+            throw new NotImplementedException();
+        }
+
+        public IEnumerable<int> Adj(int vertex)
+        {
+            throw new NotImplementedException();
+        }
+
+        public IEnumerable<int> SymAdj(int vertex)
+        {
+            throw new NotImplementedException();
+        }
+
+        public IEnumerable<int> Vertices { get; private set; }
 
         public void Update()
         {
@@ -73,61 +94,29 @@ namespace NeighborTester
         }
 
         // принимаем на вход координаты вершины и индекс данной вершины, vertex - индекс данной вершины
-        public int[] Neighborhood(Coordinate x, int vertex)
+        public IEnumerable<int> Neighborhood(Coordinate x, int vertex)
         {
             // tmp - номер блока куда попадает вершина
             int tmp = 0;
-            double radius = Radius[vertex];
+            double radius = Radiuses[vertex];
            
-            // ищем номер вершины, т.е. номер блока, куда попадает вершина 
-            for (int i = 0; i < m; i++)
+           
+            for (int q = 0; q < ndmass.Length; q++ )
             {
-                for (int j = 0; j < m; j++)
+                if (ndmass[q].indexOfVertex == vertex)
                 {
-                    if ((x.X >= blockscoordinate[i, j].X) && (x.X < blockscoordinate[i, j].X + width))
-                    {
-                        if ((x.Y >= blockscoordinate[i, j].Y) && (x.Y < blockscoordinate[i, j].Y + height))
-                        {
-                            tmp = (j + i * m);
-                        }
-                    }
+                    tmp = ndmass[q].number;
+                    break;
                 }
             }
+
             // используем LINQ, чтобы найти все вершины из соседних блоков
-
-            // Array.Sort(ndmass, new SortByNumberOfBlockMin());
-
-            // ищем вершины в блоках над основым
-            List<Node> highervertices = (from Node nd in ndmass
-                                         where (nd.number >= ((int)(tmp - 1 - m)) && (nd.number <= ((int)(tmp + 1 - m)))
-                                             )
-                                         select nd).ToList<Node>();
-
-            List<Node> vertices = (from Node nd in ndmass
-                                   where (nd.number <= ((int)(tmp + 1)) && (nd.number >= ((int)(tmp - 1))))
-                                   select nd).ToList<Node>();
-
-            // ищем вершины в блоках под основым
-            List<Node> lowvertices = (from Node nd in ndmass
-                                      where (nd.number >= ((int)(tmp - 1 + m)) && (nd.number <= ((int)(tmp + 1 + m))))
-                                      select nd).ToList<Node>();
-
-            IEnumerable<Node> allneighbourvertices = vertices.Concat(lowvertices.Concat(highervertices));
-
-            //лист для того, чтобы хранить вершины, которые попадают в радиус вершины данной
-            List<int> nodelist = new List<int>((highervertices.Count + vertices.Count + lowvertices.Count) / 2);
-
-            // ищем вершины, которые попадают в радиус данной вершины
-            foreach (Node nd in allneighbourvertices)
-            {
-                if ((Math.Pow((nd.coord.X - x.X), 2) + Math.Pow((nd.coord.Y - x.Y), 2) <= Math.Pow(radius, 2)))
-                {
-                    nodelist.Add(nd.indexOfVertex);
-                }
-
-            }
-
-            return nodelist.ToArray();
+            IEnumerable<int> vertices = (from Node nd in ndmass
+                                   where ((((nd.number <= (tmp + 1)) && (nd.number >= (tmp - 1))) 
+                                   || ((nd.number >= (tmp - 1 - m)) && (nd.number <= (tmp + 1 - m))) 
+                                   ||  ((nd.number >= (tmp - 1 + m)) && (nd.number <= (tmp + 1 + m)))) && ((Math.Pow((nd.coord.X - x.X), 2) + Math.Pow((nd.coord.Y - x.Y), 2) <= Math.Pow(radius, 2))))
+                                   select nd.indexOfVertex);
+            return vertices;
         }
 
         public void CreateBlocks(IList<Coordinate> coordinate, System.Drawing.Size size)
@@ -137,12 +126,24 @@ namespace NeighborTester
             width = ((double)size.Width) / m;
 
             ndmass = new Node [coordinate.Count];
-            blockscoordinate = new Coordinate[m, m];
+            
+            int x = 0;
+            int y = 0;
+
+            for (int k = 0; k < coordinate.Count; k++ )
+            {
+                x = (int)(coordinate[k].X / width);
+                y = (int)(coordinate[k].Y / height);
+
+                ndmass[k] = new Node(coordinate[k], (y + x * m), k);
+            }
+
 
             // проходим по числу блоков, чтобы для каждого блока на лету 
             // узнать, какие именно вершины попадают в каждый конкретный блок
-            int indexOfMassive = 0;
-
+            //int indexOfMassive = 0;
+            
+            /*
             for (int i = 0; i < m; i++)
             {
                 for (int j = 0; j < m; j++)
@@ -151,24 +152,24 @@ namespace NeighborTester
                     // заносить туда координаты левого верхнего угла каждого блока
                     // с целью поиска вершин, которые входят в этот блок
 
-                    Coordinate leftCorner = new Coordinate(width * j, height * i);
-                    blockscoordinate[i, j] = leftCorner;
+                    blockscoordinate[i, j, 0] = width * j;
+                    blockscoordinate[i, j, 1] = height * i;
 
                     for (int t = 0; t < coordinate.Count; t++)
                     {
-                        if ((coordinate[t].X >= leftCorner.X) && (coordinate[t].X < leftCorner.X + width))
+                        if ((coordinate[t].X >= blockscoordinate[i, j, 0]) && (coordinate[t].X < blockscoordinate[i, j, 0] + width))
                         {
-                            if ((coordinate[t].Y >= leftCorner.Y) && (coordinate[t].Y < leftCorner.Y + height))
+                            if ((coordinate[t].Y >= blockscoordinate[i, j, 1]) && (coordinate[t].Y < blockscoordinate[i, j, 1] + height))
                             {
-                                ndmass[indexOfMassive] = new Node(coordinate[t], (j + i * m), t);
+                                ndmass[indexOfMassive] = new Node(coordinate[t], (j + i * m));
                                 indexOfMassive++;
                             }
                         }
                     }
 
                 }
-            }
-
+             
+            }*/
 
             Array.Sort(ndmass, new SortByNumberOfBlockMin());
         }
@@ -178,11 +179,11 @@ namespace NeighborTester
         {
             // определяем m
             double temp = 0, w, h;
-            for (int t = 0; t < Radius.Length; t++)
+            for (uint t = 0; t < Radiuses.Length; t++)
             {
-                if (temp < Radius[t])
+                if (temp < Radiuses[t])
                 {
-                    temp = Radius[t];
+                    temp = Radiuses[t];
                 }
             }
 
@@ -193,6 +194,15 @@ namespace NeighborTester
             m = (int)(w < h ? w : h);
         }
 
+        public int[] Neighborhood(double x, double y, int vertex)
+        {
+            throw new NotImplementedException();
+        }
+
+        public void CreateBlocks(Size size, double[] x, double[] y)
+        {
+            throw new NotImplementedException();
+        }
     }
 
     public class SortByNumberOfBlockMin : IComparer<Node>

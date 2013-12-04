@@ -8,11 +8,11 @@ namespace Buddy.Common.Structures
         /// <summary>
         /// Номера соседних вершин
         /// </summary>
-        int[] Neighborhood(Coordinate x, int vertex);
+        int[] Neighborhood(double x, double y, int vertex);
 
         /// <summary>
         /// Обновление внутренних структур
         /// </summary>
-        void CreateBlocks(IList<Coordinate> coordinate, Size size, ArrayCoordinate arr);
+        void CreateBlocks(Size size, double[] x, double[] y);
     }
 }

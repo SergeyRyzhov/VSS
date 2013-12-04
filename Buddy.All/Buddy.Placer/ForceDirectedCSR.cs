@@ -64,8 +64,8 @@ namespace Buddy.Placer
                     
                     var j = graph.Adjency[k];
                     if (j < i) continue;
-                    var AttrForce = Distance(coordinates[i], coordinates[j]) * graph.Weight[k];
-                    var u = FindForceVector(coordinates[i], coordinates[j], AttrForce);
+                    var attrForce = Distance(coordinates[i], coordinates[j]) * graph.Weights[k];
+                    var u = FindForceVector(coordinates[i], coordinates[j], attrForce);
                     vectors[i].X += u.X;
                     vectors[i].Y += u.Y;
                     vectors[j].X -= u.X;
@@ -87,7 +87,7 @@ namespace Buddy.Placer
                 {
                    // var j = etr.Current;
                     if (Math.Abs(coordinates[i].X - coordinates[j].X) < double.Epsilon && Math.Abs(coordinates[i].Y - coordinates[j].Y) < double.Epsilon)
-                        RepFoce = -(graph.Radius[i]+graph.Radius[j]);
+                        RepFoce = -(graph.Radiuses[i]+graph.Radiuses[j]);
                     else RepFoce = -1 / Distance(coordinates[i], coordinates[j]);
                     var u = FindForceVector(coordinates[i], coordinates[j], RepFoce);
                     vectors[i].X += u.X;
@@ -127,7 +127,7 @@ namespace Buddy.Placer
             }
         }
 
-        public static void Scale(Size size, IList<Coordinate> coordinates, IGraph graph)
+        public static void Scale(Size size, IList<Coordinate> coordinates, IGraph graph, bool always = false)
         {
 
             var maxX = coordinates[0].X;
@@ -146,12 +146,12 @@ namespace Buddy.Placer
 
             for (var i = 0; i < graph.VerticesAmount; i++)
             {
-                if (coordinates[i].X + graph.Radius[i] > maxX) maxX = coordinates[i].X + graph.Radius[i];
-                if (coordinates[i].Y + graph.Radius[i] > maxY) maxY = coordinates[i].Y + graph.Radius[i];
-                if (coordinates[i].X - graph.Radius[i] < minX) minX = coordinates[i].X - graph.Radius[i];
-                if (coordinates[i].Y - graph.Radius[i] < minY) minY = coordinates[i].Y - graph.Radius[i];
+                if (coordinates[i].X + graph.Radiuses[i] > maxX) maxX = coordinates[i].X + graph.Radiuses[i];
+                if (coordinates[i].Y + graph.Radiuses[i] > maxY) maxY = coordinates[i].Y + graph.Radiuses[i];
+                if (coordinates[i].X - graph.Radiuses[i] < minX) minX = coordinates[i].X - graph.Radiuses[i];
+                if (coordinates[i].Y - graph.Radiuses[i] < minY) minY = coordinates[i].Y - graph.Radiuses[i];
             }
-            if ((maxX > size.Width) || (maxY > size.Height) || (minX < 0) || (minY < 0))
+            if ((maxX > size.Width) || (maxY > size.Height) || (minX < 0) || (minY < 0) || always)
             {
                 var weight = maxX - minX;
                 var height = maxY - minY;

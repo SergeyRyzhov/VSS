@@ -31,7 +31,7 @@ namespace Buddy.Placer
             var ite = Settings.Iterations;
             do
             {
-                PlaceGraph(symmetricGraph.VerticesAmount, symmetricGraph.Radius, symmetricGraph.XAdj, symmetricGraph.Adjency, symmetricGraph.Weight, width,
+                PlaceGraph(symmetricGraph.VerticesAmount, symmetricGraph.Radiuses, symmetricGraph.XAdj, symmetricGraph.Adjency, symmetricGraph.Weights, width,
                 height, localX, localY, out localresultX, out localresultY);
 
                 localX = localresultX.ToArray();
@@ -44,7 +44,7 @@ namespace Buddy.Placer
 
             resultX = localX.ToArray();
             resultY = localY.ToArray();
-            //PlaceGraph(symmetricGraph.VerticesAmount, symmetricGraph.Radius, symmetricGraph.XAdj, symmetricGraph.Adjency, symmetricGraph.Weight, width,
+            //PlaceGraph(symmetricGraph.VerticesAmount, symmetricGraph.Radiuses, symmetricGraph.XAdj, symmetricGraph.Adjency, symmetricGraph.Weights, width,
             //    height, initialX, initialY, out resultX, out resultY);
     
             return resultX.Select((t, i) => new Coordinate(t, resultY[i])).ToList();
@@ -59,7 +59,7 @@ namespace Buddy.Placer
             double[] resultX;
             double[] resultY;
         
-            PlaceGraphIter(symmetricGraph.VerticesAmount, symmetricGraph.Radius, symmetricGraph.XAdj, symmetricGraph.Adjency, symmetricGraph.Weight, width,
+            PlaceGraphIter(symmetricGraph.VerticesAmount, symmetricGraph.Radiuses, symmetricGraph.XAdj, symmetricGraph.Adjency, symmetricGraph.Weights, width,
                 height, initialX, initialY, out resultX, out resultY);
         
             return resultX.Select((t, i) => new Coordinate(t, resultY[i])).ToList();
@@ -80,7 +80,7 @@ namespace Buddy.Placer
         {
             IGraph graph = new Graph(nodes, xAdj, adjency, radiuses, weights);//nodes, rowIndexes[nodes], radiuses, weights, columnIndexes, rowIndexes);
     
-            var dec = new ReducedGraph(graph);
+            var dec = new GraphReducer(graph);
             var labels = GetReduceLabels(nodes, graph).ToArray();
     
             var rgraph = dec.Reduce(labels.Select(x => x).ToArray());
@@ -93,11 +93,11 @@ namespace Buddy.Placer
             double[] localResultX = localInitialX.ToArray();
             double[] localResultY = localInitialY.ToArray();
     
-            //m_localPlacer.PlaceGraph(rgraph.VerticesAmount, rgraph.Radius, rgraph.XAdj, rgraph.Adjency,
-            //    rgraph.Weight, width, height, localInitialX, localInitialY, out localResultX, out localResultY);
+            //m_localPlacer.PlaceGraph(rgraph.VerticesAmount, rgraph.Radiuses, rgraph.XAdj, rgraph.Adjency,
+            //    rgraph.Weights, width, height, localInitialX, localInitialY, out localResultX, out localResultY);
     
             Drawer.DrawGraph(new Size((int)width, (int)height), rgraph,
-                localResultX.Select((t, i) => new Coordinate(t, localResultY[i])).ToList(), string.Format("multulevel_down_{0}.bmp", nodes), false);
+                localResultX.Select((t, i) => new Coordinate(t, localResultY[i])).ToList(), string.Format("multulevel_down_{0}.bmp", nodes));
     
             if (rgraph.VerticesAmount > 50)
             {
@@ -114,9 +114,9 @@ namespace Buddy.Placer
             for (int i = 0; i < nodes; i++)
             {
                 var j = labels[i];
-                resultX[i] = localResultX[j] + rnd.Next((int)(2 * rgraph.Radius[j])) - rgraph.Radius[j];
+                resultX[i] = localResultX[j] + rnd.Next((int)(2 * rgraph.Radiuses[j])) - rgraph.Radiuses[j];
     
-                resultY[i] = localResultY[j] + rnd.Next((int)(2 * rgraph.Radius[j])) - rgraph.Radius[j];
+                resultY[i] = localResultY[j] + rnd.Next((int)(2 * rgraph.Radiuses[j])) - rgraph.Radiuses[j];
     
                 if (resultX[i] < 0)
                     resultX[i] = -resultX[i];
@@ -133,8 +133,8 @@ namespace Buddy.Placer
                 var xx = resultX.ToArray();
                 var yy = resultY.ToArray();
                 //m_localPlacer.Settings.Iterations *= 2;
-                m_localPlacer.PlaceGraph(graph.VerticesAmount, graph.Radius, graph.XAdj, graph.Adjency,
-                    graph.Weight, width, height, xx, yy, out xx, out yy);
+                m_localPlacer.PlaceGraph(graph.VerticesAmount, graph.Radiuses, graph.XAdj, graph.Adjency,
+                    graph.Weights, width, height, xx, yy, out xx, out yy);
                 
                 if (yy.Any(double.IsNaN))
                 {
@@ -148,7 +148,7 @@ namespace Buddy.Placer
     
                 Drawer.DrawGraph(new Size((int)width, (int)height), graph,
                     xx.Select((t, i) => new Coordinate(t, yy[i])).ToList(),
-                    string.Format("multulevel_up_{0}.bmp", nodes), false);
+                    string.Format("multulevel_up_{0}.bmp", nodes));
     
                 resultX = xx.ToArray();
                 resultY = yy.ToArray();

@@ -39,8 +39,8 @@ namespace Buddy.Common
                         graph.Adj(vertex)
                             .Sum(
                                 second =>
-                                    Collision(x[vertex], y[vertex], graph.Radius[vertex], x[second], y[second],
-                                        graph.Radius[second])));
+                                    Collision(x[vertex], y[vertex], graph.Radiuses[vertex], x[second], y[second],
+                                        graph.Radiuses[second])));
         }
 
         private static double Collision(double x1, double y1, double r1, double x2, double y2, double r2)
@@ -116,7 +116,8 @@ namespace Buddy.Common
             }
             if (double.IsNaN(s))
             {
-                Console.WriteLine(s);
+                Console.WriteLine(@"Error in statistic. Input data x{0} y{1} r{2} and second x{3} y{4} r{5}", 
+                    x1, y1, r1, x2, y2, r2);
             }
             return s;
         }

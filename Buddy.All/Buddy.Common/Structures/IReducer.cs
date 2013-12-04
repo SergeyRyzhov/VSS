@@ -1,6 +1,6 @@
 ﻿namespace Buddy.Common.Structures
 {
-    public interface IReducible
+    public interface IReducer
     {
         /// <summary>
         /// Получение редуцированного графа
