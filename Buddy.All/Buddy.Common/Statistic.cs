@@ -1,6 +1,6 @@
-﻿using System.Linq;
-using Buddy.Common.Structures;
+﻿using Buddy.Common.Structures;
 using System;
+using System.Linq;
 
 namespace Buddy.Common
 {
@@ -49,7 +49,7 @@ namespace Buddy.Common
             d = Math.Sqrt(Math.Pow(x2 - x1, 2) + Math.Pow(y2 - y1, 2));
             if (d <= Double.Epsilon)//центры совпадают
             {
-                if (Math.Abs( r1- r2) <= Double.Epsilon)
+                if (Math.Abs(r1 - r2) <= Double.Epsilon)
                 {
                     s = Math.PI * r1 * r1;
                 }
@@ -70,7 +70,7 @@ namespace Buddy.Common
             {
                 if (Math.Abs(r1 - r2) < Double.Epsilon)
                 {
-                    double cos = Math.Cos(d / (2 * r1));
+                    var cos = Math.Cos(d / (2 * r1));
                     if (cos < 0)
                     {
                         cos = -1 * cos;
@@ -83,8 +83,8 @@ namespace Buddy.Common
                     r = r2;
                     d1 = (Math.Pow(d, 2) + Math.Pow(R, 2) - Math.Pow(r, 2)) / 2d;
                     d2 = (Math.Pow(d, 2) + Math.Pow(r, 2) - Math.Pow(R, 2)) / 2d;
-                    double cos1 = Math.Cos(d2 / r);
-                    double cos2 = Math.Cos(d1 / R);
+                    var cos1 = Math.Cos(d2 / r);
+                    var cos2 = Math.Cos(d1 / R);
                     if (cos1 < 0)
                     { cos1 = -1 * cos1; }
                     if (cos2 < 0)
@@ -99,8 +99,8 @@ namespace Buddy.Common
                     r = r1;
                     d1 = (Math.Pow(d, 2) + Math.Pow(R, 2) - Math.Pow(r, 2)) / 2d;
                     d2 = (Math.Pow(d, 2) + Math.Pow(r, 2) - Math.Pow(R, 2)) / 2d;
-                    double cos1 = Math.Cos(d2 / r);
-                    double cos2 = Math.Cos(d1 / R);
+                    var cos1 = Math.Cos(d2 / r);
+                    var cos2 = Math.Cos(d1 / R);
                     if (cos1 < 0)
                     { cos1 = -1 * cos1; }
                     if (cos2 < 0)
@@ -109,15 +109,16 @@ namespace Buddy.Common
                     A2 = Math.Pow(R, 2) * Math.Pow(cos2, -1);
                     s = A1 + A2 - (Math.Sqrt((-d + r - R) * (-d - r + R) * (-d + r + R) * (d + r + R))) / 2;
                 }
-                if (Math.Abs(d-r1 - r2) < Double.Epsilon)
+                if (Math.Abs(d - r1 - r2) < Double.Epsilon)
                 {
                     s = 0;
                 }
             }
             if (double.IsNaN(s))
             {
-                Console.WriteLine(@"Error in statistic. Input data x{0} y{1} r{2} and second x{3} y{4} r{5}", 
+                Console.WriteLine(@"Error in statistic. Input data x{0} y{1} r{2} and second x{3} y{4} r{5}",
                     x1, y1, r1, x2, y2, r2);
+                return 0;
             }
             return s;
         }

@@ -1,8 +1,8 @@
-﻿using System.Collections.Generic;
-using System.Linq;
-using Buddy.Common.Structures;
+﻿using Buddy.Common.Structures;
 using System;
+using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 
 namespace Buddy.Common.Parser
 {
@@ -12,7 +12,7 @@ namespace Buddy.Common.Parser
         {
             var fileStream = new FileStream(fileName, FileMode.Open);
             var streamReader = new StreamReader(fileStream);
-            
+
             var line = streamReader.ReadLine();
             while (line != null && line.Contains("%"))
             {
@@ -38,7 +38,7 @@ namespace Buddy.Common.Parser
                     throw new Exception("Not a square matrix.");
                 }
 
-                nz = int.Parse(values[2])*2;
+                nz = int.Parse(values[2]) * 2;
             }
             catch (Exception exception)
             {

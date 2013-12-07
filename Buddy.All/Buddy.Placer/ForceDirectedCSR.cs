@@ -1,195 +1,258 @@
-﻿using System;
+﻿using Buddy.Common.Printers;
+using Buddy.Common.Structures;
+using System;
 using System.Collections.Generic;
 using System.Drawing;
-using System.Linq;
-using Buddy.Common.Structures;
 
 namespace Buddy.Placer
 {
-   public class ForceDirectedCSR : BasePlacer
+    public class ForceDirectedCSR : BasePlacer
     {
-        public ForceDirectedCSR(ISettings settings) : base(settings)
+        private static Random m_random;
+
+        public ForceDirectedCSR(ISettings settings)
+            : base(settings)
         {
-            
+            m_random = new Random();
         }
 
-
-       private static double Distance(Coordinate a, Coordinate b)
+        private static double Distance(double ax, double ay, double bx, double by)
         {
-            return Math.Sqrt(Math.Pow(a.X - b.X, 2) + Math.Pow(a.Y - b.Y, 2));
+            return Math.Sqrt((bx - ax) * (bx - ax) + (by - ay) * (by - ay));
         }
 
-        private static double Norma(Coordinate a)
+        private static double Norma(double x, double y)
         {
-            return Math.Sqrt(Math.Pow(a.X, 2) + Math.Pow(a.Y, 2));
+            return Math.Sqrt(x * x + y * y);
         }
 
-       
-        private static Coordinate FindForceVector(Coordinate a, Coordinate b, double fourceModule)
+        private static void FindForceVector(double ax, double ay, double bx, double by, double fourceModule,
+            out double x,
+            out double y)
         {
-            Coordinate newCoord;
-            if ((Math.Abs(a.X - b.X) <double.Epsilon) && (Math.Abs(a.Y - b.Y) < double.Epsilon))
+            //todo может быть для каждой координаты отдельное сравнение?
+            if ((Math.Abs(ax - bx) < double.Epsilon) || (Math.Abs(ay - by) < double.Epsilon))
             {
-                Random r = new Random();
-                 newCoord = new Coordinate
-                {
-                    X = r.NextDouble() ,
-                    Y = r.NextDouble() 
-                };
-
+                x = m_random.NextDouble();
+                y = m_random.NextDouble();
             }
             else
             {
-                newCoord = new Coordinate
-                {
-                    X = b.X - a.X,
-                    Y = b.Y - a.Y
-                };
+                x = bx - ax;
+                y = by - ay;
             }
-            var norma = Norma(newCoord);
-            newCoord.X = (newCoord.X / norma) * fourceModule;
-            newCoord.Y = (newCoord.Y / norma) * fourceModule;
-
-            return newCoord;
+            //todo возможно логика должна быть другой (добавлено чтобы не делить на 0)
+            if (x < double.Epsilon || y < double.Epsilon)
+                return;
+            var norma = Norma(x, y);
+            x = (x / norma) * fourceModule;
+            y = (y / norma) * fourceModule;
         }
 
-
-        private static void CulcAttractiveForces(IGraph graph, IList<Coordinate> coordinates,
-            IList<Coordinate> vectors)
+        private static void CulcAttractiveForces(IGraph graph, IList<double> inX, IList<double> inY,
+            ref double[] outX, ref double[] outY)
         {
-            for (var i = 0; i < graph.XAdj.Length-1; i++)
+            foreach (var v in graph.Vertices)
             {
-                for (var k = graph.XAdj[i]; k < graph.XAdj[i+1]; k++)
+                //todo нужно ли сделать сокрытие внутренних структур
+                //foreach (var u in graph.SymAdj(v))
+                for (var k = graph.XAdj[v]; k < graph.XAdj[v + 1]; k++)
                 {
-                    
-                    var j = graph.Adjency[k];
-                    if (j < i) continue;
-                    var AttrForce = Distance(coordinates[i], coordinates[j]) * graph.Weights[k];
-                    var u = FindForceVector(coordinates[i], coordinates[j], AttrForce);
-                    vectors[i].X += u.X;
-                    vectors[i].Y += u.Y;
-                    vectors[j].X -= u.X;
-                    vectors[j].Y -= u.Y;
+                    var u = graph.Adjency[k];
+
+                    if (u <= v) continue;
+
+                    var attrForce = Distance(inX[v], inY[v], inX[u], inY[u])*graph.Weights[k]/
+                                    (graph.Radius(v) + graph.Radius(u));
+                    double x;
+                    double y;
+
+                    FindForceVector(inX[v], inY[v], inX[u], inY[u], attrForce, out x, out y);
+                    if (double.IsNaN(x))
+                        throw new Exception();
+                    if (double.IsNaN(y))
+                        throw new Exception();
+
+                    outX[v] += x;
+                    outY[v] += y;
+                    outX[u] -= x;
+                    outY[u] -= y;
                 }
             }
         }
 
-        private static void CulcRepulsiveForces(IGraph graph, IList<Coordinate> coordinates,
-            IList<Coordinate> vectors, Size size)
+        private static void CulcRepulsiveForces(IGraph graph, IList<double> inX, IList<double> inY,
+            ref double[] outX, ref double[] outY)
         {
-           // INeighbor g = new NeighborTester.NeighborGraph(graph, size, coordinates);
-            double RepFoce;
-            for (var i = 0; i < graph.VerticesAmount; i++)
-            {//  var neighbors = g.Neighborhood(coordinates[i], i);
-             //  var etr = neighbors.GetEnumerator;
-               for (var j = i + 1; j < graph.VerticesAmount; j++)
-            //   while(etr.MoveNext())
+            //todo вынести логику получения соседей в отдельный интерфейс/класс
+            for (var v = 0; v < graph.VerticesAmount; v++)
+            {
+                for (var u = v + 1; u < graph.VerticesAmount; u++)
                 {
-                   // var j = etr.Current;
-                    if (Math.Abs(coordinates[i].X - coordinates[j].X) < double.Epsilon && Math.Abs(coordinates[i].Y - coordinates[j].Y) < double.Epsilon)
-                        RepFoce = -(graph.Radiuses[i]+graph.Radiuses[j]);
-                    else RepFoce = -1 / Distance(coordinates[i], coordinates[j]);
-                    var u = FindForceVector(coordinates[i], coordinates[j], RepFoce);
-                    vectors[i].X += u.X;
-                    vectors[i].Y += u.Y;
-                    vectors[j].X -= u.X;
-                    vectors[j].Y -= u.Y;
+                    double repFoce;
+                    if (Math.Abs(inX[v] - inX[u]) < double.Epsilon &&
+                        Math.Abs(inY[v] - inY[u]) < double.Epsilon)
+                    {
+                        repFoce = -(graph.Radius(v) + graph.Radius(u));
+                    }
+                    else
+                    {
+                        repFoce = -1 / Distance(inX[v], inY[v], inX[u], inY[u]);
+                    }
 
+                    double x;
+                    double y;
+
+                    FindForceVector(inX[v], inY[v], inX[u], inY[u], repFoce, out x, out y);
+                    outX[v] += x;
+                    outY[v] += y;
+                    outX[u] -= x;
+                    outY[u] -= y;
                 }
             }
         }
 
-        private static double MaxStep(Size size, IGraph graph)
+        private static double MaxStep
         {
-            return 10;
-        }
-
-        private static double ReductionCoef(Size size, IGraph graph, IList<Coordinate> vectors)
-        {
-            var maxModule = vectors.Max(v => Norma(v));
-            return MaxStep(size, graph) / maxModule;
-        }
-
-        private static void CulcGradient(IGraph graph, IList<Coordinate> coordinates, Coordinate[] gradient, Size size)
-        {
-            for (var i = 0; i < graph.VerticesAmount; i++)
+            //todo вынести в настройки, либо рассчитывать
+            get
             {
-                gradient[i].X = 0;
-                gradient[i].Y = 0;
-            }
-            CulcAttractiveForces(graph, coordinates, gradient);
-            CulcRepulsiveForces(graph, coordinates, gradient, size);
-            var r1 = ReductionCoef(size, graph, gradient);
-            foreach (var v in gradient)
-            {
-                v.X = v.X * r1;
-                v.Y = v.Y * r1;
+                return 10;
             }
         }
 
-        public static void Scale(Size size, IList<Coordinate> coordinates, IGraph graph)
+        private static double ReductionCoef(IList<double> x, IList<double> y)
         {
-            return;
-            var maxX = coordinates[0].X;
-            var minX = coordinates[0].Y;
-            var maxY = coordinates[0].X;
-            var minY = coordinates[0].Y;
-
-            for (var i = 1; i < coordinates.Count; i++)
+            double maxModule = 0;
+            // ReSharper disable once LoopCanBeConvertedToQuery
+            for (var i = 0; i < x.Count; i++)
             {
-                if (coordinates[i].X > maxX) maxX = coordinates[i].X;
-                if (coordinates[i].Y > maxY) maxY = coordinates[i].Y;
-                if (coordinates[i].X < minX) minX = coordinates[i].X;
-                if (coordinates[i].Y < minY) minY = coordinates[i].Y;
+                maxModule = Math.Max(maxModule, Norma(x[i], y[i]));
+                if (double.IsNaN(maxModule))
+                    throw new Exception();
+            }
+            return MaxStep / maxModule;
+        }
 
+        private static void CulcGradient(IGraph graph, IList<double> inX, IList<double> inY, ref double[] outX, ref double[] outY)
+        {
+            foreach (var vertex in graph.Vertices)
+            {
+                outX[vertex] = 0;
+                outY[vertex] = 0;
             }
 
-            for (var i = 0; i < graph.VerticesAmount; i++)
+            CulcAttractiveForces(graph, inX, inY, ref outX, ref outY);
+            for (int i = 0; i < outX.Length; i++)
             {
-                if (coordinates[i].X + graph.Radiuses[i] > maxX) maxX = coordinates[i].X + graph.Radiuses[i];
-                if (coordinates[i].Y + graph.Radiuses[i] > maxY) maxY = coordinates[i].Y + graph.Radiuses[i];
-                if (coordinates[i].X - graph.Radiuses[i] < minX) minX = coordinates[i].X - graph.Radiuses[i];
-                if (coordinates[i].Y - graph.Radiuses[i] < minY) minY = coordinates[i].Y - graph.Radiuses[i];
+                if (double.IsNaN(outX[i]))
+                    throw new Exception();
             }
-            if ((maxX > size.Width) || (maxY > size.Height) || (minX < 0) || (minY < 0))
+
+            CulcRepulsiveForces(graph, inX, inY, ref outX, ref outY);
+            for (int i = 0; i < outX.Length; i++)
+            {
+                if (double.IsNaN(outX[i]))
+                    throw new Exception();
+            }
+
+            var reductionCoef = ReductionCoef(outX, outY);
+            foreach (var vertex in graph.Vertices)
+            {
+                outX[vertex] *= reductionCoef;
+                outY[vertex] *= reductionCoef;
+            }
+        }
+
+        //todo исправить если есть ошибка
+        public static void Scale(IGraph graph, Size size, ref double[] x, ref double[] y, bool always = false)
+        {
+            var maxX = x[0];
+            var minX = x[0];
+
+            var maxY = y[0];
+            var minY = y[0];
+
+            foreach (var vertex in graph.Vertices)
+            {
+                maxX = Math.Max(maxX, x[vertex]);
+                minX = Math.Min(minX, x[vertex]);
+
+                maxY = Math.Max(maxY, y[vertex]);
+                minY = Math.Min(minY, y[vertex]);
+            }
+
+            foreach (var vertex in graph.Vertices)
+            {
+                maxX = Math.Max(maxX, x[vertex] + graph.Radius(vertex));
+                minX = Math.Min(minX, x[vertex] - graph.Radius(vertex));
+
+                maxY = Math.Max(maxY, y[vertex] + graph.Radius(vertex));
+                minY = Math.Min(minY, y[vertex] - graph.Radius(vertex));
+            }
+
+            if ((maxX > size.Width) || (maxY > size.Height) || (minX < 0) || (minY < 0) || always)
             {
                 var weight = maxX - minX;
                 var height = maxY - minY;
 
-                var coeffx = (size.Width - 20) / weight;
-                var coeffy = (size.Height - 20) / height;
-                for (var i = 0; i < graph.VerticesAmount; i++)
-                {
-                    coordinates[i].X = (coordinates[i].X - minX) * coeffx + 10;
-                    coordinates[i].Y = (coordinates[i].Y - minY) * coeffy + 10;
+                //todo вынести если нужно в настройки
+                const int limit = 20;
+                var coeffX = (size.Width - limit) / weight;
+                var coeffY = (size.Height - limit) / height;
 
+                //todo вынести если нужно в настройки
+                const int limitBorder = 10;
+                foreach (var vertex in graph.Vertices)
+                {
+                    x[vertex] = (x[vertex] - minX) * coeffX + limitBorder;
+                    y[vertex] = (y[vertex] - minY) * coeffY + limitBorder;
                 }
             }
 
+            foreach (var vertex in graph.Vertices)
+            {
+                if (x[vertex] > size.Width)
+                    throw new Exception();
+
+                if (y[vertex] > size.Height)
+                    throw new Exception();
+            }
         }
 
-
-        public override IList<Coordinate> PlaceGraph(IGraph graph, IList<Coordinate> coordinate, Size size)
+        public override void PlaceGraph(IGraph graph, Size size, double[] inX, double[] inY, ref double[] outX, ref double[] outY)
         {
-            IList<Coordinate> newCoord = coordinate.ToList();
             var iterations = Settings.Iterations;
-            Coordinate[] gradient = new Coordinate[graph.VerticesAmount];
-            for (var i = 0; i < gradient.Length; i++)
-                gradient[i] = new Coordinate(0, 0);
-            do
+
+            Array.Copy(inX, outX, inX.Length);
+            Array.Copy(inY, outY, inY.Length);
+
+            var x = new double[inX.Length];
+            var y = new double[inY.Length];
+
+            foreach (var vertex in graph.Vertices)
             {
-                CulcGradient(graph, newCoord, gradient, size);
+                if (double.IsNaN(outX[vertex]))
+                    throw new Exception();
+            }
+            Drawer.Pause();
+            while (iterations-- > 0)
+            {
+                CulcGradient(graph, outX, outY, ref x, ref y);
 
-                for (var i = 0; i < graph.VerticesAmount; i++)
+                foreach (var vertex in graph.Vertices)
                 {
-                    newCoord[i].X += gradient[i].X;
-                    newCoord[i].Y += gradient[i].Y;
-                }
-                iterations--;
-                Scale(size, newCoord, graph);
-            } while (iterations > 0);
+                    if (double.IsNaN(x[vertex]))
+                        throw new Exception();
 
-            return newCoord;
+                    outX[vertex] += x[vertex];
+                    outY[vertex] += y[vertex];
+                }
+
+                Scale(graph, size, ref outX, ref outY);
+                Drawer.DrawGraph(size, graph, outX, outY, string.Format("force_directed_{0}.bmp", Settings.Iterations - iterations));
+            }
+            Drawer.Resume();
         }
     }
 }

@@ -66,7 +66,7 @@ namespace Buddy.Common.Structures
 
             for (var i = 0; i < edgesAmount; i++)
             {
-                weights[i] = 1;
+                weights[i] = 2;
             }
         }
 
@@ -89,7 +89,7 @@ namespace Buddy.Common.Structures
             return new Graph(size, xadj, adjncy.ToArray(), radiuses, weight);
         }
 
-        protected virtual int MakeGraph(int size, int[] map, out int[] xadj, out List<int> adjncy)
+        protected virtual void MakeGraph(int size, int[] map, out int[] xadj, out List<int> adjncy)
         {
             var fst = new int[size + 1];
             for (var i = 0; i <= size; i++)
@@ -127,7 +127,6 @@ namespace Buddy.Common.Structures
                 adjncy.AddRange(temp.OrderBy(e => e));
                 xadj[i + 1] = adjncy.Count;
             }
-            return size;
         }
     }
 }

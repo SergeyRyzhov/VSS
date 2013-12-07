@@ -52,7 +52,7 @@ namespace Buddy.Placer
 
             if (line == null)
             {
-                throw  new Exception();
+                throw new Exception();
             }
 
             var nodes = Int32.Parse(line);
@@ -69,7 +69,7 @@ namespace Buddy.Placer
                     throw new Exception();
                 }
 
-                var lineNums = line.Split(new []{' '});
+                var lineNums = line.Split(new[] { ' ' });
 
                 x[i] = double.Parse(lineNums[0]);
                 y[i] = double.Parse(lineNums[1]);

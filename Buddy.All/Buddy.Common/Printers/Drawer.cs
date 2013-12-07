@@ -1,7 +1,8 @@
-﻿using System.Diagnostics;
+﻿using System.Linq;
 using Buddy.Common.Structures;
-using System.Collections.Generic;
+using System.Diagnostics;
 using System.Drawing;
+using System.IO;
 
 namespace Buddy.Common.Printers
 {
@@ -11,26 +12,35 @@ namespace Buddy.Common.Printers
 
         private static string m_firstFile;
 
-        public static bool Skip { get; set; }
+        private static bool m_skip;
 
         public static bool Fill { get; set; }
 
+        public static void Pause()
+        {
+            m_skip = true;
+        }
+
+        public static void Resume()
+        {
+            m_skip = false;
+        }
 
         static Drawer()
         {
-            Skip = false;
+            m_skip = false;
             Fill = false;
         }
 
-        public static void DrawGraph(Size size, IGraph graph, IList<Coordinate> coords, string fileName)
+        public static void DrawGraph(Size size, IGraph graph, double[] cX, double[] cY, string fileName)
         {
-            if (Skip)
+            if (m_skip)
                 return;
 
             var vertexBrush = Brushes.OrangeRed;
             var vertexPen = new Pen(Color.DarkOrange, 1);
             var edgePen = new Pen(Color.Blue, 1);
-            
+
             var bitmap = new Bitmap(size.Width, size.Height);
             using (var image = Graphics.FromImage(bitmap))
             {
@@ -38,30 +48,34 @@ namespace Buddy.Common.Printers
                 {
                     foreach (var second in graph.SymAdj(vertex))
                     {
-                        var a = coords[vertex];
-                        var b = coords[second];
-                        image.DrawLine(edgePen, a.FloatX, a.FloatY, b.FloatX, b.FloatY);
+                        image.DrawLine(edgePen, (float)cX[vertex], (float)cY[vertex], (float)cX[second], (float)cY[second]);
                     }
                 }
 
                 const int scale = 1;
+                var notFill = graph.Radiuses.Max() > 30;
                 for (var i = 0; i < graph.VerticesAmount; i++)
                 {
-                    var x = new Coordinate(coords[i].X, coords[i].Y);
-                    var radius = graph.Radiuses[i] * scale;
+                    var radius = graph.Radius(i) * scale;
+                    var x = cX[i];
+                    var y = cY[i];
 
-                    x.X -= radius;
-                    x.Y -= radius;
-                    if (Fill)
+                    x -= radius;
+                    y -= radius;
+
+                    var side = (float)radius * 2;
+
+                    if (Fill && !notFill)
                     {
-                        image.FillEllipse(vertexBrush, x.FloatX, x.FloatY, (float)radius*2, (float)radius*2);
+                        image.FillEllipse(vertexBrush, (float)x, (float)y, side, side);
+
+                        image.FillEllipse(Brushes.White, (float)x + side * 0.1f, (float)y + side * 0.1f, side * 0.8f, side * 0.8f);
                     }
                     else
                     {
-                        image.DrawEllipse(vertexPen, x.FloatX, x.FloatY, (float)radius*2, (float)radius*2);
+                        image.DrawEllipse(vertexPen, (float)x, (float)y, side, side);
                     }
                 }
-                
             }
             var file = string.Format("{0}. {1}", m_number++, fileName);
             if (m_firstFile == null)
@@ -73,7 +87,8 @@ namespace Buddy.Common.Printers
 
         public static void OpenFirst()
         {
-            Process.Start(m_firstFile);
+            if (File.Exists(m_firstFile))
+                Process.Start(m_firstFile);
         }
     }
 }

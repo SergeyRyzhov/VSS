@@ -1,6 +1,4 @@
-﻿using System.Linq;
-using Buddy.Common.Structures;
-using System.Collections.Generic;
+﻿using Buddy.Common.Structures;
 using System.Drawing;
 
 namespace Buddy.Placer
@@ -12,28 +10,22 @@ namespace Buddy.Placer
             Settings = settings;
         }
 
-        public virtual void PlaceGraph(int nodes, double[] radiuses, int[] xAdj, int[] adjency, double[] weights, double width,
+        public virtual void PlaceGraph(int nodes, double[] radiuses, int[] xAdj, int[] adjency, double[] weights,
+            double width,
             double height, double[] initialX, double[] initialY, out double[] resultX, out double[] resultY)
         {
-            IGraph graph = new Graph(nodes, xAdj, adjency,radiuses,weights);
-
-            var coordinate = graph.Vertices.Select(vertex => new Coordinate(initialX[vertex], initialY[vertex])).ToList();
+            IGraph graph = new Graph(nodes, xAdj, adjency, radiuses, weights);
 
             var size = new Size((int)width, (int)height);
-
-            var coord = PlaceGraph(graph, coordinate, size);
 
             resultX = new double[nodes];
             resultY = new double[nodes];
 
-            foreach (var vertex in graph.Vertices)
-            {
-                resultX[vertex] = coord[vertex].X;
-                resultY[vertex] = coord[vertex].Y;
-            }
+            PlaceGraph(graph, size, initialX, initialY, ref resultX, ref resultY);
         }
 
-        public abstract IList<Coordinate> PlaceGraph(IGraph symmetricGraph, IList<Coordinate> coordinate, Size size);
+        public abstract void PlaceGraph(IGraph graph, Size size, double[] inX, double[] inY, ref double[] outX,
+            ref double[] outY);
 
         public ISettings Settings { get; private set; }
     }

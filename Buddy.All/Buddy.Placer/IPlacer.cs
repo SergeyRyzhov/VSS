@@ -1,5 +1,4 @@
-﻿
-namespace Buddy.Placer
+﻿namespace Buddy.Placer
 {
     public interface IPlacer
     {

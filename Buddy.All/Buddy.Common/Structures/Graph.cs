@@ -19,23 +19,29 @@ namespace Buddy.Common.Structures
         {
             VerticesAmount = verticesAmount;
             EdgesAmount = edgesAmount;
-            XAdj = new int[verticesAmount+1];
+            XAdj = new int[verticesAmount + 1];
             Adjency = new int[edgesAmount];
             Radiuses = new double[verticesAmount];
             Weights = new double[EdgesAmount];
         }
 
         public double[] Radiuses { get; private set; }
+
         public double[] Weights { get; private set; }
+
         public int[] Adjency { get; private set; }
+
         public int[] XAdj { get; private set; }
+
         public int EdgesAmount { get; private set; }
+
         public int VerticesAmount { get; private set; }
 
         public double Radius(int vertex)
         {
             return Radiuses[vertex];
         }
+
         /// <summary>
         /// Slow method, please use weights array if you know index of edge.
         /// </summary>
@@ -70,7 +76,7 @@ namespace Buddy.Common.Structures
                 {
                     continue;
                 }
-                
+
                 yield return Adjency[i];
             }
         }

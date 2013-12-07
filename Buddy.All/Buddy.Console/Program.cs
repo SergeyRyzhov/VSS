@@ -1,10 +1,8 @@
 ﻿using Buddy.Common;
 using Buddy.Common.Parser;
 using Buddy.Common.Printers;
-using Buddy.Common.Structures;
 using Buddy.Placer;
 using System;
-using System.Collections.Generic;
 using System.Drawing;
 using System.Linq;
 
@@ -14,16 +12,16 @@ namespace Buddy.Console
     {
         private static void Main()
         {
-            Drawer.Skip = false;
-            //Drawer.Fill = true;
-            
+            //Drawer.Pause();
+            Drawer.Fill = true;
+
             //TODO: пока так, потом через аргументы командной строки
-            const string filename = "../../../../Matrix/grids/400.mtx";
+            const string filename = "../../../../Matrix/grids/100x100.mtx";
 
             var parser = new Parser();
             var graph = parser.ParseCrsGraph(filename);
 
-            var size = new Size(640, 480);
+            var size = new Size(1280, 1024);
 
             var randPlacer = new RandomPlacer();
             double[] x;
@@ -39,57 +37,52 @@ namespace Buddy.Console
             }
             else
             {
-                randPlacer.PlaceGraph(graph.VerticesAmount,null,null,null,null,size.Width, size.Height,null,null, out x, out y);
-                saver.Persist("input.pos",x,y);
+                randPlacer.PlaceGraph(graph.VerticesAmount, null, null, null, null, size.Width, size.Height, null, null,
+                    out x, out y);
+                saver.Persist("input.pos", x, y);
             }
 
-            var coords = new List<Coordinate>();
+            Statistic.PrintStatistic(graph, x, y);
 
-            for (var i = 0; i < graph.VerticesAmount; i++)
-            {
-                coords.Add(new Coordinate(x[i], y[i]));
-            }
+            Drawer.DrawGraph(size, graph, x, y, "input.bmp");
 
-            Statistic.PrintStatistic(graph, coords.Select(c => c.X).ToArray(), coords.Select(c => c.Y).ToArray());
-
-            //TODO: Печеть информации в параметры
-            const bool print = false;
-
-            //if (print)
-            //    PrintCoordinates(coords);
-
-            Drawer.DrawGraph(size, graph, coords, "input.bmp");
             System.Console.WriteLine("Число итераций");
             var s = System.Console.ReadLine();
             s = string.IsNullOrEmpty(s) ? "5" : s;
+
             var a = int.Parse(s);
             //TODO: число итерайций в параметры
 
             s = System.Console.ReadLine();
             s = string.IsNullOrEmpty(s) ? "5" : s;
             var b = int.Parse(s);
-            ISettings settings = new Settings()
-            {
-                Iterations = b,
-            };
 
-            var localPlacer = new ForceDirectedCSR(new Settings { Iterations = a });
+            IPlacer localPlacer = new ForceDirectedCSR(new Settings { Iterations = a });
 
-            var placer = new MultilevelPlaсer(settings, localPlacer);
+            IPlacer placer = new MultilevelPlaсer(new Settings { Iterations = b }, localPlacer);
 
-            IList<Coordinate> result = coords.ToList();
+            //placer = localPlacer; //расскоментировать чтобы FD
+
+            //Drawer.Pause();
             var start = DateTime.Now;
-            result = placer.PlaceGraph(graph, result, size);
+            double[] resultX;
+            double[] resultY;
+
+            placer.PlaceGraph(graph.VerticesAmount, graph.Radiuses, graph.XAdj, graph.Adjency, graph.Weights,
+                size.Width, size.Height, x, y, out resultX,
+                out resultY);
+
             var workTime = DateTime.Now - start;
+            //Drawer.Resume();
             System.Console.WriteLine("Time: {0}", workTime);
 
-            Statistic.PrintStatistic(graph, result.Select(c => c.X).ToArray(), result.Select(c => c.Y).ToArray());
+            Statistic.PrintStatistic(graph, resultX, resultY);
+            saver.Persist("output.pos", resultX, resultY);
 
-            saver.Persist("output.pos", result.Select(c => c.X).ToArray(), result.Select(c => c.Y).ToArray());
+            //растянуть на область чтобы посмотреть;) 
+            ForceDirectedCSR.Scale(graph,size,ref resultX,ref resultY, true);
 
-            //ForceDirectedCSR.Scale(size, result, graph,true);
-
-            Drawer.DrawGraph(size, graph, result, "output.bmp");
+            Drawer.DrawGraph(size, graph, resultX, resultY, "output.bmp");
             Drawer.OpenFirst();
         }
     }
