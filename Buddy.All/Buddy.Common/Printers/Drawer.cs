@@ -53,7 +53,6 @@ namespace Buddy.Common.Printers
                 }
 
                 const int scale = 1;
-                var notFill = graph.Radiuses.Max() > 30;
                 for (var i = 0; i < graph.VerticesAmount; i++)
                 {
                     var radius = graph.Radius(i) * scale;
@@ -65,11 +64,9 @@ namespace Buddy.Common.Printers
 
                     var side = (float)radius * 2;
 
-                    if (Fill && !notFill)
+                    if (Fill)
                     {
                         image.FillEllipse(vertexBrush, (float)x, (float)y, side, side);
-
-                        image.FillEllipse(Brushes.White, (float)x + side * 0.1f, (float)y + side * 0.1f, side * 0.8f, side * 0.8f);
                     }
                     else
                     {
