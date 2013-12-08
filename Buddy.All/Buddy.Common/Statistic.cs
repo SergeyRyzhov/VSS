@@ -107,7 +107,7 @@ namespace Buddy.Common
                     { cos2 = -1 * cos2; }
                     A1 = Math.Pow(r, 2) * Math.Pow(cos1, -1);
                     A2 = Math.Pow(R, 2) * Math.Pow(cos2, -1);
-                    s = A1 + A2 - (Math.Sqrt((-d + r - R) * (-d - r + R) * (-d + r + R) * (d + r + R))) / 2;
+                    s = A1 + A2 - (Math.Sqrt((-d + r + R) * (d + r - R) * (d - r + R) * (d + r + R))) / 2;
                 }
                 if (Math.Abs(d - r1 - r2) < Double.Epsilon)
                 {
