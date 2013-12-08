@@ -1,24 +1,26 @@
-﻿using System.Data;
-using Buddy.Common.Printers;
-using Buddy.Common.Structures;
-using System;
+﻿using System;
 using System.Drawing;
 using System.Linq;
+using Buddy.Common.Printers;
+using Buddy.Common.Structures;
 
-namespace Buddy.Placer
+namespace Buddy.Placer.Placers
 {
     public class MultilevelPlaсer : BasePlacer
     {
         private readonly BasePlacer m_localPlacer;
 
         private readonly Random m_random;
+        private IReductionMapper m_mapper;
 
-        public MultilevelPlaсer(ISettings settings, IPlacer localPlacer)
+        public MultilevelPlaсer(ISettings settings, IPlacer localPlacer, IReductionMapper mapper)
             : base(settings)
         {
             m_localPlacer = localPlacer as BasePlacer;
             if (m_localPlacer == null)
                 throw new Exception("Bad local placer.");
+
+            m_mapper = mapper;
 
             m_random = new Random();
         }
@@ -68,7 +70,7 @@ namespace Buddy.Placer
         {
             var nodes = graph.VerticesAmount;
 
-            var reducer = new GraphReducer(graph);
+            var reducer = new GraphReducer(graph, m_mapper);
             int[] map;
             var reducedGraph = reducer.Reduce(out map);
             var count = map.Max() + 1;

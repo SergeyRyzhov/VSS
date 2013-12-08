@@ -1,7 +1,7 @@
 ﻿using System;
 using System.IO;
 
-namespace Buddy.Placer
+namespace Buddy.Placer.Placers
 {
     public class RandomPlacer : IPlacer, IPersistable
     {

@@ -41,15 +41,15 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="BasePlacer.cs" />
+    <Compile Include="Placers\BasePlacer.cs" />
     <Compile Include="DefaultSettings.cs" />
-    <Compile Include="ForceDirectedCSR.cs" />
+    <Compile Include="Placers\ForceDirectedCSR.cs" />
     <Compile Include="IPersistable.cs" />
     <Compile Include="IPlacer.cs" />
     <Compile Include="ISettings.cs" />
-    <Compile Include="MultilevelPlaсer.cs" />
+    <Compile Include="Placers\MultilevelPlaсer.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="RandomPlacer.cs" />
+    <Compile Include="Placers\RandomPlacer.cs" />
     <Compile Include="Settings.cs" />
   </ItemGroup>
   <ItemGroup>

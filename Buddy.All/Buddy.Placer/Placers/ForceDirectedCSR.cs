@@ -1,10 +1,10 @@
-﻿using Buddy.Common.Printers;
-using Buddy.Common.Structures;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Drawing;
+using Buddy.Common.Printers;
+using Buddy.Common.Structures;
 
-namespace Buddy.Placer
+namespace Buddy.Placer.Placers
 {
     public class ForceDirectedCSR : BasePlacer
     {
@@ -41,9 +41,7 @@ namespace Buddy.Placer
                 x = bx - ax;
                 y = by - ay;
             }
-            //todo возможно логика должна быть другой (добавлено чтобы не делить на 0)
-            //if (x > double.Epsilon && y < double.Epsilon)
-            //    return;
+
             var norma = Norma(x, y);
             norma = norma > double.Epsilon ? norma : 1;
 

@@ -1,7 +1,7 @@
-﻿using Buddy.Common.Structures;
-using System.Drawing;
+﻿using System.Drawing;
+using Buddy.Common.Structures;
 
-namespace Buddy.Placer
+namespace Buddy.Placer.Placers
 {
     public abstract class BasePlacer : IPlacer
     {

@@ -1,10 +1,13 @@
 ﻿using Buddy.Common;
 using Buddy.Common.Parser;
 using Buddy.Common.Printers;
+using Buddy.Common.Structures;
+using Buddy.Common.Structures.Mappers;
 using Buddy.Placer;
 using System;
 using System.Drawing;
 using System.Linq;
+using Buddy.Placer.Placers;
 
 namespace Buddy.Console
 {
@@ -59,7 +62,15 @@ namespace Buddy.Console
 
             IPlacer localPlacer = new ForceDirectedCSR(new Settings { Iterations = a });
 
-            IPlacer placer = new MultilevelPlaсer(new Settings { Iterations = b }, localPlacer);
+            // ReSharper disable once JoinDeclarationAndInitializer
+            IReductionMapper mapper;
+            
+            //mapper = new AllAdjacencyToVertexMapper();
+            mapper = new FirstAdjacencyToVertexMapper();
+            //mapper = new OneEdgeToVertexMapper();
+
+
+            IPlacer placer = new MultilevelPlaсer(new Settings { Iterations = b }, localPlacer, mapper);
 
             //placer = localPlacer; //расскоментировать чтобы FD
 

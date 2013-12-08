@@ -6,47 +6,20 @@ namespace Buddy.Common.Structures
     public class GraphReducer
     {
         private readonly IGraph m_graph;
+        private readonly IReductionMapper m_reductionMapper;
 
-        public GraphReducer(IGraph graph)
+        public GraphReducer(IGraph graph, IReductionMapper reductionMapper)
         {
             m_graph = graph;
+            m_reductionMapper = reductionMapper;
         }
 
         protected virtual void ComputeMap(out int size, out int[] map)
         {
             map = new int[m_graph.VerticesAmount];
 
-            for (var i = 0; i < m_graph.VerticesAmount; i++)
-            {
-                map[i] = -1;
-            }
+            m_reductionMapper.ReductionMap(map, m_graph);
 
-            var current = 0;
-
-            foreach (var vertex in m_graph.Vertices)
-            {
-                foreach (var label in m_graph.SymAdj(vertex).OrderBy(e => -e))
-                {
-                    var first = vertex;
-                    var second = label;
-
-                    if (map[first] != -1 || map[second] != -1)
-                    {
-                        continue;
-                    }
-
-                    map[first] = current;
-                    map[second] = current;
-                    current++;
-                    break;
-                }
-            }
-
-            for (var i = 0; i < m_graph.VerticesAmount; i++)
-            {
-                if (map[i] == -1)
-                    map[i] = current++;
-            }
             size = map.Max() + 1;
         }
 
