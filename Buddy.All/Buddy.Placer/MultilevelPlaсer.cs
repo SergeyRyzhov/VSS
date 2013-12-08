@@ -1,4 +1,5 @@
-﻿using Buddy.Common.Printers;
+﻿using System.Data;
+using Buddy.Common.Printers;
 using Buddy.Common.Structures;
 using System;
 using System.Drawing;
@@ -85,6 +86,8 @@ namespace Buddy.Placer
             m_localPlacer.PlaceGraph(reducedGraph, size, x, y, ref x, ref y);
 
             RestorePositions(reducedGraph, map, x, y, size, outX, outY);
+
+            m_localPlacer.PlaceGraph(graph, size, outX, outY, ref outX, ref outY);
 
             Drawer.DrawGraph(size, graph, outX, outY, string.Format("multulevel_up_{0}.bmp", nodes));
         }

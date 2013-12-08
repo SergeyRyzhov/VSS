@@ -31,7 +31,7 @@ namespace Buddy.Placer
             out double y)
         {
             //todo может быть для каждой координаты отдельное сравнение?
-            if ((Math.Abs(ax - bx) < double.Epsilon) || (Math.Abs(ay - by) < double.Epsilon))
+            if ((Math.Abs(ax - bx) < double.Epsilon) && (Math.Abs(ay - by) < double.Epsilon))
             {
                 x = m_random.NextDouble();
                 y = m_random.NextDouble();
@@ -42,11 +42,13 @@ namespace Buddy.Placer
                 y = by - ay;
             }
             //todo возможно логика должна быть другой (добавлено чтобы не делить на 0)
-            if (x < double.Epsilon || y < double.Epsilon)
-                return;
+            //if (x > double.Epsilon && y < double.Epsilon)
+            //    return;
             var norma = Norma(x, y);
-            x = (x / norma) * fourceModule;
-            y = (y / norma) * fourceModule;
+            norma = norma > double.Epsilon ? norma : 1;
+
+            x = x > double.Epsilon ? (x / norma) * fourceModule : 0;
+            y = y > double.Epsilon ? (y / norma) * fourceModule : 0;
         }
 
         private static void CulcAttractiveForces(IGraph graph, IList<double> inX, IList<double> inY,
@@ -97,7 +99,7 @@ namespace Buddy.Placer
                     }
                     else
                     {
-                        repFoce = -1 / Distance(inX[v], inY[v], inX[u], inY[u]);
+                        repFoce = -(graph.Radius(v) + graph.Radius(u)) / Distance(inX[v], inY[v], inX[u], inY[u]);
                     }
 
                     double x;
