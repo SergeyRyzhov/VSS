@@ -19,7 +19,7 @@ namespace Buddy.Console
             Drawer.Fill = true;
 
             //TODO: пока так, потом через аргументы командной строки
-            const string filename = "../../../../Matrix/grids/400.mtx";
+            const string filename = "../../../../Matrix/grids/100x100.mtx";
 
             var parser = new Parser();
             var graph = parser.ParseCrsGraph(filename);
@@ -66,8 +66,8 @@ namespace Buddy.Console
             IReductionMapper mapper;
             
             //mapper = new AllAdjacencyToVertexMapper();
-            mapper = new FirstAdjacencyToVertexMapper();
-            //mapper = new OneEdgeToVertexMapper();
+            //mapper = new FirstAdjacencyToVertexMapper();
+            mapper = new OneEdgeToVertexMapper();
 
 
             IPlacer placer = new MultilevelPlaсer(new Settings { Iterations = b }, localPlacer, mapper);

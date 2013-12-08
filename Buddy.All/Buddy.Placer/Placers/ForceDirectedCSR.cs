@@ -62,8 +62,7 @@ namespace Buddy.Placer.Placers
 
                     if (u <= v) continue;
 
-                    var attrForce = Distance(inX[v], inY[v], inX[u], inY[u])*graph.Weights[k]/
-                                    (graph.Radius(v) + graph.Radius(u));
+                    var attrForce = Distance(inX[v], inY[v], inX[u], inY[u])*graph.Weights[k];
                     double x;
                     double y;
 
@@ -249,9 +248,9 @@ namespace Buddy.Placer.Placers
                     outY[vertex] += y[vertex];
                 }
 
-                Scale(graph, size, ref outX, ref outY);
                 Drawer.DrawGraph(size, graph, outX, outY, string.Format("force_directed_{0}.bmp", Settings.Iterations - iterations));
             }
+            Scale(graph, size, ref outX, ref outY);
             Drawer.Resume();
         }
     }

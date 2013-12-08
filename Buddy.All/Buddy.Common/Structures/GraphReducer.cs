@@ -39,7 +39,7 @@ namespace Buddy.Common.Structures
 
             for (var i = 0; i < edgesAmount; i++)
             {
-                weights[i] = 2;
+                weights[i] = 1;
             }
         }
 
