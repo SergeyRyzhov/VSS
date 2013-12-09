@@ -2,6 +2,6 @@
 {
     public interface ISettings
     {
-        int Iterations { get; }
+        int Iterations { get; set; }
     }
 }

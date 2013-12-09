@@ -22,9 +22,6 @@ namespace Buddy.Common.Structures.Mappers
                 {
                     var second = label;
                     var first = vertex;
-                    //if (map[first] == -1)
-                    //{
-                    //}
                     if (map[second] == -1 && map[first] == -1)
                     {
                         map[second] = current;

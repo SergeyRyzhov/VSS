@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace Buddy.Common.Structures
 {
@@ -90,6 +91,44 @@ namespace Buddy.Common.Structures
                     yield return i;
                 }
             }
+        }
+    }
+
+    public static class GraphExtensions
+    {
+        public static IEnumerable<int> Near(this IGraph graph, int vertex, IList<double> x, IList<double> y)
+        {
+            var maxRadius = graph.Radiuses.Max() * 2;
+
+            var vx = x[vertex];
+            var vy = y[vertex];
+
+            var leftX = vx - maxRadius;
+            var topY = vy - maxRadius;
+            var rightX = vx + maxRadius;
+            var bottomY = vy + maxRadius;
+
+            for (var v = vertex+1; v < graph.VerticesAmount; v++)
+            {
+                if (InSquare(x[v],y[v], leftX,  topY,  rightX,  bottomY))
+                    yield return v;
+            }
+        }
+
+        private static bool InSquare(double x, double y, double leftX, double topY, double rightX, double bottomY)
+        {
+            if (x < leftX)
+                return false;
+
+            if (y < topY)
+                return false;
+
+            if (x > rightX)
+                return false;
+
+            if (y > bottomY)
+                return false;
+            return true;
         }
     }
 }

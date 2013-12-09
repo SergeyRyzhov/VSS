@@ -11,7 +11,7 @@ namespace Buddy.Placer.Placers
         private readonly BasePlacer m_localPlacer;
 
         private readonly Random m_random;
-        private IReductionMapper m_mapper;
+        private readonly IReductionMapper m_mapper;
 
         public MultilevelPlaсer(ISettings settings, IPlacer localPlacer, IReductionMapper mapper)
             : base(settings)
@@ -84,6 +84,17 @@ namespace Buddy.Placer.Placers
 
             if (nodes > 50)
                 Iterations(reducedGraph, size, x, y, x, y);
+            else
+            {
+                if (nodes > 5)
+                {
+                    var i = m_localPlacer.Settings.Iterations;
+                    m_localPlacer.Settings.Iterations *= 10;
+                    m_localPlacer.PlaceGraph(reducedGraph, size, x, y, ref x, ref y);
+                    m_localPlacer.Settings.Iterations = i;
+                    Drawer.DrawGraph(size, reducedGraph, x, y, string.Format("multulevel_middle_{0}.bmp", nodes));
+                }
+            }
 
             m_localPlacer.PlaceGraph(reducedGraph, size, x, y, ref x, ref y);
 

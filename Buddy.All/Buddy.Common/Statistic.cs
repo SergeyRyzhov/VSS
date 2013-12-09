@@ -23,14 +23,26 @@ namespace Buddy.Common
             m_lastDistance = distance;
             m_lastCollision = collision;
         }
-
+        /// <summary>
+        /// Расчёт суммарного расстояния
+        /// </summary>
+        /// <param name="graph"></param>
+        /// <param name="x"></param>
+        /// <param name="y"></param>
+        /// <returns></returns>
         public static double SumDistances(IGraph graph, double[] x, double[] y)
         {
             return
                 graph.Vertices.Sum(
                     vertex => graph.SymAdj(vertex).Sum(second => Distance(x[vertex], y[vertex], x[second], y[second])));
         }
-
+        /// <summary>
+        /// Расчтё суммарной оласти пересечения
+        /// </summary>
+        /// <param name="graph">Граф</param>
+        /// <param name="x">Координаты Х</param>
+        /// <param name="y"></param>
+        /// <returns></returns>
         public static double CollisionArea(IGraph graph, double[] x, double[] y)
         {
             return
@@ -42,7 +54,16 @@ namespace Buddy.Common
                                     Collision(x[vertex], y[vertex], graph.Radiuses[vertex], x[second], y[second],
                                         graph.Radiuses[second])));
         }
-
+        /// <summary>
+        /// Расчёт площзади пересечения двух вершин
+        /// </summary>
+        /// <param name="x1"></param>
+        /// <param name="y1"></param>
+        /// <param name="r1"></param>
+        /// <param name="x2"></param>
+        /// <param name="y2"></param>
+        /// <param name="r2"></param>
+        /// <returns></returns>
         private static double Collision(double x1, double y1, double r1, double x2, double y2, double r2)
         {
             double R, r, d, d1, d2, A1, A2, s = 0;

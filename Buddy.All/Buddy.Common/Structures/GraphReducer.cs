@@ -29,7 +29,9 @@ namespace Buddy.Common.Structures
             for (var i = 0; i < m_graph.VerticesAmount; i++)
             {
                 var current = labels[i];
-                radiuses[current] += m_graph.Radiuses[i];
+                //if (radiuses[current] < 50)
+                    radiuses[current] += m_graph.Radiuses[i];
+                //radiuses[current] = 1;
             }
         }
 
@@ -53,16 +55,16 @@ namespace Buddy.Common.Structures
 
             ComputeMap(out size, out map);
 
-            MakeGraph(size, map, out xadj, out adjncy);
+            MakeGraph(size, map, out xadj, out adjncy, out weight);
 
             ComputeRadiuses(size, map, out radiuses);
 
-            ComputeWeights(adjncy.Count, map, out weight);
+            //ComputeWeights(adjncy.Count, map, out weight);
 
             return new Graph(size, xadj, adjncy.ToArray(), radiuses, weight);
         }
 
-        protected virtual void MakeGraph(int size, int[] map, out int[] xadj, out List<int> adjncy)
+        protected virtual void MakeGraph(int size, int[] map, out int[] xadj, out List<int> adjncy, out double[] weights)
         {
             var fst = new int[size + 1];
             for (var i = 0; i <= size; i++)
@@ -77,6 +79,7 @@ namespace Buddy.Common.Structures
 
             xadj = new int[size + 1];
             adjncy = new List<int>();
+            var listWeights = new List<double>();
 
             var mask = new int[size + 1];
             for (var i = 0; i <= size; i++) mask[i] = -1;
@@ -84,22 +87,44 @@ namespace Buddy.Common.Structures
             for (var i = 0; i < size; i++)
             {
                 var j = fst[i];
-                var temp = new List<int>();
+                var temp = new List<EdgeInfo>();
                 while (j != -1)
                 {
-                    foreach (var e in m_graph.Adj(j))
+                    for (int k = m_graph.XAdj[j]; k < m_graph.XAdj[j + 1]; k++)
                     {
+                        var e = m_graph.Adjency[k];
                         if (mask[map[e]] != i && map[e] != i)
                         {
-                            temp.Add(map[e]);
+                            temp.Add(new EdgeInfo
+                            {
+                                Vertex = map[e],
+                                Weight = m_graph.Weights[k]
+                            });
+
                             mask[map[e]] = i;
+                        }
+                        else
+                        {
+                            if (mask[map[e]] == i)
+                            {
+                                temp.Find(ei => ei.Vertex == map[e]).Weight += m_graph.Weights[k];
+                            }
                         }
                     }
                     j = nxt[j];
                 }
-                adjncy.AddRange(temp.OrderBy(e => e));
+                adjncy.AddRange(temp.OrderBy(e => e.Vertex).Select(ei => ei.Vertex));
+                listWeights.AddRange(temp.OrderBy(ei=>ei.Vertex).Select(ei=>ei.Weight));
+
                 xadj[i + 1] = adjncy.Count;
             }
+            weights = listWeights.ToArray();
         }
+    }
+
+    internal class EdgeInfo
+    {
+        public int Vertex;
+        public double Weight;
     }
 }

@@ -86,17 +86,18 @@ namespace Buddy.Placer.Placers
             //todo вынести логику получения соседей в отдельный интерфейс/класс
             for (var v = 0; v < graph.VerticesAmount; v++)
             {
-                for (var u = v + 1; u < graph.VerticesAmount; u++)
+                //for (var u = v + 1; u < graph.VerticesAmount; u++)
+                foreach (var u in graph.Near(v, inX, inY))
                 {
                     double repFoce;
                     if (Math.Abs(inX[v] - inX[u]) < double.Epsilon &&
                         Math.Abs(inY[v] - inY[u]) < double.Epsilon)
                     {
-                        repFoce = -(graph.Radius(v) + graph.Radius(u));
+                        repFoce = -Math.Pow((graph.Radius(v) + graph.Radius(u)),2);
                     }
                     else
                     {
-                        repFoce = -(graph.Radius(v) + graph.Radius(u)) / Distance(inX[v], inY[v], inX[u], inY[u]);
+                        repFoce = -Math.Pow((graph.Radius(v) + graph.Radius(u)),2) / Distance(inX[v], inY[v], inX[u], inY[u]);
                     }
 
                     double x;
@@ -160,6 +161,12 @@ namespace Buddy.Placer.Placers
             {
                 outX[vertex] *= reductionCoef;
                 outY[vertex] *= reductionCoef;
+            }
+
+            for (int i = 0; i < outX.Length; i++)
+            {
+                if (double.IsNaN(outX[i]))
+                    throw new Exception();
             }
         }
 
@@ -227,6 +234,7 @@ namespace Buddy.Placer.Placers
                     throw new Exception();
             }
         }
+
         public override void PlaceGraph(IGraph graph, Size size, double[] inX, double[] inY, ref double[] outX, ref double[] outY)
         {
             var iterations = Settings.Iterations;
@@ -255,10 +263,13 @@ namespace Buddy.Placer.Placers
                     outX[vertex] += x[vertex];
                     outY[vertex] += y[vertex];
                 }
+                //if (iterations % 10 == 0)
+                //    Drawer.Resume();
 
                 Drawer.DrawGraph(size, graph, outX, outY, string.Format("force_directed_{0}.bmp", Settings.Iterations - iterations));
+                //Drawer.Pause();
             }
-            Scale(graph, size, ref outX, ref outY);
+            //Scale(graph, size, ref outX, ref outY);
             Drawer.Resume();
         }
     }

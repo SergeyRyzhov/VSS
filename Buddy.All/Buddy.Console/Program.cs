@@ -16,10 +16,9 @@ namespace Buddy.Console
         private static void Main()
         {
             //Drawer.Pause();
-            Drawer.Fill = true;
 
             //TODO: пока так, потом через аргументы командной строки
-            const string filename = "../../../../Matrix/grids/100x100.mtx";
+            const string filename = "../../../../Matrix/grids/400.mtx";
 
             var parser = new Parser();
             var graph = parser.ParseCrsGraph(filename);
@@ -65,9 +64,9 @@ namespace Buddy.Console
             // ReSharper disable once JoinDeclarationAndInitializer
             IReductionMapper mapper;
             
-            //mapper = new AllAdjacencyToVertexMapper();
-            //mapper = new FirstAdjacencyToVertexMapper();
-            mapper = new OneEdgeToVertexMapper();
+//            mapper = new AllAdjacencyToVertexMapper();
+            mapper = new FirstAdjacencyToVertexMapper();
+//            mapper = new OneEdgeToVertexMapper();
 
 
             IPlacer placer = new MultilevelPlaсer(new Settings { Iterations = b }, localPlacer, mapper);
@@ -78,11 +77,11 @@ namespace Buddy.Console
             var start = DateTime.Now;
             double[] resultX;
             double[] resultY;
-
+            //Drawer.Pause();
             placer.PlaceGraph(graph.VerticesAmount, graph.Radiuses, graph.XAdj, graph.Adjency, graph.Weights,
                 size.Width, size.Height, x, y, out resultX,
                 out resultY);
-
+            //Drawer.Resume();
             var workTime = DateTime.Now - start;
             //Drawer.Resume();
             System.Console.WriteLine("Time: {0}", workTime);
