@@ -172,6 +172,11 @@ namespace Buddy.Placer.Placers
             var maxY = y[0];
             var minY = y[0];
 
+            var area = 0.0;
+            //todo вынести если нужно в настройки
+            var limit = 20;
+            var limitBorder = 10;
+
             foreach (var vertex in graph.Vertices)
             {
                 maxX = Math.Max(maxX, x[vertex]);
@@ -179,15 +184,23 @@ namespace Buddy.Placer.Placers
 
                 maxY = Math.Max(maxY, y[vertex]);
                 minY = Math.Min(minY, y[vertex]);
+
+                area += Math.PI * graph.Radius(vertex) * graph.Radius(vertex);
             }
 
-            foreach (var vertex in graph.Vertices)
+            if (area <= size.Height * size.Width)
             {
-                maxX = Math.Max(maxX, x[vertex] + graph.Radius(vertex));
-                minX = Math.Min(minX, x[vertex] - graph.Radius(vertex));
+                limit = 0;
+                limitBorder = 0;
 
-                maxY = Math.Max(maxY, y[vertex] + graph.Radius(vertex));
-                minY = Math.Min(minY, y[vertex] - graph.Radius(vertex));
+                foreach (var vertex in graph.Vertices)
+                {
+                    maxX = Math.Max(maxX, x[vertex] + graph.Radius(vertex));
+                    minX = Math.Min(minX, x[vertex] - graph.Radius(vertex));
+
+                    maxY = Math.Max(maxY, y[vertex] + graph.Radius(vertex));
+                    minY = Math.Min(minY, y[vertex] - graph.Radius(vertex));
+                }
             }
 
             if ((maxX > size.Width) || (maxY > size.Height) || (minX < 0) || (minY < 0) || always)
@@ -195,13 +208,9 @@ namespace Buddy.Placer.Placers
                 var weight = maxX - minX;
                 var height = maxY - minY;
 
-                //todo вынести если нужно в настройки
-                const int limit = 20;
                 var coeffX = (size.Width - limit) / weight;
                 var coeffY = (size.Height - limit) / height;
 
-                //todo вынести если нужно в настройки
-                const int limitBorder = 10;
                 foreach (var vertex in graph.Vertices)
                 {
                     x[vertex] = (x[vertex] - minX) * coeffX + limitBorder;
@@ -218,7 +227,6 @@ namespace Buddy.Placer.Placers
                     throw new Exception();
             }
         }
-
         public override void PlaceGraph(IGraph graph, Size size, double[] inX, double[] inY, ref double[] outX, ref double[] outY)
         {
             var iterations = Settings.Iterations;
