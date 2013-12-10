@@ -14,10 +14,10 @@ namespace Buddy.Common
             var distance = SumDistances(graph, x, y);
             var collision = CollisionArea(graph, x, y);
 
-            Console.WriteLine("Statistic:");
-            Console.WriteLine("Distance = {0:f} {1}", distance,
+            Console.WriteLine("Статистика:");
+            Console.WriteLine("Расстояние = {0:f} {1}", distance,
                 m_lastDistance < distance ? '+' : Math.Abs(m_lastDistance - distance) < double.Epsilon ? ' ' : '-');
-            Console.WriteLine("Collision = {0:f} {1}", collision,
+            Console.WriteLine("Площадь пересечений = {0:f} {1}", collision,
                 m_lastCollision < collision ? '+' : Math.Abs(m_lastCollision - collision) < double.Epsilon ? ' ' : '-');
 
             m_lastDistance = distance;

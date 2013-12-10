@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Drawing;
+using System.Linq;
 using Buddy.Common.Printers;
 using Buddy.Common.Structures;
 
@@ -87,9 +88,13 @@ namespace Buddy.Placer.Placers
             //todo вынести логику получения соседей в отдельный интерфейс/класс
             for (var v = 0; v < graph.VerticesAmount; v++)
             {
-                for (var u = v + 1; u < graph.VerticesAmount; u++)
-                //foreach (var u in graph.Near(v, inX, inY))
+                //Console.WriteLine();
+                //Console.Write("{0}:",v);
+                //for (var u = v + 1; u < graph.VerticesAmount; u++)
+                foreach (var u in graph.Near(v, inX, inY))
                 {
+
+                    //Console.Write("{0} ",u);
                     double repFoce;
                     if (Math.Abs(inX[v] - inX[u]) < double.Epsilon &&
                         Math.Abs(inY[v] - inY[u]) < double.Epsilon)
@@ -132,7 +137,8 @@ namespace Buddy.Placer.Placers
                 if (double.IsNaN(maxModule))
                     throw new Exception();
             }
-            return MaxStep / maxModule;
+            var r = MaxStep/maxModule;
+            return maxModule > MaxStep ? r : 1;
         }
 
         private static void CulcGradient(IGraph graph, IList<double> inX, IList<double> inY, ref double[] outX, ref double[] outY)
@@ -252,6 +258,8 @@ namespace Buddy.Placer.Placers
                     throw new Exception();
             }
             Drawer.Pause();
+            var drawableIterations = iterations / 10;
+            drawableIterations = drawableIterations < 10 ? 10 : drawableIterations;
             while (iterations-- > 0)
             {
                 CulcGradient(graph, outX, outY, ref x, ref y);
@@ -264,14 +272,19 @@ namespace Buddy.Placer.Placers
                     outX[vertex] += x[vertex];
                     outY[vertex] += y[vertex];
                 }
-                if (iterations % 10 == 0)
+                if (iterations%drawableIterations == 0)
+                {
                     Drawer.Resume();
 
-                Drawer.DrawGraph(size, graph, outX, outY, string.Format("force_directed_{0}.bmp", Settings.Iterations - iterations));
-                Drawer.Pause();
-            Scale(graph, size, ref outX, ref outY);
+                    Drawer.DrawGraph(size, graph, outX, outY,
+                        string.Format("force_directed_{0}.png", Settings.Iterations - iterations));
+                    Drawer.Pause();
+                }
+                //Scale(graph, size, ref outX, ref outY);
             }
             Drawer.Resume();
+            if (Settings.Iterations % drawableIterations != 0)
+                Drawer.DrawGraph(size, graph, outX, outY, string.Format("force_directed_{0}.png", Settings.Iterations));
         }
     }
 }

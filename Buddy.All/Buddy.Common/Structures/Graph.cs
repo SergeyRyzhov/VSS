@@ -98,35 +98,42 @@ namespace Buddy.Common.Structures
     {
         public static IEnumerable<int> Near(this IGraph graph, int vertex, IList<double> x, IList<double> y)
         {
-            var maxRadius = graph.Radiuses.Max() * 2;
+            const int force = 10;
+            var maxRadius = graph.Radiuses.Max() * 2* force;
 
             var vx = x[vertex];
             var vy = y[vertex];
 
-            var leftX = vx - maxRadius;
-            var topY = vy - maxRadius;
-            var rightX = vx + maxRadius;
-            var bottomY = vy + maxRadius;
+            var leftX = vx  - graph.Radius(vertex) - maxRadius;
+            var topY = vy - graph.Radius(vertex) - maxRadius;
+            var rightX = vx + graph.Radius(vertex) + maxRadius;
+            var bottomY = vy + graph.Radius(vertex) + maxRadius;
 
-            for (var v = vertex+1; v < graph.VerticesAmount; v++)
+            for (var v = 0; v < vertex; v++)
             {
-                if (InSquare(x[v],y[v], leftX,  topY,  rightX,  bottomY))
+                if (InSquare(x[v], y[v], graph.Radius(v), leftX, topY, rightX, bottomY))
+                    yield return v;
+            }
+
+            for (var v = vertex + 1; v < graph.VerticesAmount; v++)
+            {
+                if (InSquare(x[v], y[v], graph.Radius(v), leftX, topY, rightX, bottomY))
                     yield return v;
             }
         }
 
-        private static bool InSquare(double x, double y, double leftX, double topY, double rightX, double bottomY)
+        private static bool InSquare(double x, double y, double r, double leftX, double topY, double rightX, double bottomY)
         {
-            if (x < leftX)
+            if (x+r < leftX)
                 return false;
 
-            if (y < topY)
+            if (y+r < topY)
                 return false;
 
-            if (x > rightX)
+            if (x-r > rightX)
                 return false;
 
-            if (y > bottomY)
+            if (y-r > bottomY)
                 return false;
             return true;
         }

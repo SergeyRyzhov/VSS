@@ -15,6 +15,8 @@ namespace Buddy.Common.Printers
 
         private static bool m_skip;
 
+        private static bool m_globalSkip;
+
         static Drawer()
         {
             m_skip = false;
@@ -30,9 +32,21 @@ namespace Buddy.Common.Printers
             m_skip = false;
         }
 
+        public static void GlobalPause()
+        {
+            m_globalSkip = true;
+            m_skip = true;
+        }
+
+        public static void GlobalResume()
+        {
+            m_globalSkip = false;
+            m_skip = false;
+        }
+
         public static void DrawGraph(Size size, IGraph graph, double[] cX, double[] cY, string fileName)
         {
-            if (m_skip)
+            if (m_skip || m_globalSkip)
                 return;
 
             var vertexBrush = new SolidBrush(Color.FromArgb(32, Color.DarkOrange));

@@ -59,6 +59,7 @@ namespace Buddy.Placer.Placers
 
             while (iterations-- > 0)
             {
+                Drawer.Resume();
                 Iterations(graph, size, outX, outY, x, y);
 
                 outX = x.ToArray();
@@ -80,7 +81,7 @@ namespace Buddy.Placer.Placers
 
             ComputePositions(nodes, inX, inY, map, x, y);
 
-            Drawer.DrawGraph(size, reducedGraph, x, y, string.Format("multulevel_down_{0}.bmp", nodes));
+            Drawer.DrawGraph(size, reducedGraph, x, y, string.Format("multulevel_down_{0}.png", nodes));
 
             if (nodes > 50)
                 Iterations(reducedGraph, size, x, y, x, y);
@@ -92,7 +93,7 @@ namespace Buddy.Placer.Placers
                     m_localPlacer.Settings.Iterations *= 10;
                     m_localPlacer.PlaceGraph(reducedGraph, size, x, y, ref x, ref y);
                     m_localPlacer.Settings.Iterations = i;
-                    Drawer.DrawGraph(size, reducedGraph, x, y, string.Format("multulevel_middle_{0}.bmp", nodes));
+                    Drawer.DrawGraph(size, reducedGraph, x, y, string.Format("multulevel_middle_{0}.png", nodes));
                 }
             }
 
@@ -102,7 +103,7 @@ namespace Buddy.Placer.Placers
 
             m_localPlacer.PlaceGraph(graph, size, outX, outY, ref outX, ref outY);
 
-            Drawer.DrawGraph(size, graph, outX, outY, string.Format("multulevel_up_{0}.bmp", nodes));
+            Drawer.DrawGraph(size, graph, outX, outY, string.Format("multulevel_up_{0}.png", nodes));
         }
 
         private void RestorePositions(IGraph graph, int[] map, double[] x, double[] y, Size size, double[] outX, double[] outY)
@@ -114,14 +115,6 @@ namespace Buddy.Placer.Placers
 
                 outX[i] = x[j] + m_random.Next((int)graph.Radius(j) * 2) - graph.Radius(j);
                 outY[i] = y[j] + m_random.Next((int)graph.Radius(j) * 2) - graph.Radius(j);
-
-                outX[i] = Math.Abs(outX[i]);
-                var dX = Math.Abs(size.Width - outX[i]);
-                outX[i] = size.Width - dX;
-
-                outY[i] = Math.Abs(outY[i]);
-                var dY = Math.Abs(size.Height - outY[i]);
-                outY[i] = size.Height - dY;
             }
         }
     }

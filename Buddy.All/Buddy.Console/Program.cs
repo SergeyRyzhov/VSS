@@ -6,19 +6,26 @@ using Buddy.Common.Structures.Mappers;
 using Buddy.Placer;
 using System;
 using System.Drawing;
-using System.Linq;
 using Buddy.Placer.Placers;
 
 namespace Buddy.Console
 {
     internal class Program
     {
-        private static void Main()
+        private static void Main(string[] args)
         {
-            //Drawer.Pause();
+            System.Console.WriteLine(@"Формат 0:[граф] 1:[итерации FD] 2:[многоуровневые итерации] 3:<тип размещения FD/MFD> 4:<тип редукции Adj / First / Half> 5:<загрузить из output.pos true/false> 5:<рисовать промежуточные итерации true/false>"); 
+            if (args.Length < 3) 
+                return;
+            System.Console.Write(@"Текущие ");
+            for (var i = 0; i < args.Length; i++)
+            {
+                System.Console.Write("{0}:{1} ", i, args[i]);
+            }
+            System.Console.WriteLine();
 
-            //TODO: пока так, потом через аргументы командной строки
-            const string filename = "../../../../Matrix/grids/400.mtx";
+            var skip = args.Length > 6 && bool.Parse(args[5]);
+            var filename = args[0];
 
             var parser = new Parser();
             var graph = parser.ParseCrsGraph(filename);
@@ -31,7 +38,7 @@ namespace Buddy.Console
 
             var saver = (randPlacer as IPersistable);
 
-            const bool load = false;
+            var load = args.Length > 5 && bool.Parse(args[5]);
 
             if (load)
             {
@@ -46,53 +53,73 @@ namespace Buddy.Console
 
             Statistic.PrintStatistic(graph, x, y);
 
-            Drawer.DrawGraph(size, graph, x, y, "input.bmp");
+            Drawer.DrawGraph(size, graph, x, y, "input.png");
+            if (skip)
+                Drawer.GlobalPause();
 
-            System.Console.WriteLine("Число итераций");
-            var s = System.Console.ReadLine();
-            s = string.IsNullOrEmpty(s) ? "5" : s;
+            var a = int.Parse(args[1]);
+            var b = int.Parse(args[2]);
 
-            var a = int.Parse(s);
-            //TODO: число итерайций в параметры
-
-            s = System.Console.ReadLine();
-            s = string.IsNullOrEmpty(s) ? "5" : s;
-            var b = int.Parse(s);
-
-            IPlacer localPlacer = new ForceDirectedCSR(new Settings { Iterations = a });
-
-            // ReSharper disable once JoinDeclarationAndInitializer
             IReductionMapper mapper;
-            
-//            mapper = new AllAdjacencyToVertexMapper();
-//            mapper = new FirstAdjacencyToVertexMapper();
-            mapper = new OneEdgeToVertexMapper();
+            if (args.Length > 4)
+            {
+                switch (args[4].ToLowerInvariant())
+                {
+                    case "adj":
+                        mapper = new AllAdjacencyToVertexMapper();
+                        break;
+                    case "first":
+                        mapper = new FirstAdjacencyToVertexMapper();
+                        break;
+                    default:
+                        mapper = new OneEdgeToVertexMapper();
+                        break;
+                }
+            }
+            else
+            {
+                mapper = new OneEdgeToVertexMapper();
+            }
 
 
-            IPlacer placer = new MultilevelPlaсer(new Settings { Iterations = b }, localPlacer, mapper);
+            IPlacer fdPlacer = new ForceDirectedCSR(new Settings { Iterations = a });
+            IPlacer placer;
+            if (args.Length > 3)
+            {
+                switch (args[3].ToLowerInvariant())
+                {
+                    case "fd":
+                        placer = fdPlacer;
+                        break;
+                    default:
+                        placer = new MultilevelPlaсer(new Settings { Iterations = b }, fdPlacer, mapper);
+                        break;
+                }
+            }
+            else
+            {
+                placer = new MultilevelPlaсer(new Settings { Iterations = b }, fdPlacer, mapper);
+            }
 
-            placer = localPlacer; //расскоментировать чтобы FD
-
-            //Drawer.Pause();
             var start = DateTime.Now;
             double[] resultX;
             double[] resultY;
-            //Drawer.Pause();
             placer.PlaceGraph(graph.VerticesAmount, graph.Radiuses, graph.XAdj, graph.Adjency, graph.Weights,
                 size.Width, size.Height, x, y, out resultX,
                 out resultY);
-            //Drawer.Resume();
+            ForceDirectedCSR.Scale(graph, size, ref resultX, ref resultY);
             var workTime = DateTime.Now - start;
-            //Drawer.Resume();
             System.Console.WriteLine("Time: {0}", workTime);
 
             Statistic.PrintStatistic(graph, resultX, resultY);
             saver.Persist("output.pos", resultX, resultY);
 
-            //растянуть на область чтобы посмотреть;) 
-            ForceDirectedCSR.Scale(graph,size,ref resultX,ref resultY, true);
+            if (skip)
+                Drawer.GlobalResume();
+            Drawer.DrawGraph(size, graph, resultX, resultY, "output.png");
 
-            Drawer.DrawGraph(size, graph, resultX, resultY, "output.bmp");
+            ForceDirectedCSR.Scale(graph, size, ref resultX, ref resultY, true);
+            Drawer.DrawGraph(size, graph, resultX, resultY, "big_output.png");
             Drawer.OpenFirst();
         }
     }
