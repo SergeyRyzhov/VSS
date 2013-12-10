@@ -1,4 +1,5 @@
-﻿using Buddy.Common;
+﻿using System.IO;
+using Buddy.Common;
 using Buddy.Common.Parser;
 using Buddy.Common.Printers;
 using Buddy.Common.Structures;
@@ -14,7 +15,7 @@ namespace Buddy.Console
     {
         private static void Main(string[] args)
         {
-            System.Console.WriteLine(@"Формат 0:[граф] 1:[итерации FD] 2:[многоуровневые итерации] 3:<тип размещения FD/MFD> 4:<тип редукции Adj / First / Half> 5:<загрузить из output.pos true/false> 5:<рисовать промежуточные итерации true/false>"); 
+            System.Console.WriteLine(@"Формат 0:[граф] 1:[итерации FD] 2:[многоуровневые итерации] 3:<тип размещения FD/MFD> 4:<тип редукции Adj / First / Half> 5:<загрузить из output.pos true/false> 6:<рисовать промежуточные итерации true/false> 7:<каталог сохранения>"); 
             if (args.Length < 3) 
                 return;
             System.Console.Write(@"Текущие ");
@@ -24,7 +25,10 @@ namespace Buddy.Console
             }
             System.Console.WriteLine();
 
-            var skip = args.Length > 6 && bool.Parse(args[5]);
+            var skip = args.Length > 5 && bool.Parse(args[5]);
+            var path = args.Length > 7 ? args[7] : string.Empty;
+            Directory.CreateDirectory(path);
+
             var filename = args[0];
 
             var parser = new Parser();
@@ -42,17 +46,17 @@ namespace Buddy.Console
 
             if (load)
             {
-                saver.Load("output.pos", out x, out y);
+                saver.Load(path + "/output.pos", out x, out y);
             }
             else
             {
                 randPlacer.PlaceGraph(graph.VerticesAmount, null, null, null, null, size.Width, size.Height, null, null,
                     out x, out y);
-                saver.Persist("input.pos", x, y);
+                saver.Persist(path+ "/input.pos", x, y);
             }
 
             Statistic.PrintStatistic(graph, x, y);
-
+            Drawer.Directory(path);
             Drawer.DrawGraph(size, graph, x, y, "input.png");
             if (skip)
                 Drawer.GlobalPause();
@@ -109,7 +113,7 @@ namespace Buddy.Console
                 out resultY);
             ForceDirectedCSR.Scale(graph, size, ref resultX, ref resultY);
             var workTime = DateTime.Now - start;
-            System.Console.WriteLine("Time: {0}", workTime);
+            System.Console.WriteLine("Время работы: {0}", workTime);
 
             Statistic.PrintStatistic(graph, resultX, resultY);
             saver.Persist("output.pos", resultX, resultY);
@@ -120,7 +124,6 @@ namespace Buddy.Console
 
             ForceDirectedCSR.Scale(graph, size, ref resultX, ref resultY, true);
             Drawer.DrawGraph(size, graph, resultX, resultY, "big_output.png");
-            Drawer.OpenFirst();
         }
     }
 }

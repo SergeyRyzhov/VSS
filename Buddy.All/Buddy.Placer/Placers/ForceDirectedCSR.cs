@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Drawing;
-using System.Linq;
 using Buddy.Common.Printers;
 using Buddy.Common.Structures;
 

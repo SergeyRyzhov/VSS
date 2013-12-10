@@ -1,7 +1,5 @@
 ﻿using System;
-using System.Diagnostics;
 using System.Drawing;
-using System.IO;
 using System.Linq;
 using Buddy.Common.Structures;
 
@@ -11,15 +9,15 @@ namespace Buddy.Common.Printers
     {
         private static int m_number;
 
-        private static string m_firstFile;
-
         private static bool m_skip;
 
         private static bool m_globalSkip;
+        private static string m_path;
 
         static Drawer()
         {
             m_skip = false;
+            m_globalSkip = false;
         }
 
         public static void Pause()
@@ -42,6 +40,11 @@ namespace Buddy.Common.Printers
         {
             m_globalSkip = false;
             m_skip = false;
+        }
+
+        public static void Directory(string path)
+        {
+            m_path = path.Last() != '/' ? path : path.Substring(0, path.Length -1);
         }
 
         public static void DrawGraph(Size size, IGraph graph, double[] cX, double[] cY, string fileName)
@@ -97,18 +100,12 @@ namespace Buddy.Common.Printers
                     image.DrawEllipse(vertexPen, (float) x, (float) y, side, side);
                 }
             }
-            var file = string.Format("{0}. {1}", m_number++, fileName);
-            if (m_firstFile == null)
-                m_firstFile = file;
+            
+            var file = string.Format("{0}/{1}. {2}", m_path, m_number++, fileName);
+
             bitmap.Save(file);
             edgePen.Dispose();
             vertexPen.Dispose();
-        }
-
-        public static void OpenFirst()
-        {
-            if (File.Exists(m_firstFile))
-                Process.Start(m_firstFile);
         }
     }
 

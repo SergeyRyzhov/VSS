@@ -23,7 +23,8 @@ namespace Buddy.Placer.Placers
 
         public void Persist(string fileName, double[] x, double[] y)
         {
-            File.Delete(fileName);
+            if (File.Exists(fileName))
+                File.Delete(fileName);
             var fs = new FileStream(fileName, FileMode.CreateNew);
             var sw = new StreamWriter(fs);
 
