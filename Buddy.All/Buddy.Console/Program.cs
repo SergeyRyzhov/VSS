@@ -1,4 +1,5 @@
 ﻿using System.IO;
+using System.Linq;
 using Buddy.Common;
 using Buddy.Common.Parser;
 using Buddy.Common.Printers;
@@ -26,7 +27,8 @@ namespace Buddy.Console
             System.Console.WriteLine();
 
             var skip = args.Length > 5 && bool.Parse(args[5]);
-            var path = args.Length > 7 ? args[7] : string.Empty;
+            var path = args.Length > 7 ? args[7] : string.Empty; 
+            path = path.Last() != '/' ? path : path.Substring(0, path.Length - 1);
             Directory.CreateDirectory(path);
 
             var filename = args[0];
@@ -116,7 +118,7 @@ namespace Buddy.Console
             System.Console.WriteLine("Время работы: {0}", workTime);
 
             Statistic.PrintStatistic(graph, resultX, resultY);
-            saver.Persist("output.pos", resultX, resultY);
+            saver.Persist(path+"/output.pos", resultX, resultY);
 
             if (skip)
                 Drawer.GlobalResume();
