@@ -65,13 +65,13 @@ namespace Buddy.Console
             IReductionMapper mapper;
             
 //            mapper = new AllAdjacencyToVertexMapper();
-            mapper = new FirstAdjacencyToVertexMapper();
-//            mapper = new OneEdgeToVertexMapper();
+//            mapper = new FirstAdjacencyToVertexMapper();
+            mapper = new OneEdgeToVertexMapper();
 
 
             IPlacer placer = new MultilevelPlaсer(new Settings { Iterations = b }, localPlacer, mapper);
 
-            //placer = localPlacer; //расскоментировать чтобы FD
+            placer = localPlacer; //расскоментировать чтобы FD
 
             //Drawer.Pause();
             var start = DateTime.Now;
