@@ -83,6 +83,8 @@ namespace Buddy.Placer.Placers
 
             Drawer.DrawGraph(size, reducedGraph, x, y, string.Format("multulevel_down_{0}.png", nodes));
 
+            m_localPlacer.PlaceGraph(reducedGraph, size, x, y, ref x, ref y);
+
             if (nodes > 50)
                 Iterations(reducedGraph, size, x, y, x, y);
             else
@@ -96,8 +98,6 @@ namespace Buddy.Placer.Placers
                     Drawer.DrawGraph(size, reducedGraph, x, y, string.Format("multulevel_middle_{0}.png", nodes));
                 }
             }
-
-            m_localPlacer.PlaceGraph(reducedGraph, size, x, y, ref x, ref y);
 
             RestorePositions(reducedGraph, map, x, y, size, outX, outY);
 

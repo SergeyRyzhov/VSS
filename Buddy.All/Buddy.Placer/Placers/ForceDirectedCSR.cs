@@ -275,15 +275,15 @@ namespace Buddy.Placer.Placers
                 {
                     Drawer.Resume();
 
-                    Drawer.DrawGraph(size, graph, outX, outY,
-                        string.Format("force_directed_{0}.png", Settings.Iterations - iterations));
+                    //Drawer.DrawGraph(size, graph, outX, outY,
+                    //    string.Format("force_directed_{0}.png", Settings.Iterations - iterations));
                     Drawer.Pause();
                 }
                 //Scale(graph, size, ref outX, ref outY);
             }
             Drawer.Resume();
-            if (Settings.Iterations % drawableIterations != 0)
-                Drawer.DrawGraph(size, graph, outX, outY, string.Format("force_directed_{0}.png", Settings.Iterations));
+//            if (Settings.Iterations % drawableIterations != 0)
+//                Drawer.DrawGraph(size, graph, outX, outY, string.Format("force_directed_{0}.png", Settings.Iterations));
         }
     }
 }
