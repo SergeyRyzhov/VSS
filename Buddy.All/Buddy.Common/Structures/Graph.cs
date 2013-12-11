@@ -94,17 +94,22 @@ namespace Buddy.Common.Structures
         }
     }
 
-    public static class GraphExtensions
+    public interface INear
     {
-        public static IEnumerable<int> Near(this IGraph graph, int vertex, IList<double> x, IList<double> y)
+        IEnumerable<int> Near(IGraph graph, int vertex, IList<double> x, IList<double> y);
+    }
+
+    public class GraphNear : INear
+    {
+        public IEnumerable<int> Near(IGraph graph, int vertex, IList<double> x, IList<double> y)
         {
             const int force = 10;
-            var maxRadius = graph.Radiuses.Max() * 2* force;
+            var maxRadius = graph.Radiuses.Max() * 2 * force;
 
             var vx = x[vertex];
             var vy = y[vertex];
 
-            var leftX = vx  - graph.Radius(vertex) - maxRadius;
+            var leftX = vx - graph.Radius(vertex) - maxRadius;
             var topY = vy - graph.Radius(vertex) - maxRadius;
             var rightX = vx + graph.Radius(vertex) + maxRadius;
             var bottomY = vy + graph.Radius(vertex) + maxRadius;
@@ -124,18 +129,27 @@ namespace Buddy.Common.Structures
 
         private static bool InSquare(double x, double y, double r, double leftX, double topY, double rightX, double bottomY)
         {
-            if (x+r < leftX)
+            if (x + r < leftX)
                 return false;
 
-            if (y+r < topY)
+            if (y + r < topY)
                 return false;
 
-            if (x-r > rightX)
+            if (x - r > rightX)
                 return false;
 
-            if (y-r > bottomY)
+            if (y - r > bottomY)
                 return false;
             return true;
+        }
+    }
+
+    public static class GraphExtensions 
+    {
+        public static IEnumerable<int> Near(this IGraph graph, int vertex, IList<double> x, IList<double> y)
+        {
+            var graphNear = new GraphNear();
+            return graphNear.Near(graph, vertex, x, y);
         }
     }
 }
