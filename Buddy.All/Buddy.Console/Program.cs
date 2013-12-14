@@ -59,7 +59,7 @@ namespace Buddy.Console
 
             Statistic.PrintStatistic(graph, x, y);
             Drawer.Directory(path);
-            Drawer.DrawGraph(size, graph, x, y, "input.png");
+            Drawer.ScaledDrawGraph(size, graph, x, y, "input.png");
             if (skip)
                 Drawer.GlobalPause();
 
@@ -113,7 +113,7 @@ namespace Buddy.Console
             placer.PlaceGraph(graph.VerticesAmount, graph.Radiuses, graph.XAdj, graph.Adjency, graph.Weights,
                 size.Width, size.Height, x, y, out resultX,
                 out resultY);
-            ForceDirectedCSR.Scale(graph, size, ref resultX, ref resultY);
+            GraphHelper.Scale(graph, size, ref resultX, ref resultY);
             var workTime = DateTime.Now - start;
             System.Console.WriteLine("Время работы: {0}", workTime);
 
@@ -122,9 +122,9 @@ namespace Buddy.Console
 
             if (skip)
                 Drawer.GlobalResume();
-            Drawer.DrawGraph(size, graph, resultX, resultY, "output.png");
+            Drawer.ScaledDrawGraph(size, graph, resultX, resultY, "output.png");
 
-            ForceDirectedCSR.Scale(graph, size, ref resultX, ref resultY, true);
+            graph.Scale(size, ref resultX, ref resultY, true);
             Drawer.DrawGraph(size, graph, resultX, resultY, "big_output.png");
         }
     }

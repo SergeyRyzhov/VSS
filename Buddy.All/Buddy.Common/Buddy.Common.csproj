@@ -45,6 +45,7 @@
     <Compile Include="Parser\Parser.cs" />
     <Compile Include="Statistic.cs" />
     <Compile Include="Structures\GraphBuilderStatistics.cs" />
+    <Compile Include="Structures\GraphHelper.cs" />
     <Compile Include="Structures\Mappers\AllAdjacencyToVertexMapper.cs" />
     <Compile Include="Structures\Coordinate.cs" />
     <Compile Include="Structures\Mappers\FirstAdjacencyToVertexMapper.cs" />

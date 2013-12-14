@@ -1,4 +1,6 @@
-﻿using Buddy.Common.Structures;
+﻿using System.Globalization;
+using System.Runtime.InteropServices;
+using Buddy.Common.Structures;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -68,7 +70,24 @@ namespace Buddy.Common.Parser
 
                 var u = int.Parse(values[0]) - 1;
                 var v = int.Parse(values[1]) - 1;
-                var w = double.Parse(values[2]);
+                var ws = values[2].Replace('.',',');
+
+                var w = double.Parse(ws);
+                w = w < 1 ? 1 : w; //lifehack for weak links
+
+                if (u == v)
+                {
+                    continue;
+                }
+
+                if (u > v)
+                {
+                    var t = v;
+                    v = u;
+                    u = t;
+                }
+
+
                 crsGraph[u].Add(v);
                 crsGraph[v].Add(u);
 

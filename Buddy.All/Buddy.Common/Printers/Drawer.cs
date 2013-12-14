@@ -47,6 +47,16 @@ namespace Buddy.Common.Printers
             m_path = path.Last() != '/' ? path : path.Substring(0, path.Length -1);
         }
 
+        public static void ScaledDrawGraph(Size size, IGraph graph, double[] cX, double[] cY, string fileName)
+        {
+            var x = cX.ToArray();
+            var y = cY.ToArray();
+
+            graph.Scale(size, ref x, ref y);
+
+            DrawGraph(size, graph, x, y, fileName);
+        }
+
         public static void DrawGraph(Size size, IGraph graph, double[] cX, double[] cY, string fileName)
         {
             if (m_skip || m_globalSkip)

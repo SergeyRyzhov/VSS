@@ -103,7 +103,7 @@ namespace Buddy.Common.Structures
     {
         public IEnumerable<int> Near(IGraph graph, int vertex, IList<double> x, IList<double> y)
         {
-            const int force = 10;
+            const int force = 20;
             var maxRadius = graph.Radiuses.Max() * 2 * force;
 
             var vx = x[vertex];
