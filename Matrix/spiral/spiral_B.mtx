@@ -1,0 +1,8 @@
+%%MatrixMarket matrix coordinate pattern general
+%-------------------------------------------------------------------------------
+% UF Sparse Matrix Collection, Tim Davis
+% http://www.cise.ufl.edu/research/sparse/matrices/Oberwolfach/spiral
+% name: Oberwolfach/spiral : B matrix
+%-------------------------------------------------------------------------------
+1434 1 1
+1 1
