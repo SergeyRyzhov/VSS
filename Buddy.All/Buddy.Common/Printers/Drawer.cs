@@ -47,24 +47,41 @@ namespace Buddy.Common.Printers
             m_path = path.Last() != '/' ? path : path.Substring(0, path.Length -1);
         }
 
-        public static void ScaledDrawGraph(Size size, IGraph graph, double[] cX, double[] cY, string fileName)
+        public static void ScaledDrawGraph(Size size, IGraph graph, double[] cX, double[] cY, string fileName, int[] map = null)
         {
             var x = cX.ToArray();
             var y = cY.ToArray();
 
             graph.Scale(size, ref x, ref y);
 
-            DrawGraph(size, graph, x, y, fileName);
+            DrawGraph(size, graph, x, y, fileName, map);
         }
 
-        public static void DrawGraph(Size size, IGraph graph, double[] cX, double[] cY, string fileName)
+        public static void DrawGraph(Size size, IGraph graph, double[] cX, double[] cY, string fileName,
+            int[] map = null)
         {
             if (m_skip || m_globalSkip)
                 return;
+            const int colorsCount = 174;
+            var colors = new Color[colorsCount];
 
-            var vertexBrush = new SolidBrush(Color.FromArgb(32, Color.DarkOrange));
+            //map = GetNearMap(graph, cX, cY);
+
+            for (var i = 1; i <= colorsCount; i++)
+            {
+                colors[i - 1] = Color.FromKnownColor((KnownColor)i);
+            }
+            var colorMap = new int[graph.VerticesAmount];
+            foreach (var vertex in graph.Vertices)
+            {
+                var colorIndex = (map == null? vertex : map[vertex]) % colorsCount;
+                colorMap[vertex] = colorIndex;
+            }
+
+            const int vertexAlpha = 255;//32;
+            var vertexBrush = new SolidBrush(Color.FromArgb(vertexAlpha, Color.DarkOrange));
             var vertexPen = new Pen(Color.FromArgb(192, Color.Red), 1);
-            var edgePen = new Pen(Color.FromArgb(224, Color.Blue), 1);
+            var edgePen = new Pen(Color.FromArgb(224, Color.Red), 1);//blue
 
             var maxWeight = graph.Weights.Max();
             var maxWidth = (int)(maxWeight / graph.Weights.Min());
@@ -73,6 +90,7 @@ namespace Buddy.Common.Printers
             var bitmap = new Bitmap(size.Width, size.Height);
             using (var image = Graphics.FromImage(bitmap))
             {
+                //image.Clear(Color.DarkGray);
                 foreach (var vertex in graph.Vertices)
                 {
 
@@ -93,8 +111,8 @@ namespace Buddy.Common.Printers
                     }
                 }
 
-                const int scale = 1;
-                var fill = graph.Radiuses.Max() < (Math.Max(size.Height, (float) size.Width) / 20);
+                const int scale = 3;
+                var fill = /*true || */graph.Radiuses.Max() < (Math.Max(size.Height, (float) size.Width) / 20);
                 for (var i = 0; i < graph.VerticesAmount; i++)
                 {
                     var radius = graph.Radius(i)*scale;
@@ -106,7 +124,10 @@ namespace Buddy.Common.Printers
 
                     var side = (float) radius*2;
                     if (fill)
-                    image.FillEllipse(vertexBrush, (float) x, (float) y, side, side);
+                    {
+                        vertexBrush.Color = colors[colorMap[i]];
+                        image.FillEllipse(vertexBrush, (float) x, (float) y, side, side);
+                    }
                     image.DrawEllipse(vertexPen, (float) x, (float) y, side, side);
                 }
             }
@@ -116,6 +137,24 @@ namespace Buddy.Common.Printers
             bitmap.Save(file);
             edgePen.Dispose();
             vertexPen.Dispose();
+        }
+
+        /// <summary>
+        /// Метод для демонстрации соседей
+        /// </summary>
+        // ReSharper disable once UnusedMember.Local
+        private static int[] GetNearMap(IGraph graph, double[] cX, double[] cY)
+        {
+            var map = graph.Vertices.ToArray();
+
+            var pos = graph.VerticesAmount/2;
+            foreach (var i in graph.Near(pos, cX, cY))
+            {
+                map[i] = (int) KnownColor.Green;
+            }
+
+            map[pos] = (int) KnownColor.Red;
+            return map;
         }
     }
 

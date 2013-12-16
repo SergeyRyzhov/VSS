@@ -7,6 +7,12 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Buddy.Placer", "Buddy.Place
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Buddy.Common", "Buddy.Common\Buddy.Common.csproj", "{E3FD10D2-0C11-49CB-A309-7854800ED294}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{E890F62B-A593-4DBE-B86D-51393F7E54F7}"
+	ProjectSection(SolutionItems) = preProject
+		Buddy.Console.psess = Buddy.Console.psess
+		Buddy.Console131214.vsp = Buddy.Console131214.vsp
+	EndProjectSection
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU

@@ -1,0 +1,12 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release|AnyCPU'">
+    <StartWorkingDirectory>D:\Project\VSS\Matrix\</StartWorkingDirectory>
+    <StartArguments>grids\400.mtx 200 1 mfd half false true test</StartArguments>
+    <StartAction>Project</StartAction>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|AnyCPU'">
+    <StartArguments>grids\400.mtx 200 1 mfd half true false test</StartArguments>
+    <StartWorkingDirectory>D:\Project\VSS\Matrix\</StartWorkingDirectory>
+  </PropertyGroup>
+</Project>

@@ -15,8 +15,8 @@ namespace Buddy.Common.Structures
 
             var area = 0.0;
             //todo вынести если нужно в настройки
-            var limit = 20;
-            var limitBorder = 10;
+            var limit = 50;
+            var limitBorder = 25;
 
             foreach (var vertex in graph.Vertices)
             {

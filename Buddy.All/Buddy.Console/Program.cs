@@ -26,7 +26,7 @@ namespace Buddy.Console
             }
             System.Console.WriteLine();
 
-            var skip = args.Length > 5 && bool.Parse(args[5]);
+            var skip = args.Length > 6 && bool.Parse(args[6]);
             var path = args.Length > 7 ? args[7] : string.Empty; 
             path = path.Last() != '/' ? path : path.Substring(0, path.Length - 1);
             Directory.CreateDirectory(path);
